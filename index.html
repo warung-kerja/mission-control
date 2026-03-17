@@ -34,59 +34,73 @@
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1.5rem;
         }
         
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
             border-bottom: 1px solid var(--border);
         }
         
         .logo {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
         
         .logo-icon {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, var(--accent), #8b5cf6);
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 0 20px var(--accent-glow);
+            font-size: 1.25rem;
         }
         
         .logo h1 {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            letter-spacing: -0.02em;
         }
         
         .logo span {
             color: var(--accent);
         }
         
-        .status-bar {
+        .nav-tabs {
             display: flex;
-            gap: 1.5rem;
-            align-items: center;
+            gap: 0.5rem;
         }
         
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .nav-tab {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
             font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        
+        .nav-tab:hover, .nav-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        
+        .status-bar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-size: 0.75rem;
             color: var(--text-secondary);
         }
         
@@ -103,250 +117,228 @@
             50% { opacity: 0.5; }
         }
         
-        .grid {
+        /* Task Board Styles */
+        .taskboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 1rem;
+            height: calc(100vh - 140px);
         }
         
-        .card {
+        .activity-feed {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            padding: 1rem;
+            overflow-y: auto;
         }
         
-        .card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.1);
+        .activity-feed h3 {
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        .card-header {
+        .activity-item {
+            padding: 0.75rem;
+            background: var(--bg-hover);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.8125rem;
+        }
+        
+        .activity-time {
+            color: var(--accent);
+            font-size: 0.75rem;
+        }
+        
+        .activity-agent {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+        
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            overflow-x: auto;
+        }
+        
+        .kanban-column {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem;
+            min-width: 220px;
+        }
+        
+        .kanban-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
         }
         
-        .card-title {
-            font-size: 1.125rem;
+        .kanban-title {
+            font-size: 0.875rem;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
         
-        .card-badge {
+        .kanban-count {
             background: var(--bg-hover);
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
             font-size: 0.75rem;
             color: var(--text-secondary);
         }
         
-        .agent-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-        
-        .agent-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.875rem;
+        .task-card {
             background: var(--bg-hover);
-            border-radius: 10px;
-            transition: all 0.2s ease;
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            cursor: grab;
+            transition: all 0.2s;
+            border-left: 3px solid var(--accent);
         }
         
-        .agent-item:hover {
-            background: rgba(99, 102, 241, 0.1);
+        .task-card:hover {
+            transform: translateX(2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         
-        .agent-info {
+        .task-card.dragging {
+            opacity: 0.5;
+        }
+        
+        .task-title {
+            font-size: 0.8125rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .task-assignee {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
         }
         
-        .agent-avatar {
-            width: 36px;
-            height: 36px;
+        .assignee-avatar {
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--accent), #8b5cf6);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
+            font-size: 0.625rem;
+            font-weight: 600;
         }
         
-        .agent-name {
-            font-weight: 500;
-            font-size: 0.9375rem;
+        .task-priority {
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+            text-transform: uppercase;
         }
         
-        .agent-role {
-            font-size: 0.75rem;
+        .priority-high { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .priority-medium { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .priority-low { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        
+        .new-task-btn {
+            width: 100%;
+            padding: 0.5rem;
+            background: transparent;
+            border: 1px dashed var(--border);
             color: var(--text-secondary);
-        }
-        
-        .agent-status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
             font-size: 0.75rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
+            transition: all 0.2s;
         }
         
-        .agent-status.idle {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
+        .new-task-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
         }
         
-        .pipeline {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-        }
-        
-        .pipeline-column {
-            background: var(--bg-hover);
+        .quick-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 1rem;
         }
         
-        .pipeline-header {
+        .quick-panel h3 {
             font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .pipeline-count {
-            background: var(--bg-card);
-            padding: 0.125rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-        }
-        
-        .pipeline-item {
-            background: var(--bg-card);
-            padding: 0.75rem;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-            border-left: 3px solid var(--accent);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .pipeline-item:hover {
-            transform: translateX(4px);
+            margin-bottom: 1rem;
         }
         
         .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-        }
-        
-        .action-btn {
-            background: var(--bg-hover);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-            padding: 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
             gap: 0.5rem;
         }
         
-        .action-btn:hover {
+        .quick-action-btn {
+            padding: 0.75rem;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8125rem;
+            text-align: left;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .quick-action-btn:hover {
             background: var(--accent);
             border-color: var(--accent);
-            transform: translateY(-2px);
         }
         
-        .metrics {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .metric {
-            background: var(--bg-hover);
-            padding: 1rem;
-            border-radius: 12px;
-            text-align: center;
-        }
-        
-        .metric-value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--accent);
-        }
-        
-        .metric-label {
+        .version-badge {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
             font-size: 0.75rem;
             color: var(--text-secondary);
-            margin-top: 0.25rem;
         }
         
-        .logs {
-            font-family: 'JetBrains Mono', 'Fira Code', monospace;
-            font-size: 0.8125rem;
-            background: var(--bg-hover);
-            border-radius: 10px;
-            padding: 1rem;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        
-        .log-entry {
-            padding: 0.25rem 0;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-secondary);
-        }
-        
-        .log-entry:last-child {
-            border-bottom: none;
-        }
-        
-        .log-time {
+        .version-badge span {
             color: var(--accent);
-            margin-right: 0.5rem;
         }
         
-        @media (max-width: 768px) {
-            .grid {
+        @media (max-width: 1200px) {
+            .taskboard {
                 grid-template-columns: 1fr;
+                height: auto;
             }
             
-            .pipeline {
-                grid-template-columns: 1fr;
-            }
-            
-            .metrics {
-                grid-template-columns: 1fr;
-            }
-            
-            header {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
+            .activity-feed, .quick-panel {
+                display: none;
             }
         }
     </style>
@@ -358,188 +350,298 @@
                 <div class="logo-icon">🚀</div>
                 <div>
                     <h1>Warung<span>Kerja</span></h1>
-                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Mission Control Dashboard</div>
                 </div>
             </div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('tasks')">📋 Tasks</button>
+                <button class="nav-tab" onclick="showTab('calendar')">📅 Calendar</button>
+                <button class="nav-tab" onclick="showTab('projects')">🎯 Projects</button>
+                <button class="nav-tab" onclick="showTab('team')">👥 Team</button>
+                <button class="nav-tab" onclick="showTab('office')">🏢 Office</button>
+            </div>
             <div class="status-bar">
-                <div class="status-item">
-                    <div class="status-dot"></div>
-                    <span>System Online</span>
-                </div>
-                <div class="status-item">
-                    <span>Last Update: Just now</span>
-                </div>
+                <div class="status-dot"></div>
+                <span>System Online</span>
             </div>
         </header>
         
-        <div class="grid">
-            <!-- Agent Registry -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        🤖 Agent Registry
+        <div id="tasks-tab" class="tab-content">
+            <div class="taskboard">
+                <div class="activity-feed">
+                    <h3>📡 Live Activity</h3>
+                    <div id="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-time">15:45</div>
+                            <div>Task Board V0.5 deployed</div>
+                            <div class="activity-agent">Baro the Creator</div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-time">15:30</div>
+                            <div>Building Task Board module</div>
+                            <div class="activity-agent">Baro the Creator</div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-time">14:38</div>
+                            <div>Mission Control V0.5 started</div>
+                            <div class="activity-agent">Raz</div>
+                        </div>
                     </div>
-                    <span class="card-badge">1 Active</span>
                 </div>
-                <div class="agent-list">
-                    <div class="agent-item">
-                        <div class="agent-info">
-                            <div class="agent-avatar">🎨</div>
-                            <div>
-                                <div class="agent-name">Baro the Creator</div>
-                                <div class="agent-role">Creative Director / Night-Shift Engine</div>
+                
+                <div class="kanban-board">
+                    <div class="kanban-column" data-status="backlog">
+                        <div class="kanban-header">
+                            <div class="kanban-title">📥 Backlog</div>
+                            <span class="kanban-count">2</span>
+                        </div>
+                        <div class="tasks-container">
+                            <div class="task-card" draggable="true" data-task-id="1">
+                                <div class="task-title">Build Calendar module</div>
+                                <div class="task-meta">
+                                    <div class="task-assignee">
+                                        <div class="assignee-avatar">B</div>
+                                        <span>Baro</span>
+                                    </div>
+                                    <span class="task-priority priority-medium">Medium</span>
+                                </div>
+                            </div>
+                            <div class="task-card" draggable="true" data-task-id="2">
+                                <div class="task-title">Build Projects tracker</div>
+                                <div class="task-meta">
+                                    <div class="task-assignee">
+                                        <div class="assignee-avatar">B</div>
+                                        <span>Baro</span>
+                                    </div>
+                                    <span class="task-priority priority-low">Low</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="agent-status">
-                            <span>●</span> Active
-                        </div>
+                        <button class="new-task-btn" onclick="addTask('backlog')">+ New Task</button>
                     </div>
-                    <div class="agent-item">
-                        <div class="agent-info">
-                            <div class="agent-avatar" style="background: rgba(148, 163, 184, 0.2);">🔍</div>
-                            <div>
-                                <div class="agent-name">Research Agent</div>
-                                <div class="agent-role">Market Intelligence</div>
+                    
+                    <div class="kanban-column" data-status="todo">
+                        <div class="kanban-header">
+                            <div class="kanban-title">📝 To Do</div>
+                            <span class="kanban-count">1</span>
+                        </div>
+                        <div class="tasks-container">
+                            <div class="task-card" draggable="true" data-task-id="3">
+                                <div class="task-title">Build Data Bridge</div>
+                                <div class="task-meta">
+                                    <div class="task-assignee">
+                                        <div class="assignee-avatar">B</div>
+                                        <span>Baro</span>
+                                    </div>
+                                    <span class="task-priority priority-high">High</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="agent-status idle">
-                            <span>●</span> Standby
-                        </div>
+                        <button class="new-task-btn" onclick="addTask('todo')">+ New Task</button>
                     </div>
-                    <div class="agent-item">
-                        <div class="agent-info">
-                            <div class="agent-avatar" style="background: rgba(148, 163, 184, 0.2);">💰</div>
-                            <div>
-                                <div class="agent-name">Pipeline Agent</div>
-                                <div class="agent-role">Passive Income Scout</div>
+                    
+                    <div class="kanban-column" data-status="inprogress">
+                        <div class="kanban-header">
+                            <div class="kanban-title">⚡ In Progress</div>
+                            <span class="kanban-count">1</span>
+                        </div>
+                        <div class="tasks-container">
+                            <div class="task-card" draggable="true" data-task-id="4">
+                                <div class="task-title">Mission Control V0.5</div>
+                                <div class="task-meta">
+                                    <div class="task-assignee">
+                                        <div class="assignee-avatar">B</div>
+                                        <span>Baro</span>
+                                    </div>
+                                    <span class="task-priority priority-high">High</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="agent-status idle">
-                            <span>●</span> Standby
+                        <button class="new-task-btn" onclick="addTask('inprogress')">+ New Task</button>
+                    </div>
+                    
+                    <div class="kanban-column" data-status="done">
+                        <div class="kanban-header">
+                            <div class="kanban-title">✅ Done</div>
+                            <span class="kanban-count">1</span>
                         </div>
+                        <div class="tasks-container">
+                            <div class="task-card" draggable="true" data-task-id="5" style="border-left-color: var(--success);">
+                                <div class="task-title">Initial Dashboard</div>
+                                <div class="task-meta">
+                                    <div class="task-assignee">
+                                        <div class="assignee-avatar">B</div>
+                                        <span>Baro</span>
+                                    </div>
+                                    <span class="task-priority priority-low">Done</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="new-task-btn" onclick="addTask('done')">+ New Task</button>
+                    </div>
+                </div>
+                
+                <div class="quick-panel">
+                    <h3>⚡ Quick Actions</h3>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" onclick="alert('Deploying agent...')">🤖 Deploy Agent</button>
+                        <button class="quick-action-btn" onclick="alert('Scanning visual diary...')">🎨 Scan Visuals</button>
+                        <button class="quick-action-btn" onclick="alert('Generating morning brief...')">📋 Morning Brief</button>
+                        <button class="quick-action-btn" onclick="alert('Creating new project...')">🎯 New Project</button>
+                        <button class="quick-action-btn" onclick="alert('Syncing with vault...')">🔄 Sync Vault</button>
                     </div>
                 </div>
             </div>
-            
-            <!-- Project Pipeline -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        📊 Project Pipeline
-                    </div>
-                    <span class="card-badge">3 Projects</span>
-                </div>
-                <div class="pipeline">
-                    <div class="pipeline-column">
-                        <div class="pipeline-header">
-                            <span>To Do</span>
-                            <span class="pipeline-count">1</span>
-                        </div>
-                        <div class="pipeline-item">Notion Freelancer OS Template</div>
-                    </div>
-                    <div class="pipeline-column">
-                        <div class="pipeline-header">
-                            <span>In Progress</span>
-                            <span class="pipeline-count">1</span>
-                        </div>
-                        <div class="pipeline-item">Mission Control Dashboard</div>
-                    </div>
-                    <div class="pipeline-column">
-                        <div class="pipeline-header">
-                            <span>Done</span>
-                            <span class="pipeline-count">1</span>
-                        </div>
-                        <div class="pipeline-item" style="border-left-color: var(--success);">Barobrain Vault Sync</div>
-                    </div>
-                </div>
+        </div>
+        
+        <div id="calendar-tab" class="tab-content" style="display: none;">
+            <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
+                <h2>📅 Calendar Module</h2>
+                <p>Coming in V0.6 — Shows scheduled cron jobs and tasks</p>
             </div>
-            
-            <!-- Quick Actions -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        ⚡ Quick Actions
-                    </div>
-                </div>
-                <div class="quick-actions">
-                    <button class="action-btn" onclick="alert('Creating new project...')">
-                        ➕ New Project
-                    </button>
-                    <button class="action-btn" onclick="alert('Deploying agent...')">
-                        🤖 Deploy Agent
-                    </button>
-                    <button class="action-btn" onclick="alert('Scanning visual diary...')">
-                        🎨 Scan Visuals
-                    </button>
-                    <button class="action-btn" onclick="alert('Generating morning brief...')">
-                        📋 Morning Brief
-                    </button>
-                </div>
+        </div>
+        
+        <div id="projects-tab" class="tab-content" style="display: none;">
+            <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
+                <h2>🎯 Projects Module</h2>
+                <p>Coming in V0.7 — Project tracker with progress & documents</p>
             </div>
-            
-            <!-- Metrics -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        📈 Workspace Metrics
-                    </div>
-                </div>
-                <div class="metrics">
-                    <div class="metric">
-                        <div class="metric-value">3</div>
-                        <div class="metric-label">Active Projects</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value">0</div>
-                        <div class="metric-label">Live Products</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value">1</div>
-                        <div class="metric-label">Agents Ready</div>
-                    </div>
-                </div>
-                <div class="logs">
-                    <div class="log-entry"><span class="log-time">11:42</span> Mission Control dashboard deployed</div>
-                    <div class="log-entry"><span class="log-time">11:40</span> Repository created: warung-kerja/mission-control</div>
-                    <div class="log-entry"><span class="log-time">10:34</span> Build started by Raz</div>
-                    <div class="log-entry"><span class="log-time">09:52</span> Mission Control concept approved</div>
-                </div>
+        </div>
+        
+        <div id="team-tab" class="tab-content" style="display: none;">
+            <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
+                <h2>👥 Team Module</h2>
+                <p>Coming in V0.8 — Org chart with mission statement</p>
+            </div>
+        </div>
+        
+        <div id="office-tab" class="tab-content" style="display: none;">
+            <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
+                <h2>🏢 Office Visualization</h2>
+                <p>Coming in V1.0 — 2D pixel art office with agents at work</p>
             </div>
         </div>
     </div>
     
+    <div class="version-badge">Version <span>V0.5</span> — Task Board Live</div>
+    
     <script>
-        // Auto-refresh every 30 seconds
-        setInterval(() => {
-            document.querySelector('.status-bar .status-item:last-child span').textContent = 
-                'Last Update: Just now';
-        }, 30000);
+        // Tab switching
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            event.target.classList.add('active');
+        }
         
-        // Simulate live log updates
-        const logs = [
-            'Scanning passive income opportunities...',
-            'Visual diary analysis complete',
-            'New template idea generated',
-            'Agent status check: All systems nominal',
-            'Syncing with Barobrain vault...'
-        ];
+        // Drag and drop
+        let draggedElement = null;
         
-        setInterval(() => {
-            const logContainer = document.querySelector('.logs');
-            const randomLog = logs[Math.floor(Math.random() * logs.length)];
+        document.querySelectorAll('.task-card').forEach(card => {
+            card.addEventListener('dragstart', function(e) {
+                draggedElement = this;
+                this.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            
+            card.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+                draggedElement = null;
+                updateCounts();
+            });
+        });
+        
+        document.querySelectorAll('.kanban-column').forEach(column => {
+            column.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            });
+            
+            column.addEventListener('drop', function(e) {
+                e.preventDefault();
+                if (draggedElement) {
+                    const container = this.querySelector('.tasks-container');
+                    container.appendChild(draggedElement);
+                    addActivity(`Task moved to ${this.querySelector('.kanban-title').textContent}`);
+                }
+            });
+        });
+        
+        function updateCounts() {
+            document.querySelectorAll('.kanban-column').forEach(column => {
+                const count = column.querySelectorAll('.task-card').length;
+                column.querySelector('.kanban-count').textContent = count;
+            });
+        }
+        
+        function addActivity(message) {
+            const activityList = document.getElementById('activity-list');
             const time = new Date().toLocaleTimeString('en-US', { 
                 hour: '2-digit', 
                 minute: '2-digit',
                 hour12: false 
             });
-            const newEntry = document.createElement('div');
-            newEntry.className = 'log-entry';
-            newEntry.innerHTML = `<span class="log-time">${time}</span> ${randomLog}`;
-            logContainer.insertBefore(newEntry, logContainer.firstChild);
-            if (logContainer.children.length > 10) {
-                logContainer.removeChild(logContainer.lastChild);
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item';
+            newActivity.innerHTML = `
+                <div class="activity-time">${time}</div>
+                <div>${message}</div>
+                <div class="activity-agent">Baro the Creator</div>
+            `;
+            activityList.insertBefore(newActivity, activityList.firstChild);
+        }
+        
+        function addTask(column) {
+            const title = prompt('Task title:');
+            if (title) {
+                const columnEl = document.querySelector(`[data-status="${column}"] .tasks-container`);
+                const newTask = document.createElement('div');
+                newTask.className = 'task-card';
+                newTask.draggable = true;
+                newTask.innerHTML = `
+                    <div class="task-title">${title}</div>
+                    <div class="task-meta">
+                        <div class="task-assignee">
+                            <div class="assignee-avatar">R</div>
+                            <span>Raz</span>
+                        </div>
+                        <span class="task-priority priority-medium">Medium</span>
+                    </div>
+                `;
+                
+                newTask.addEventListener('dragstart', function(e) {
+                    draggedElement = this;
+                    this.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                
+                newTask.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    draggedElement = null;
+                    updateCounts();
+                });
+                
+                columnEl.appendChild(newTask);
+                updateCounts();
+                addActivity(`New task created: ${title}`);
             }
-        }, 15000);
+        }
+        
+        // Auto-refresh activity feed
+        setInterval(() => {
+            const messages = [
+                'Scanning passive income opportunities...',
+                'Checking project status...',
+                'Syncing with vault...',
+                'Agent heartbeat check...'
+            ];
+            if (Math.random() > 0.7) {
+                addActivity(messages[Math.floor(Math.random() * messages.length)]);
+            }
+        }, 30000);
     </script>
 </body>
 </html>
