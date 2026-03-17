@@ -847,11 +847,13 @@
         
         async function fetchCalendarEvents() {
             try {
-                // For now, use mock data since backend may not be running
-                // const response = await fetch('http://localhost:3001/api/calendar');
-                // calendarEvents = await response.json();
-                
-                // Mock data for demo
+                const response = await fetch('http://localhost:3001/api/calendar');
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                calendarEvents = await response.json();
+                renderCalendar();
+            } catch (error) {
+                console.error('Error fetching calendar events:', error);
+                // Fallback to mock data if backend is unavailable
                 calendarEvents = [
                     { id: "1", title: "Weekly Review", date: "2026-03-20", type: "meeting", source: "manual", color: "#10b981" },
                     { id: "2", title: "Mission Control V0.6 Launch", date: "2026-03-22", type: "milestone", source: "manual", color: "#8b5cf6" },
@@ -859,10 +861,6 @@
                     { id: "4", title: "[CRON] Heartbeat", date: "2026-03-20", type: "cron", source: "openclaw", color: "#8b5cf6" },
                     { id: "5", title: "Team Sync", date: "2026-03-21", type: "meeting", source: "manual", color: "#10b981" },
                 ];
-                renderCalendar();
-            } catch (error) {
-                console.error('Error fetching calendar events:', error);
-                calendarEvents = [];
                 renderCalendar();
             }
         }
