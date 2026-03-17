@@ -15,7 +15,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # Configuration
-VAULT_PATH = "/mnt/d/Baro Brain"
+VAULT_PATH = "/mnt/d/Warung Kerja 1.0"
 PORT = 3001
 
 @app.route('/api/health')
@@ -33,7 +33,7 @@ def get_tasks():
     tasks = []
     
     # Scan for task files in Sync Hub
-    sync_hub = os.path.join(VAULT_PATH, "00_🔄_Sync_Hub")
+    sync_hub = os.path.join(VAULT_PATH, "00_Sync_Hub")
     if os.path.exists(sync_hub):
         for file in glob.glob(os.path.join(sync_hub, "*.md")):
             with open(file, 'r', encoding='utf-8') as f:
@@ -100,6 +100,59 @@ def get_activity():
     ]
     return jsonify(activities)
 
+@app.route('/api/calendar')
+def get_calendar():
+    """Get calendar events from multiple sources"""
+    events = []
+    
+    # Source 1: Manual entries from JSON file
+    manual_path = os.path.join(VAULT_PATH, "calendar_entries.json")
+    if os.path.exists(manual_path):
+        try:
+            with open(manual_path, 'r', encoding='utf-8') as f:
+                manual_events = json.load(f)
+                for event in manual_events:
+                    event["source"] = "manual"
+                    events.append(event)
+        except:
+            pass
+    
+    # Source 2: OpenClaw cron jobs
+    cron_path = os.path.expanduser("~/.openclaw/cron/jobs.json")
+    if os.path.exists(cron_path):
+        try:
+            with open(cron_path, 'r', encoding='utf-8') as f:
+                cron_data = json.load(f)
+                for job in cron_data.get("jobs", []):
+                    if job.get("enabled", False):
+                        schedule = job.get("schedule", {})
+                        name = job.get("name", "Unnamed Job")
+                        event = {
+                            "id": job.get("id", ""),
+                            "title": f"[CRON] {name}",
+                            "date": "recurring",  # We'll need to parse cron expression
+                            "type": "cron",
+                            "source": "openclaw",
+                            "color": "#8b5cf6",  # Purple accent
+                            "description": f"Scheduled: {schedule.get('expr', 'N/A')}"
+                        }
+                        events.append(event)
+        except Exception as e:
+            print(f"Error reading cron: {e}")
+    
+    # Source 3: Tasks with dates from vault (to be implemented)
+    # This would scan for tasks with due dates in frontmatter
+    
+    # Add some default events if empty
+    if not events:
+        events = [
+            {"id": "1", "title": "Weekly Review", "date": "2026-03-20", "type": "meeting", "source": "manual", "color": "#10b981"},
+            {"id": "2", "title": "Mission Control V0.6 Launch", "date": "2026-03-22", "type": "milestone", "source": "manual", "color": "#8b5cf6"},
+            {"id": "3", "title": "Figma Template Review", "date": "2026-03-19", "type": "task", "source": "manual", "color": "#f59e0b"},
+        ]
+    
+    return jsonify(events)
+
 @app.route('/api/vault/status')
 def vault_status():
     """Check vault connectivity"""
@@ -125,6 +178,7 @@ if __name__ == '__main__':
     print(f"📁 Vault Path: {VAULT_PATH}")
     print(f"🌐 API URL: http://localhost:{PORT}")
     print(f"📋 Tasks Endpoint: http://localhost:{PORT}/api/tasks")
+    print(f"📅 Calendar Endpoint: http://localhost:{PORT}/api/calendar")
     print("=" * 50)
     print("Press Ctrl+C to stop")
     print()
