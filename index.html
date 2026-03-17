@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warung-Kerja Mission Control</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-hover: #1a1a25;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #1e293b;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        
+        .logo span {
+            color: var(--accent);
+        }
+        
+        .status-bar {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-badge {
+            background: var(--bg-hover);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .agent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .agent-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.875rem;
+            background: var(--bg-hover);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+        
+        .agent-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .agent-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .agent-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        
+        .agent-name {
+            font-weight: 500;
+            font-size: 0.9375rem;
+        }
+        
+        .agent-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+        
+        .agent-status.idle {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+        
+        .pipeline {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        
+        .pipeline-column {
+            background: var(--bg-hover);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+        
+        .pipeline-header {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .pipeline-count {
+            background: var(--bg-card);
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+        
+        .pipeline-item {
+            background: var(--bg-card);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            border-left: 3px solid var(--accent);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .pipeline-item:hover {
+            transform: translateX(4px);
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        
+        .action-btn {
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .action-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .metric {
+            background: var(--bg-hover);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+        
+        .logs {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.8125rem;
+            background: var(--bg-hover);
+            border-radius: 10px;
+            padding: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            padding: 0.25rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .log-time {
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pipeline {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">🚀</div>
+                <div>
+                    <h1>Warung<span>Kerja</span></h1>
+                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Mission Control Dashboard</div>
+                </div>
+            </div>
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="status-dot"></div>
+                    <span>System Online</span>
+                </div>
+                <div class="status-item">
+                    <span>Last Update: Just now</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="grid">
+            <!-- Agent Registry -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        🤖 Agent Registry
+                    </div>
+                    <span class="card-badge">1 Active</span>
+                </div>
+                <div class="agent-list">
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <div class="agent-avatar">🎨</div>
+                            <div>
+                                <div class="agent-name">Baro the Creator</div>
+                                <div class="agent-role">Creative Director / Night-Shift Engine</div>
+                            </div>
+                        </div>
+                        <div class="agent-status">
+                            <span>●</span> Active
+                        </div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <div class="agent-avatar" style="background: rgba(148, 163, 184, 0.2);">🔍</div>
+                            <div>
+                                <div class="agent-name">Research Agent</div>
+                                <div class="agent-role">Market Intelligence</div>
+                            </div>
+                        </div>
+                        <div class="agent-status idle">
+                            <span>●</span> Standby
+                        </div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <div class="agent-avatar" style="background: rgba(148, 163, 184, 0.2);">💰</div>
+                            <div>
+                                <div class="agent-name">Pipeline Agent</div>
+                                <div class="agent-role">Passive Income Scout</div>
+                            </div>
+                        </div>
+                        <div class="agent-status idle">
+                            <span>●</span> Standby
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project Pipeline -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        📊 Project Pipeline
+                    </div>
+                    <span class="card-badge">3 Projects</span>
+                </div>
+                <div class="pipeline">
+                    <div class="pipeline-column">
+                        <div class="pipeline-header">
+                            <span>To Do</span>
+                            <span class="pipeline-count">1</span>
+                        </div>
+                        <div class="pipeline-item">Notion Freelancer OS Template</div>
+                    </div>
+                    <div class="pipeline-column">
+                        <div class="pipeline-header">
+                            <span>In Progress</span>
+                            <span class="pipeline-count">1</span>
+                        </div>
+                        <div class="pipeline-item">Mission Control Dashboard</div>
+                    </div>
+                    <div class="pipeline-column">
+                        <div class="pipeline-header">
+                            <span>Done</span>
+                            <span class="pipeline-count">1</span>
+                        </div>
+                        <div class="pipeline-item" style="border-left-color: var(--success);">Barobrain Vault Sync</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        ⚡ Quick Actions
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="alert('Creating new project...')">
+                        ➕ New Project
+                    </button>
+                    <button class="action-btn" onclick="alert('Deploying agent...')">
+                        🤖 Deploy Agent
+                    </button>
+                    <button class="action-btn" onclick="alert('Scanning visual diary...')">
+                        🎨 Scan Visuals
+                    </button>
+                    <button class="action-btn" onclick="alert('Generating morning brief...')">
+                        📋 Morning Brief
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Metrics -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        📈 Workspace Metrics
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-value">3</div>
+                        <div class="metric-label">Active Projects</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">0</div>
+                        <div class="metric-label">Live Products</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">1</div>
+                        <div class="metric-label">Agents Ready</div>
+                    </div>
+                </div>
+                <div class="logs">
+                    <div class="log-entry"><span class="log-time">11:42</span> Mission Control dashboard deployed</div>
+                    <div class="log-entry"><span class="log-time">11:40</span> Repository created: warung-kerja/mission-control</div>
+                    <div class="log-entry"><span class="log-time">10:34</span> Build started by Raz</div>
+                    <div class="log-entry"><span class="log-time">09:52</span> Mission Control concept approved</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            document.querySelector('.status-bar .status-item:last-child span').textContent = 
+                'Last Update: Just now';
+        }, 30000);
+        
+        // Simulate live log updates
+        const logs = [
+            'Scanning passive income opportunities...',
+            'Visual diary analysis complete',
+            'New template idea generated',
+            'Agent status check: All systems nominal',
+            'Syncing with Barobrain vault...'
+        ];
+        
+        setInterval(() => {
+            const logContainer = document.querySelector('.logs');
+            const randomLog = logs[Math.floor(Math.random() * logs.length)];
+            const time = new Date().toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            });
+            const newEntry = document.createElement('div');
+            newEntry.className = 'log-entry';
+            newEntry.innerHTML = `<span class="log-time">${time}</span> ${randomLog}`;
+            logContainer.insertBefore(newEntry, logContainer.firstChild);
+            if (logContainer.children.length > 10) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+        }, 15000);
+    </script>
+</body>
+</html>
