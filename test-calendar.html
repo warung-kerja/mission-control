@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Calendar JSON</title>
+</head>
+<body>
+    <h1>Testing calendar.json fetch</h1>
+    <div id="output">Loading...</div>
+    
+    <script>
+        async function testFetch() {
+            try {
+                const response = await fetch('calendar.json');
+                if (!response.ok) {
+                    document.getElementById('output').innerHTML = `Error: HTTP ${response.status}`;
+                    return;
+                }
+                const data = await response.json();
+                document.getElementById('output').innerHTML = `
+                    <h2>Success!</h2>
+                    <p>Generated at: ${data.generated_at}</p>
+                    <p>Total events: ${data.counts.total}</p>
+                    <ul>
+                        ${data.events.slice(0, 5).map(event => `<li>${event.title} (${event.date})</li>`).join('')}
+                    </ul>
+                `;
+            } catch (error) {
+                document.getElementById('output').innerHTML = `Error: ${error.message}`;
+            }
+        }
+        
+        testFetch();
+    </script>
+</body>
+</html>
