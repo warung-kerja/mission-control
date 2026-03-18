@@ -527,7 +527,7 @@
                     <div id="activity-list">
                         <div class="activity-item">
                             <div class="activity-time">15:45</div>
-                            <div>Task Board V0.5 deployed</div>
+                            <div>Task Board V0.6 deployed</div>
                             <div class="activity-agent">Baro the Creator</div>
                         </div>
                         <div class="activity-item">
@@ -537,7 +537,7 @@
                         </div>
                         <div class="activity-item">
                             <div class="activity-time">14:38</div>
-                            <div>Mission Control V0.5 started</div>
+                            <div>Mission Control V0.6 started</div>
                             <div class="activity-agent">Raz</div>
                         </div>
                     </div>
@@ -601,7 +601,7 @@
                         </div>
                         <div class="tasks-container">
                             <div class="task-card" draggable="true" data-task-id="4">
-                                <div class="task-title">Mission Control V0.5</div>
+                                <div class="task-title">Mission Control V0.6</div>
                                 <div class="task-meta">
                                     <div class="task-assignee">
                                         <div class="assignee-avatar">B</div>
@@ -720,7 +720,7 @@
         </div>
     </div>
     
-    <div class="version-badge">Version <span>V0.5</span> — Task Board Live</div>
+    <div class="version-badge">Version <span>V0.6</span> — Calendar Module Live</div>
     
     <script>
         // Tab switching
@@ -847,13 +847,15 @@
         
         async function fetchCalendarEvents() {
             try {
-                const response = await fetch('http://localhost:3001/api/calendar');
+                // Fetch from static calendar.json file
+                const response = await fetch('calendar.json');
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                calendarEvents = await response.json();
+                const data = await response.json();
+                calendarEvents = data.events || [];
                 renderCalendar();
             } catch (error) {
                 console.error('Error fetching calendar events:', error);
-                // Fallback to mock data if backend is unavailable
+                // Fallback to mock data if static file is unavailable
                 calendarEvents = [
                     { id: "1", title: "Weekly Review", date: "2026-03-20", type: "meeting", source: "manual", color: "#10b981" },
                     { id: "2", title: "Mission Control V0.6 Launch", date: "2026-03-22", type: "milestone", source: "manual", color: "#8b5cf6" },
