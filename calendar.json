@@ -1,0 +1,109 @@
+{
+  "events": [
+    {
+      "title": "Chat_Migration_2026-03-15",
+      "start": "2026-03-15T00:00:00",
+      "end": "2026-03-15T01:00:00",
+      "type": "task",
+      "color": "#10b981",
+      "description": "Daily brief: Chat_Migration_2026-03-15.md",
+      "file": "Chat_Migration_2026-03-15.md",
+      "id": "event-3eee7fbc",
+      "date": "2026-03-15",
+      "source": "obsidian"
+    },
+    {
+      "title": "Morning_Brief_2026-03-15",
+      "start": "2026-03-15T00:00:00",
+      "end": "2026-03-15T01:00:00",
+      "type": "task",
+      "color": "#10b981",
+      "description": "Daily brief: Morning_Brief_2026-03-15.md",
+      "file": "Morning_Brief_2026-03-15.md",
+      "id": "event-445341ea",
+      "date": "2026-03-15",
+      "source": "obsidian"
+    },
+    {
+      "title": "Morning_Brief_2026-03-16",
+      "start": "2026-03-16T00:00:00",
+      "end": "2026-03-16T01:00:00",
+      "type": "task",
+      "color": "#10b981",
+      "description": "Daily brief: Morning_Brief_2026-03-16.md",
+      "file": "Morning_Brief_2026-03-16.md",
+      "id": "event-2a044b46",
+      "date": "2026-03-16",
+      "source": "obsidian"
+    },
+    {
+      "title": "Morning_Brief_2026-03-17",
+      "start": "2026-03-17T00:00:00",
+      "end": "2026-03-17T01:00:00",
+      "type": "task",
+      "color": "#10b981",
+      "description": "Daily brief: Morning_Brief_2026-03-17.md",
+      "file": "Morning_Brief_2026-03-17.md",
+      "id": "event-b7563310",
+      "date": "2026-03-17",
+      "source": "obsidian"
+    },
+    {
+      "title": "Morning Brief",
+      "start": "2026-03-18T15:44:21.771193",
+      "end": "2026-03-18T15:49:21.771219",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 30 6 * * * (next run unknown)",
+      "id": "event-18db9a60",
+      "date": "2026-03-18",
+      "source": "openclaw"
+    },
+    {
+      "title": "Morning_Brief_2026-03-18",
+      "start": "2026-03-18T00:00:00",
+      "end": "2026-03-18T01:00:00",
+      "type": "task",
+      "color": "#10b981",
+      "description": "Daily brief: Morning_Brief_2026-03-18.md",
+      "file": "Morning_Brief_2026-03-18.md",
+      "id": "event-30355857",
+      "date": "2026-03-18",
+      "source": "obsidian"
+    },
+    {
+      "id": "cal-3",
+      "title": "Figma Template Review",
+      "date": "2026-03-19",
+      "type": "task",
+      "color": "#f59e0b",
+      "description": "Review Figma blueprint with Baro",
+      "source": "manual"
+    },
+    {
+      "id": "cal-1",
+      "title": "Weekly Review",
+      "date": "2026-03-20",
+      "type": "meeting",
+      "color": "#10b981",
+      "description": "Weekly team review and planning",
+      "source": "manual"
+    },
+    {
+      "id": "cal-2",
+      "title": "Mission Control V0.6 Launch",
+      "date": "2026-03-22",
+      "type": "milestone",
+      "color": "#8b5cf6",
+      "description": "Launch calendar module for Mission Control",
+      "source": "manual"
+    }
+  ],
+  "generated_at": "2026-03-18T15:44:21.792103",
+  "counts": {
+    "manual": 3,
+    "cron": 1,
+    "obsidian": 5,
+    "total": 9
+  }
+}
