@@ -496,6 +496,194 @@
             font-size: 0.875rem;
             color: var(--text-secondary);
         }
+        
+        /* Projects Module Styles */
+        .projects-container {
+            padding: 2rem;
+        }
+        
+        .projects-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .projects-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        
+        .project-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-planning {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+        
+        .status-active {
+            background: rgba(25, 135, 84, 0.1);
+            color: #198754;
+            border: 1px solid rgba(25, 135, 84, 0.3);
+        }
+        
+        .status-completed {
+            background: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+            border: 1px solid rgba(108, 117, 125, 0.3);
+        }
+        
+        .project-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+        
+        .project-progress {
+            margin-bottom: 1rem;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+        
+        .loading-projects {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .projects-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -699,9 +887,39 @@
         </div>
         
         <div id="projects-tab" class="tab-content" style="display: none;">
-            <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
-                <h2>🎯 Projects Module</h2>
-                <p>Coming in V0.7 — Project tracker with progress & documents</p>
+            <div class="projects-container">
+                <div class="projects-header">
+                    <h2>🎯 Active Projects</h2>
+                    <div class="projects-filters">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="active">Active</button>
+                        <button class="filter-btn" data-filter="planning">Planning</button>
+                        <button class="filter-btn" data-filter="completed">Completed</button>
+                    </div>
+                </div>
+                
+                <div class="projects-grid" id="projects-grid">
+                    <!-- Projects will be loaded here -->
+                    <div class="loading-projects">
+                        <div class="spinner"></div>
+                        <p>Loading projects...</p>
+                    </div>
+                </div>
+                
+                <div class="projects-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-projects">0</div>
+                        <div class="stat-label">Total Projects</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="active-projects">0</div>
+                        <div class="stat-label">Active</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avg-progress">0%</div>
+                        <div class="stat-label">Avg Progress</div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -720,7 +938,7 @@
         </div>
     </div>
     
-    <div class="version-badge">Version <span>V0.6</span> — Calendar Module Live</div>
+    <div class="version-badge">Version <span>V0.7</span> — Projects Module Live</div>
     
     <script>
         // Tab switching
@@ -1001,6 +1219,141 @@
                 button.addEventListener('click', () => {
                     if (button.getAttribute('onclick').includes('calendar')) {
                         renderCalendar();
+                    }
+                });
+            });
+        });
+        
+        // Projects Module JavaScript
+        let allProjects = [];
+        let currentFilter = 'all';
+        
+        async function loadProjects() {
+            try {
+                const response = await fetch('http://localhost:3001/api/projects');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                allProjects = await response.json();
+                renderProjects();
+                updateStats();
+            } catch (error) {
+                console.error('Failed to load projects:', error);
+                // Fallback to mock data if API fails
+                allProjects = [
+                    {
+                        id: 'mission-control',
+                        name: 'Mission Control',
+                        status: 'active',
+                        progress: 60,
+                        description: 'Web dashboard for team coordination and project tracking',
+                        created: '2026-03-15',
+                        updated: '2026-03-19'
+                    },
+                    {
+                        id: 'sample-project-1',
+                        name: 'Sample Project 1',
+                        status: 'planning',
+                        progress: 10,
+                        description: 'Example project in planning phase',
+                        created: '2026-03-18',
+                        updated: '2026-03-18'
+                    },
+                    {
+                        id: 'sample-project-2',
+                        name: 'Sample Project 2',
+                        status: 'completed',
+                        progress: 100,
+                        description: 'Example completed project',
+                        created: '2026-02-01',
+                        updated: '2026-03-10'
+                    }
+                ];
+                renderProjects();
+                updateStats();
+            }
+        }
+        
+        function renderProjects() {
+            const grid = document.getElementById('projects-grid');
+            if (!grid) return;
+            
+            const filteredProjects = allProjects.filter(project => {
+                if (currentFilter === 'all') return true;
+                return project.status === currentFilter;
+            });
+            
+            if (filteredProjects.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-projects" style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <p>No projects found with status: ${currentFilter}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = filteredProjects.map(project => `
+                <div class="project-card" data-status="${project.status}">
+                    <div class="project-header">
+                        <h3 class="project-title">${project.name}</h3>
+                        <span class="project-status status-${project.status}">
+                            ${project.status.charAt(0).toUpperCase() + project.status.slice(1)}
+                        </span>
+                    </div>
+                    <p class="project-description">${project.description || 'No description available'}</p>
+                    <div class="project-progress">
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span>${project.progress}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${project.progress}%"></div>
+                        </div>
+                    </div>
+                    <div class="project-meta">
+                        <span>Created: ${project.created || 'Unknown'}</span>
+                        <span>Updated: ${project.updated || 'Unknown'}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateStats() {
+            const total = allProjects.length;
+            const active = allProjects.filter(p => p.status === 'active').length;
+            const avgProgress = allProjects.length > 0 
+                ? Math.round(allProjects.reduce((sum, p) => sum + (p.progress || 0), 0) / allProjects.length)
+                : 0;
+            
+            document.getElementById('total-projects').textContent = total;
+            document.getElementById('active-projects').textContent = active;
+            document.getElementById('avg-progress').textContent = `${avgProgress}%`;
+        }
+        
+        function setupProjectFilters() {
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.getAttribute('data-filter');
+                    renderProjects();
+                });
+            });
+        }
+        
+        // Initialize projects when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProjects();
+            setupProjectFilters();
+            
+            // Also load projects when projects tab is clicked
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    if (this.getAttribute('onclick') && this.getAttribute('onclick').includes('projects')) {
+                        // Refresh projects data when switching to projects tab
+                        setTimeout(() => {
+                            loadProjects();
+                        }, 100);
                     }
                 });
             });
