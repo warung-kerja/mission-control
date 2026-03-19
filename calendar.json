@@ -70,94 +70,6 @@
       "source": "manual"
     },
     {
-      "title": "Morning Brief - Discord",
-      "start": "2026-03-19T23:40:06.097341",
-      "end": "2026-03-19T23:45:06.098218",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 30 6 * * * (next run unknown)",
-      "id": "event-2daa43d1",
-      "date": "2026-03-19",
-      "source": "openclaw"
-    },
-    {
-      "title": "Daily Check-in",
-      "start": "2026-03-19T23:40:06.098970",
-      "end": "2026-03-19T23:45:06.098977",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 30 22 * * * (next run unknown)",
-      "id": "event-861af8a4",
-      "date": "2026-03-19",
-      "source": "openclaw"
-    },
-    {
-      "title": "Passive Income Work Block - Completion Report",
-      "start": "2026-03-19T23:40:06.098984",
-      "end": "2026-03-19T23:45:06.098986",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 0 10 * * * (next run unknown)",
-      "id": "event-e3175fae",
-      "date": "2026-03-19",
-      "source": "openclaw"
-    },
-    {
-      "title": "Passive Income Work Block - Start Notification",
-      "start": "2026-03-19T23:40:06.098989",
-      "end": "2026-03-19T23:45:06.098990",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 30 8 * * * (next run unknown)",
-      "id": "event-aba18e98",
-      "date": "2026-03-19",
-      "source": "openclaw"
-    },
-    {
-      "title": "Nightly Visual Diary Scan",
-      "start": "2026-03-19T23:40:06.098994",
-      "end": "2026-03-19T23:45:06.098995",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 0 0 * * * (next run unknown)",
-      "id": "event-5489250f",
-      "date": "2026-03-19",
-      "source": "openclaw"
-    },
-    {
-      "title": "Bob Market Research - Passive Income Insights",
-      "start": "2026-03-19T23:40:06.098997",
-      "end": "2026-03-19T23:45:06.098998",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 0 4 * * * (next run unknown)",
-      "id": "event-168664c3",
-      "date": "2026-03-19",
-      "source": "openclaw"
-    },
-    {
-      "title": "Autonomous Development Work (12am-4:30am)",
-      "start": "2026-03-19T23:40:06.099002",
-      "end": "2026-03-19T23:45:06.099003",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 0 0 * * * (next run unknown)",
-      "id": "event-8b257ea4",
-      "date": "2026-03-19",
-      "source": "openclaw"
-    },
-    {
-      "title": "Morning Tech Report (6:35am)",
-      "start": "2026-03-19T23:40:06.099006",
-      "end": "2026-03-19T23:45:06.099007",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 35 6 * * * (next run unknown)",
-      "id": "event-a24ba5a1",
-      "date": "2026-03-19",
-      "source": "openclaw"
-    },
-    {
       "title": "Morning_Brief_2026-03-19",
       "start": "2026-03-19T00:00:00",
       "end": "2026-03-19T01:00:00",
@@ -179,13 +91,123 @@
       "source": "manual"
     },
     {
+      "title": "Morning Brief - Discord",
+      "start": "2026-03-20T00:40:06.580617",
+      "end": "2026-03-20T00:45:06.581172",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 30 6 * * * (next run unknown)",
+      "id": "event-39441ece",
+      "date": "2026-03-20",
+      "source": "openclaw"
+    },
+    {
       "title": "Regenerate Mission Control Calendar",
-      "start": "2026-03-20T00:40:00",
-      "end": "2026-03-20T00:45:00",
+      "start": "2026-03-20T01:40:00",
+      "end": "2026-03-20T01:45:00",
       "type": "cron",
       "color": "#3b82f6",
       "description": "Runs every 1.0 hours",
-      "id": "event-85621914",
+      "id": "event-12b61671",
+      "date": "2026-03-20",
+      "source": "openclaw"
+    },
+    {
+      "title": "Daily Check-in",
+      "start": "2026-03-20T00:40:06.581682",
+      "end": "2026-03-20T00:45:06.581684",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 30 22 * * * (next run unknown)",
+      "id": "event-1f3e8cd7",
+      "date": "2026-03-20",
+      "source": "openclaw"
+    },
+    {
+      "title": "Passive Income Work Block - Completion Report",
+      "start": "2026-03-20T00:40:06.581687",
+      "end": "2026-03-20T00:45:06.581688",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 0 10 * * * (next run unknown)",
+      "id": "event-611197db",
+      "date": "2026-03-20",
+      "source": "openclaw"
+    },
+    {
+      "title": "Passive Income Work Block - Start Notification",
+      "start": "2026-03-20T00:40:06.581691",
+      "end": "2026-03-20T00:45:06.581692",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 30 8 * * * (next run unknown)",
+      "id": "event-9b772878",
+      "date": "2026-03-20",
+      "source": "openclaw"
+    },
+    {
+      "title": "Nightly Visual Diary Scan",
+      "start": "2026-03-20T00:40:06.581695",
+      "end": "2026-03-20T00:45:06.581696",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 0 0 * * * (next run unknown)",
+      "id": "event-2f72a6bd",
+      "date": "2026-03-20",
+      "source": "openclaw"
+    },
+    {
+      "title": "Bob Market Research - Passive Income Insights",
+      "start": "2026-03-20T00:40:06.581699",
+      "end": "2026-03-20T00:45:06.581700",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 0 4 * * * (next run unknown)",
+      "id": "event-347898f5",
+      "date": "2026-03-20",
+      "source": "openclaw"
+    },
+    {
+      "title": "Autonomous Development Work (12am-4:30am)",
+      "start": "2026-03-20T00:40:06.581702",
+      "end": "2026-03-20T00:45:06.581703",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 0 0 * * * (next run unknown)",
+      "id": "event-56cbadcb",
+      "date": "2026-03-20",
+      "source": "openclaw"
+    },
+    {
+      "title": "Morning Tech Report (6:35am)",
+      "start": "2026-03-20T00:40:06.581705",
+      "end": "2026-03-20T00:45:06.581706",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 35 6 * * * (next run unknown)",
+      "id": "event-4734b579",
+      "date": "2026-03-20",
+      "source": "openclaw"
+    },
+    {
+      "title": "Dev Session Start Notification",
+      "start": "2026-03-20T00:40:06.581709",
+      "end": "2026-03-20T00:45:06.581710",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 0 0 * * * (next run unknown)",
+      "id": "event-840068ae",
+      "date": "2026-03-20",
+      "source": "openclaw"
+    },
+    {
+      "title": "Dev Session End Notification",
+      "start": "2026-03-20T00:40:06.581712",
+      "end": "2026-03-20T00:45:06.581713",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 30 4 * * * (next run unknown)",
+      "id": "event-09a5d907",
       "date": "2026-03-20",
       "source": "openclaw"
     },
@@ -199,11 +221,11 @@
       "source": "manual"
     }
   ],
-  "generated_at": "2026-03-19T23:40:06.141964",
+  "generated_at": "2026-03-20T00:40:06.665845",
   "counts": {
     "manual": 3,
-    "cron": 9,
+    "cron": 11,
     "obsidian": 6,
-    "total": 18
+    "total": 20
   }
 }
