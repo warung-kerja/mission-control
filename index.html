@@ -924,9 +924,71 @@
         </div>
         
         <div id="team-tab" class="tab-content" style="display: none;">
-            <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
-                <h2>👥 Team Module</h2>
-                <p>Coming in V0.8 — Org chart with mission statement</p>
+            <div style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+                <h2 style="text-align: center; margin-bottom: 2rem;">👥 Team Structure</h2>
+                
+                <div id="team-org-chart" style="background: var(--card-bg); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; border: 1px solid var(--border-color);">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 2rem;">
+                        <!-- Raz -->
+                        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; width: 100%; max-width: 400px; color: white;">
+                            <div style="font-size: 1.5rem; font-weight: bold;">👑 Raz</div>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">Boss/Owner • Human</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.8;">Team leader and decision maker</div>
+                        </div>
+                        
+                        <div style="height: 40px; width: 2px; background: var(--border-color);"></div>
+                        
+                        <!-- Baro -->
+                        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 12px; width: 100%; max-width: 400px; color: white;">
+                            <div style="font-size: 1.5rem; font-weight: bold;">🎨 Baro</div>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">Creative Director / Team Lead • Main Agent</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.8;">Creative direction and strategy</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.7rem; opacity: 0.7;">Workspace: /home/baro/.openclaw/agents/main/</div>
+                        </div>
+                        
+                        <div style="height: 40px; width: 2px; background: var(--border-color);"></div>
+                        
+                        <!-- Noona -->
+                        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 12px; width: 100%; max-width: 400px; color: white;">
+                            <div style="font-size: 1.5rem; font-weight: bold;">🔧 Noona</div>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">Junior Engineer / Main Builder • Agent Level</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.8;">Builds tools, automations, and applications</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.7rem; opacity: 0.7;">Workspace: /home/baro/.openclaw/agents/noona/</div>
+                        </div>
+                        
+                        <div style="height: 40px; width: 2px; background: var(--border-color);"></div>
+                        
+                        <!-- Sub-agents -->
+                        <div style="text-align: center; padding: 1.5rem; background: var(--card-bg); border-radius: 12px; width: 100%; max-width: 400px; border: 1px dashed var(--border-color);">
+                            <div style="font-size: 1.2rem; font-weight: bold;">🤖 Sub-agents</div>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Temporary agents (no workspace)</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">Example: "Bob" - task-specific agents</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                    <h3 style="margin-top: 0;">📊 Team Data</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                        <div>
+                            <div style="font-weight: bold; color: var(--text-secondary);">Hierarchy</div>
+                            <div>Raz (Human) → Baro (Main Agent) → Noona (Agent Level) → [Sub-agents]</div>
+                        </div>
+                        <div>
+                            <div style="font-weight: bold; color: var(--text-secondary);">Data Source</div>
+                            <div><code>team.json</code> • Updated: 2026-03-19 21:13</div>
+                        </div>
+                        <div>
+                            <div style="font-weight: bold; color: var(--text-secondary);">Version</div>
+                            <div>V0.8-minimal • 15-minute implementation</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; text-align: center; color: var(--text-secondary); font-size: 0.9rem;">
+                    <p>✅ Basic team structure implemented in 15 minutes<br>
+                    🔄 Future updates: Status indicators, role badges, workspace info</p>
+                </div>
             </div>
         </div>
         
@@ -938,7 +1000,7 @@
         </div>
     </div>
     
-    <div class="version-badge">Version <span>V0.7</span> — Projects Module Live</div>
+    <div class="version-badge">Version <span>V0.8</span> — Team Module (Minimal) Live</div>
     
     <script>
         // Tab switching

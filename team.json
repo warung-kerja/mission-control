@@ -1,0 +1,27 @@
+{
+  "team": [
+    {
+      "name": "Raz",
+      "role": "Boss/Owner",
+      "type": "human",
+      "description": "Team leader and decision maker"
+    },
+    {
+      "name": "Baro",
+      "role": "Creative Director / Team Lead",
+      "type": "main-agent",
+      "workspace": "/home/baro/.openclaw/agents/main/",
+      "description": "Creative direction and strategy"
+    },
+    {
+      "name": "Noona",
+      "role": "Junior Engineer / Main Builder",
+      "type": "agent-level",
+      "workspace": "/home/baro/.openclaw/agents/noona/",
+      "description": "Builds tools, automations, and applications"
+    }
+  ],
+  "hierarchy": "Raz (Human) → Baro (Main Agent) → Noona (Agent Level) → [Sub-agents]",
+  "lastUpdated": "2026-03-19T21:13:00+11:00",
+  "version": "V0.8-minimal"
+}
