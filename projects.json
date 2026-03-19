@@ -1,0 +1,113 @@
+{
+  "projects": [
+    {
+      "id": "project-1",
+      "name": "Mission Control Dashboard",
+      "description": "Central dashboard for team coordination, project tracking, and agent management",
+      "status": "active",
+      "progress": 75,
+      "version": "V0.8",
+      "lead": "Noona",
+      "team": ["Baro", "Noona"],
+      "startDate": "2026-03-17",
+      "dueDate": "2026-03-25",
+      "priority": "high",
+      "type": "internal-tool",
+      "color": "#6366f1",
+      "icon": "🚀",
+      "features": [
+        {"name": "Task Board", "status": "done", "version": "V0.5"},
+        {"name": "Calendar Module", "status": "in-progress", "version": "V0.6"},
+        {"name": "Projects Tracker", "status": "in-progress", "version": "V0.7"},
+        {"name": "Team Org Chart", "status": "done", "version": "V0.8"},
+        {"name": "Memories Browser", "status": "planned", "version": "V0.9"},
+        {"name": "Office Visualization", "status": "planned", "version": "V1.0"}
+      ],
+      "repository": "https://github.com/warung-kerja/mission-control",
+      "liveUrl": "https://warung-kerja.github.io/mission-control/",
+      "lastUpdated": "2026-03-19T22:17:00+11:00"
+    },
+    {
+      "id": "project-2",
+      "name": "Amazon Short Stories",
+      "description": "Passive income product: Series of short stories for Amazon Kindle",
+      "status": "active",
+      "progress": 40,
+      "version": "V0.3",
+      "lead": "Baro",
+      "team": ["Baro", "Noona"],
+      "startDate": "2026-03-15",
+      "dueDate": "2026-04-15",
+      "priority": "medium",
+      "type": "passive-income",
+      "color": "#10b981",
+      "icon": "📚",
+      "features": [
+        {"name": "Series Bible", "status": "done"},
+        {"name": "Story Outlines", "status": "in-progress"},
+        {"name": "First Story Draft", "status": "in-progress"},
+        {"name": "Cover Design", "status": "planned"},
+        {"name": "Publishing Setup", "status": "planned"}
+      ],
+      "folder": "/mnt/d/Warung Kerja 1.0/01_Passive_Engine/Amazon_Short_Stories/",
+      "lastUpdated": "2026-03-18T15:30:00+11:00"
+    },
+    {
+      "id": "project-3",
+      "name": "Agent Workspace Migration",
+      "description": "Migrate agent workspaces to structured organization",
+      "status": "planned",
+      "progress": 10,
+      "version": "V0.1",
+      "lead": "Baro",
+      "team": ["Baro", "Noona"],
+      "startDate": "2026-03-20",
+      "dueDate": "2026-03-27",
+      "priority": "medium",
+      "type": "infrastructure",
+      "color": "#f59e0b",
+      "icon": "🤖",
+      "features": [
+        {"name": "Planning", "status": "done"},
+        {"name": "Directory Structure", "status": "in-progress"},
+        {"name": "Agent Templates", "status": "planned"},
+        {"name": "Migration Script", "status": "planned"}
+      ],
+      "document": "/mnt/d/Warung Kerja 1.0/02_Business_Operations/Agent_Workspace_Migration_Plan.md",
+      "lastUpdated": "2026-03-18T12:00:00+11:00"
+    },
+    {
+      "id": "project-4",
+      "name": "Figma Template Blueprint",
+      "description": "Design system and template for Figma community",
+      "status": "on-hold",
+      "progress": 25,
+      "version": "V0.2",
+      "lead": "Baro",
+      "team": ["Baro"],
+      "startDate": "2026-03-10",
+      "dueDate": "2026-03-30",
+      "priority": "low",
+      "type": "design-product",
+      "color": "#8b5cf6",
+      "icon": "🎨",
+      "features": [
+        {"name": "Component Spec", "status": "in-progress"},
+        {"name": "Template Design", "status": "planned"},
+        {"name": "Documentation", "status": "planned"}
+      ],
+      "folder": "/mnt/d/Warung Kerja 1.0/03_Active_Projects/Figma_Template_Blueprint/",
+      "lastUpdated": "2026-03-16T14:20:00+11:00"
+    }
+  ],
+  "stats": {
+    "total": 4,
+    "active": 2,
+    "planned": 1,
+    "onHold": 1,
+    "completed": 0,
+    "averageProgress": 37.5
+  },
+  "lastUpdated": "2026-03-20T00:15:00+11:00",
+  "version": "V0.7-mvp"
+}

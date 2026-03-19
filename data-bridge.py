@@ -61,22 +61,34 @@ def get_tasks():
 
 @app.route('/api/projects')
 def get_projects():
-    """Get all projects from the vault"""
-    projects = []
-    
-    projects_path = os.path.join(VAULT_PATH, "03_🚀_Active_Projects")
-    if os.path.exists(projects_path):
-        for folder in os.listdir(projects_path):
-            folder_path = os.path.join(projects_path, folder)
-            if os.path.isdir(folder_path):
-                projects.append({
-                    "id": folder,
-                    "name": folder.replace('_', ' '),
-                    "status": "active",
-                    "progress": 0
-                })
-    
-    return jsonify(projects)
+    """Get all projects from projects.json"""
+    try:
+        # Try to read from projects.json in the current directory
+        projects_file = os.path.join(os.path.dirname(__file__), 'projects.json')
+        if os.path.exists(projects_file):
+            with open(projects_file, 'r') as f:
+                data = json.load(f)
+                # Return the projects array from the JSON
+                return jsonify(data.get('projects', []))
+        
+        # Fallback to reading from vault folders
+        projects = []
+        projects_path = os.path.join(VAULT_PATH, "03_🚀_Active_Projects")
+        if os.path.exists(projects_path):
+            for folder in os.listdir(projects_path):
+                folder_path = os.path.join(projects_path, folder)
+                if os.path.isdir(folder_path):
+                    projects.append({
+                        "id": folder,
+                        "name": folder.replace('_', ' '),
+                        "status": "active",
+                        "progress": 0
+                    })
+        
+        return jsonify(projects)
+    except Exception as e:
+        print(f"Error loading projects: {e}")
+        return jsonify([])
 
 @app.route('/api/activity')
 def get_activity():
