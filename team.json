@@ -4,24 +4,34 @@
       "name": "Raz",
       "role": "Boss/Owner",
       "type": "human",
-      "description": "Team leader and decision maker"
+      "status": "online",
+      "lastActive": "2026-03-19T21:20:00+11:00",
+      "description": "Team leader and decision maker",
+      "mission": "Lead Warung Kerja creative projects and team direction"
     },
     {
       "name": "Baro",
       "role": "Creative Director / Team Lead",
       "type": "main-agent",
+      "status": "online",
+      "lastActive": "2026-03-19T21:15:00+11:00",
       "workspace": "/home/baro/.openclaw/agents/main/",
-      "description": "Creative direction and strategy"
+      "description": "Creative direction and strategy",
+      "mission": "Provide creative direction and oversee agent development"
     },
     {
       "name": "Noona",
       "role": "Junior Engineer / Main Builder",
       "type": "agent-level",
+      "status": "online",
+      "lastActive": "2026-03-19T21:20:00+11:00",
       "workspace": "/home/baro/.openclaw/agents/noona/",
-      "description": "Builds tools, automations, and applications"
+      "description": "Builds tools, automations, and applications",
+      "mission": "Build and ship functional tools for team efficiency"
     }
   ],
   "hierarchy": "Raz (Human) → Baro (Main Agent) → Noona (Agent Level) → [Sub-agents]",
-  "lastUpdated": "2026-03-19T21:13:00+11:00",
-  "version": "V0.8-minimal"
+  "mission": "Warung Kerja Mission Control: Central dashboard for team coordination, project tracking, and agent management",
+  "lastUpdated": "2026-03-19T21:20:00+11:00",
+  "version": "V0.8-enhanced"
 }
