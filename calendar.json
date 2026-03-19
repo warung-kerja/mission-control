@@ -71,23 +71,23 @@
     },
     {
       "title": "Morning Brief",
-      "start": "2026-03-19T16:40:06.142725",
-      "end": "2026-03-19T16:45:06.143218",
+      "start": "2026-03-19T17:40:05.866574",
+      "end": "2026-03-19T17:45:05.867094",
       "type": "cron",
       "color": "#3b82f6",
       "description": "Cron: 30 6 * * * (next run unknown)",
-      "id": "event-eef77c38",
+      "id": "event-0b693869",
       "date": "2026-03-19",
       "source": "openclaw"
     },
     {
       "title": "Regenerate Mission Control Calendar",
-      "start": "2026-03-19T17:40:00",
-      "end": "2026-03-19T17:45:00",
+      "start": "2026-03-19T18:40:00",
+      "end": "2026-03-19T18:45:00",
       "type": "cron",
       "color": "#3b82f6",
       "description": "Runs every 1.0 hours",
-      "id": "event-4d3bbb3e",
+      "id": "event-9f6ba7cc",
       "date": "2026-03-19",
       "source": "openclaw"
     },
@@ -122,7 +122,7 @@
       "source": "manual"
     }
   ],
-  "generated_at": "2026-03-19T16:40:06.171898",
+  "generated_at": "2026-03-19T17:40:05.896418",
   "counts": {
     "manual": 3,
     "cron": 2,
