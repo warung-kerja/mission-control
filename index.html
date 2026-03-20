@@ -696,12 +696,12 @@
                 </div>
             </div>
             <div class="nav-tabs">
-                <button class="nav-tab active" onclick="showTab('tasks')">📋 Tasks</button>
-                <button class="nav-tab" onclick="showTab('calendar')">📅 Calendar</button>
-                <button class="nav-tab" onclick="showTab('projects')">🎯 Projects</button>
-                <button class="nav-tab" onclick="showTab('team')">👥 Team</button>
-                <button class="nav-tab" onclick="showTab('backlog')">📝 Backlog</button>
-                <button class="nav-tab" onclick="showTab('office')">🏢 Office</button>
+                <button class="nav-tab active" onclick="showTab('tasks', event)">📋 Tasks</button>
+                <button class="nav-tab" onclick="showTab('calendar', event)">📅 Calendar</button>
+                <button class="nav-tab" onclick="showTab('projects', event)">🎯 Projects</button>
+                <button class="nav-tab" onclick="showTab('team', event)">👥 Team</button>
+                <button class="nav-tab" onclick="showTab('backlog', event)">📝 Backlog</button>
+                <button class="nav-tab" onclick="showTab('office', event)">🏢 Office</button>
             </div>
             <div class="status-bar">
                 <div class="status-dot"></div>
@@ -1157,7 +1157,7 @@
     
     <script>
         // Tab switching
-        function showTab(tabName) {
+        function showTab(tabName, event) {
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.style.display = 'none';
             });
@@ -1165,7 +1165,18 @@
                 tab.classList.remove('active');
             });
             document.getElementById(tabName + '-tab').style.display = 'block';
-            event.target.classList.add('active');
+            
+            // Add active class to clicked button
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                // Fallback: find button with matching onclick
+                document.querySelectorAll('.nav-tab').forEach(button => {
+                    if (button.getAttribute('onclick') && button.getAttribute('onclick').includes(tabName)) {
+                        button.classList.add('active');
+                    }
+                });
+            }
         }
         
         // Drag and drop
