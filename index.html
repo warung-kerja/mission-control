@@ -724,7 +724,7 @@
                 <button class="nav-tab" onclick="showTab('calendar', event)">📅 Calendar</button>
                 <button class="nav-tab" onclick="showTab('projects', event)">🎯 Projects</button>
                 <button class="nav-tab" onclick="showTab('team', event)">👥 Team</button>
-                <button class="nav-tab" onclick="showTab('backlog', event)">📝 Backlog</button>
+                <button class="nav-tab" onclick="showTab('memories', event)">🧠 Memories</button>
                 <button class="nav-tab" onclick="showTab('office', event)">🏢 Office</button>
             </div>
             <div class="status-bar">
@@ -1053,115 +1053,150 @@
             </div>
         </div>
         
-        <div id="backlog-tab" class="tab-content" style="display: none;">
-            <div style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
-                <h2 style="text-align: center; margin-bottom: 1rem;">📝 Mission Control Backlog</h2>
+        <div id="memories-tab" class="tab-content" style="display: none;">
+            <div style="padding: 2rem; max-width: 1400px; margin: 0 auto;">
+                <h2 style="text-align: center; margin-bottom: 1rem;">🧠 Memories Browser</h2>
                 <div style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9rem;">
-                    Task tracking, progress monitoring, and roadmap visualization for Mission Control development
+                    Browse, search, and visualize memory files from Noona's workspace
                     <div style="margin-top: 0.5rem; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                        <span style="background: var(--accent-color); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">📊 LIVE</span>
-                        <span>Auto-updating from Backlog.md • Last updated: <span id="backlog-last-updated">Loading...</span></span>
+                        <span style="background: var(--accent-color); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">V0.9</span>
+                        <span>Phase 1: Basic Memory Browser • Last updated: <span id="memories-last-updated">Loading...</span></span>
                     </div>
                 </div>
                 
-                <!-- Progress Summary -->
+                <!-- Search and Controls -->
                 <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid var(--border-color);">
-                    <h3 style="margin-top: 0;">📈 Progress Overview</h3>
-                    <div id="backlog-progress" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
-                        <!-- Progress stats will be loaded dynamically -->
-                        <div style="text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px;">
-                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
-                            <div style="font-weight: bold;">Loading...</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Calculating progress</div>
+                    <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem;">
+                        <div style="flex: 1; position: relative;">
+                            <input type="text" id="memory-search" placeholder="Search memories..." style="width: 100%; padding: 0.75rem 1rem; padding-left: 2.5rem; background: var(--bg-hover); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;" />
+                            <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary);">🔍</div>
                         </div>
+                        <button onclick="refreshMemories()" style="padding: 0.75rem 1.5rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                            🔄 Refresh
+                        </button>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <select id="memory-filter-type" style="padding: 0.5rem; background: var(--bg-hover); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 0.85rem;">
+                            <option value="all">All Memory Types</option>
+                            <option value="daily">Daily Logs</option>
+                            <option value="project">Project Memory</option>
+                            <option value="general">General Memory</option>
+                        </select>
+                        
+                        <select id="memory-filter-date" style="padding: 0.5rem; background: var(--bg-hover); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 0.85rem;">
+                            <option value="all">All Dates</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                        
+                        <button onclick="clearFilters()" style="padding: 0.5rem 1rem; background: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                            Clear Filters
+                        </button>
                     </div>
                 </div>
                 
-                <!-- Backlog Content -->
-                <div style="display: grid; grid-template-columns: 1fr 350px; gap: 2rem;">
-                    <!-- Main Backlog Content -->
-                    <div style="background: var(--card-bg); border-radius: 12px; padding: 2rem; border: 1px solid var(--border-color);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                            <h3 style="margin: 0;">📋 Task Backlog</h3>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <button id="filter-all" class="filter-btn active" onclick="filterTasks('all')">All</button>
-                                <button id="filter-priority" class="filter-btn" onclick="filterTasks('priority')">Priority</button>
-                                <button id="filter-todo" class="filter-btn" onclick="filterTasks('todo')">To Do</button>
-                                <button id="filter-done" class="filter-btn" onclick="filterTasks('done')">Done</button>
+                <!-- Main Content Area -->
+                <div style="display: grid; grid-template-columns: 300px 1fr; gap: 2rem;">
+                    <!-- Left Sidebar: Memory Navigation -->
+                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <!-- Memory Stats -->
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                            <h4 style="margin-top: 0; margin-bottom: 1rem;">📊 Memory Stats</h4>
+                            <div id="memory-stats" style="display: flex; flex-direction: column; gap: 0.8rem;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Total Files:</span>
+                                    <span style="font-weight: bold;" id="stat-total-files">Loading...</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Daily Logs:</span>
+                                    <span style="font-weight: bold;" id="stat-daily-logs">Loading...</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Project Memory:</span>
+                                    <span style="font-weight: bold;" id="stat-project-memory">Loading...</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Last Updated:</span>
+                                    <span style="font-weight: bold;" id="stat-last-updated">Loading...</span>
+                                </div>
                             </div>
                         </div>
                         
-                        <div id="backlog-content" style="font-size: 0.9rem; line-height: 1.6;">
-                            <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
-                                <div style="font-size: 2rem; margin-bottom: 1rem;">📝</div>
-                                <div>Loading backlog data...</div>
-                                <div style="font-size: 0.8rem; margin-top: 0.5rem;">Fetching from Backlog.md</div>
+                        <!-- Memory Tree Navigation -->
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color); flex: 1;">
+                            <h4 style="margin-top: 0; margin-bottom: 1rem;">📁 Memory Structure</h4>
+                            <div id="memory-tree" style="font-size: 0.85rem; line-height: 1.5; max-height: 400px; overflow-y: auto;">
+                                <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                    <div style="font-size: 2rem; margin-bottom: 1rem;">📂</div>
+                                    <div>Loading memory structure...</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Sidebar: Stats & Quick Actions -->
+                    <!-- Right Panel: Memory Viewer -->
                     <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                        <!-- Stats Card -->
-                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
-                            <h4 style="margin-top: 0; margin-bottom: 1rem;">📊 Quick Stats</h4>
-                            <div id="backlog-stats" style="display: flex; flex-direction: column; gap: 0.8rem;">
-                                <div style="display: flex; justify-content: space-between;">
-                                    <span>Total Tasks:</span>
-                                    <span style="font-weight: bold;">Loading...</span>
+                        <!-- Memory Viewer -->
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 2rem; border: 1px solid var(--border-color); flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                <h3 style="margin: 0;" id="memory-viewer-title">Select a Memory</h3>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button onclick="copyMemoryContent()" style="padding: 0.5rem 1rem; background: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                                        📋 Copy
+                                    </button>
+                                    <button onclick="exportMemory()" style="padding: 0.5rem 1rem; background: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                                        📤 Export
+                                    </button>
                                 </div>
-                                <div style="display: flex; justify-content: space-between;">
-                                    <span>Completed:</span>
-                                    <span style="font-weight: bold;">Loading...</span>
+                            </div>
+                            
+                            <div id="memory-viewer" style="font-size: 0.9rem; line-height: 1.6; max-height: 600px; overflow-y: auto; padding: 1rem; background: var(--bg-hover); border-radius: 8px; border: 1px solid var(--border-color);">
+                                <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                                    <div style="font-size: 2rem; margin-bottom: 1rem;">📄</div>
+                                    <div>Select a memory file from the navigation tree to view its content</div>
+                                    <div style="font-size: 0.8rem; margin-top: 0.5rem;">Browse daily logs, project memory, or general memory files</div>
                                 </div>
-                                <div style="display: flex; justify-content: space-between;">
-                                    <span>In Progress:</span>
-                                    <span style="font-weight: bold;">Loading...</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between;">
-                                    <span>Priority Tasks:</span>
-                                    <span style="font-weight: bold;">Loading...</span>
+                            </div>
+                            
+                            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                                        <span id="memory-metadata">No file selected</span>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button onclick="prevMemory()" style="padding: 0.5rem 1rem; background: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem;" disabled id="prev-btn">
+                                            ← Previous
+                                        </button>
+                                        <button onclick="nextMemory()" style="padding: 0.5rem 1rem; background: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem;" disabled id="next-btn">
+                                            Next →
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Roadmap Card -->
+                        <!-- Recent Memories -->
                         <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
-                            <h4 style="margin-top: 0; margin-bottom: 1rem;">🗺️ Roadmap</h4>
-                            <div style="font-size: 0.85rem; line-height: 1.5;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem;">
-                                    <div style="width: 12px; height: 12px; background: #3b82f6; border-radius: 50%;"></div>
-                                    <span><strong>Phase 1</strong> (Now): Immediate improvements</span>
+                            <h4 style="margin-top: 0; margin-bottom: 1rem;">🕒 Recent Memories</h4>
+                            <div id="recent-memories" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                                <div style="text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px; cursor: pointer;" onclick="loadMemory('daily', '2026-03-21.md')">
+                                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📅</div>
+                                    <div style="font-weight: bold; font-size: 0.9rem;">Today</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-secondary);">2026-03-21.md</div>
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem;">
-                                    <div style="width: 12px; height: 12px; background: #8b5cf6; border-radius: 50%;"></div>
-                                    <span><strong>Phase 2</strong> (Week 1): Core features</span>
+                                <div style="text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px; cursor: pointer;" onclick="loadMemory('project', 'mission-control/MEMORY.md')">
+                                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🏗️</div>
+                                    <div style="font-weight: bold; font-size: 0.9rem;">Mission Control</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Project Memory</div>
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem;">
-                                    <div style="width: 12px; height: 12px; background: #10b981; border-radius: 50%;"></div>
-                                    <span><strong>Phase 3</strong> (Weeks 2-3): Advanced features</span>
+                                <div style="text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px; cursor: pointer;" onclick="loadMemory('general', 'MEMORY.md')">
+                                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧠</div>
+                                    <div style="font-weight: bold; font-size: 0.9rem;">General Memory</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Long-term memory</div>
                                 </div>
-                            </div>
-                            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
-                                <a href="mission-control-roadmap.md" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
-                                    📄 View full roadmap →
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <!-- Actions Card -->
-                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
-                            <h4 style="margin-top: 0; margin-bottom: 1rem;">⚡ Quick Actions</h4>
-                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                                <button onclick="refreshBacklog()" style="padding: 0.5rem; background: var(--accent-color); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
-                                    🔄 Refresh Backlog
-                                </button>
-                                <button onclick="openBacklogFile()" style="padding: 0.5rem; background: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
-                                    📝 Edit Backlog.md
-                                </button>
-                                <button onclick="exportBacklog()" style="padding: 0.5rem; background: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
-                                    📤 Export as JSON
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -2502,7 +2537,433 @@
                     }
                 });
             });
+            
+            // Add event listener for memories tab
+            document.querySelectorAll('.nav-tab').forEach(button => {
+                button.addEventListener('click', () => {
+                    if (button.getAttribute('onclick').includes('memories')) {
+                        loadMemories();
+                    }
+                });
+            });
+            
+            // Initialize search functionality
+            const searchInput = document.getElementById('memory-search');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function(event) {
+                    if (event.key === 'Enter') {
+                        searchMemories(this.value);
+                    }
+                });
+                
+                // Debounced search
+                let searchTimeout;
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        searchMemories(this.value);
+                    }, 300);
+                });
+            }
         });
+        
+        // ====================
+        // MEMORIES BROWSER FUNCTIONS
+        // ====================
+        
+        let currentMemories = [];
+        let currentMemoryIndex = -1;
+        let memorySearchResults = [];
+        
+        async function loadMemories() {
+            try {
+                // Update last updated timestamp
+                document.getElementById('memories-last-updated').textContent = new Date().toLocaleString();
+                
+                // Load memory stats
+                await loadMemoryStats();
+                
+                // Load memory tree
+                await loadMemoryTree();
+                
+                // Load recent memories
+                await loadRecentMemories();
+                
+                addActivity('Memories browser loaded');
+            } catch (error) {
+                console.error('Error loading memories:', error);
+                addActivity('Error loading memories: ' + error.message);
+            }
+        }
+        
+        async function loadMemoryStats() {
+            try {
+                // In a real implementation, this would fetch from an API
+                // For now, use mock data
+                const stats = {
+                    totalFiles: 24,
+                    dailyLogs: 18,
+                    projectMemory: 5,
+                    lastUpdated: '2026-03-21 09:15'
+                };
+                
+                document.getElementById('stat-total-files').textContent = stats.totalFiles;
+                document.getElementById('stat-daily-logs').textContent = stats.dailyLogs;
+                document.getElementById('stat-project-memory').textContent = stats.projectMemory;
+                document.getElementById('stat-last-updated').textContent = stats.lastUpdated;
+            } catch (error) {
+                console.error('Error loading memory stats:', error);
+            }
+        }
+        
+        async function loadMemoryTree() {
+            try {
+                const treeContainer = document.getElementById('memory-tree');
+                
+                // Mock memory structure
+                const memoryStructure = `
+                <div style="padding-left: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; cursor: pointer;" onclick="loadMemory('general', 'MEMORY.md')">
+                        <span>📄</span>
+                        <span style="font-weight: bold;">MEMORY.md</span>
+                    </div>
+                    
+                    <div style="margin-left: 1rem;">
+                        <div style="font-weight: bold; margin: 0.5rem 0; color: var(--text-secondary);">📁 memory/</div>
+                        <div style="margin-left: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('daily', '2026-03-21.md')">
+                                <span>📅</span>
+                                <span>2026-03-21.md</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('daily', '2026-03-20.md')">
+                                <span>📅</span>
+                                <span>2026-03-20.md</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('daily', '2026-03-19.md')">
+                                <span>📅</span>
+                                <span>2026-03-19.md</span>
+                            </div>
+                            <div style="color: var(--text-secondary); padding: 0.3rem 0;">+15 more daily logs</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-left: 1rem;">
+                        <div style="font-weight: bold; margin: 0.5rem 0; color: var(--text-secondary);">📁 projects/</div>
+                        <div style="margin-left: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('project', 'mission-control/MEMORY.md')">
+                                <span>🏗️</span>
+                                <span>mission-control/</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('project', 'memories-browser/MEMORY.md')">
+                                <span>🧠</span>
+                                <span>memories-browser/</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('project', 'workspace-explorer/MEMORY.md')">
+                                <span>🔍</span>
+                                <span>workspace-explorer/</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+                
+                treeContainer.innerHTML = memoryStructure;
+            } catch (error) {
+                console.error('Error loading memory tree:', error);
+            }
+        }
+        
+        async function loadRecentMemories() {
+            try {
+                // This would be populated from actual recent files
+                // For now, just update the UI to show it's working
+                const recentContainer = document.getElementById('recent-memories');
+                // Already has static content
+            } catch (error) {
+                console.error('Error loading recent memories:', error);
+            }
+        }
+        
+        async function loadMemory(type, filename) {
+            try {
+                // Update UI
+                document.getElementById('memory-viewer-title').textContent = filename;
+                document.getElementById('memory-metadata').textContent = `${type} • ${filename} • ${new Date().toLocaleString()}`;
+                
+                // Enable navigation buttons
+                document.getElementById('prev-btn').disabled = false;
+                document.getElementById('next-btn').disabled = false;
+                
+                // Show loading state
+                const viewer = document.getElementById('memory-viewer');
+                viewer.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">⏳</div>
+                        <div>Loading ${filename}...</div>
+                    </div>
+                `;
+                
+                // In a real implementation, this would fetch from an API
+                // For now, use mock content based on filename
+                setTimeout(() => {
+                    let content = '';
+                    
+                    if (filename === '2026-03-21.md') {
+                        content = `# 2026-03-21.md - Daily Log
+
+## 🕘 Morning Session (9:00 AM - 12:00 PM)
+**Focus**: Mission Control V0.9 - Memories Browser
+
+### ✅ Completed
+1. **Updated AGENTS.md** with project memory loading protocol
+2. **Analyzed cron jobs** for Noona's schedule
+3. **Started V0.9 development** - Memories Browser Phase 1
+
+### 🚀 Current Work
+- **Implementing Memories Browser tab** in Mission Control
+- **Replacing Backlog tab** with Memories functionality
+- **Building memory navigation UI** with search and filtering
+
+### 📊 Progress
+- **Frontend UI**: 70% complete
+- **JavaScript functions**: 50% complete
+- **API integration**: 0% (mock data for now)
+
+### 🔧 Technical Details
+- **Tab structure**: Updated navigation from "Backlog" to "Memories"
+- **UI components**: Search, filters, memory tree, viewer, recent memories
+- **JavaScript**: Memory loading, search, navigation functions
+
+---
+**Last updated**: 2026-03-21 09:15 AM`;
+                    } else if (filename === 'MEMORY.md') {
+                        content = `# MEMORY.md - Noona's Long-Term Memory
+
+## 🎯 Who I Am
+- **Name**: Noona
+- **Role**: Junior Engineer / Main Builder
+- **Team**: Warung Kerja (Raz → Baro → Noona)
+- **Mission**: Build tools, automations, and applications that make the team more efficient
+
+## 📅 Today's Date: March 21, 2026
+
+### 🔥 Critical Lessons Learned (March 19, 2026)
+**Execution Protocols**:
+1. **5-Minute Rule**: If thinking >5 minutes, start coding
+2. **MVP First**: Minimal working version, then enhance
+3. **Commit Early**: First commit within 30 minutes of starting
+4. **Progress Tracking**: GitHub commit history as timeline
+5. **No "I will" Statements**: Only "I have" statements (evidence-based)
+
+### 🚀 Current Projects
+1. **Mission Control V0.9**: Memories Browser (in progress)
+2. **Project Memory System**: Implemented and operational
+3. **Cron Job Management**: All Noona jobs healthy and running
+
+### 🎯 Next Steps
+1. Complete Memories Browser Phase 1
+2. Add API integration for real memory data
+3. Implement search and filtering functionality`;
+                    } else if (filename === 'mission-control/MEMORY.md') {
+                        content = `# Mission Control Project Memory
+
+## 🎯 Project Overview
+**Name**: Mission Control Dashboard
+**Version**: V0.9 (in development)
+**Status**: Active development
+**Live site**: https://warung-kerja.github.io/mission-control/
+
+## 📅 Project Timeline
+- **V0.5**: Initial dashboard (6 tabs placeholder)
+- **V0.6**: Calendar Module (completed March 18, 2026)
+- **V0.7**: Projects Module (completed March 19, 2026)
+- **V0.8**: Teams Module (completed March 19, 2026)
+- **V0.9**: Memories Browser (in progress - March 21, 2026)
+
+## 🏗️ Current Development
+**V0.9 - Memories Browser**:
+- **Phase 1**: Basic Memory Browser (current)
+- **Phase 2**: Enhanced Search
+- **Phase 3**: Timeline Visualization
+- **Phase 4**: Insights Dashboard
+
+## 🔧 Technical Architecture
+**Frontend**: Vanilla HTML/CSS/JavaScript
+**Backend**: Python Flask (data-bridge.py)
+**API**: /api/health, /api/tasks, /api/projects, /api/calendar
+**Deployment**: GitHub Pages with hourly static JSON generation`;
+                    } else {
+                        content = `# ${filename}
+
+This is a sample memory file for demonstration purposes.
+
+**Type**: ${type}
+**Filename**: ${filename}
+**Loaded**: ${new Date().toLocaleString()}
+
+## Sample Content
+Memory files contain important information about:
+- Project decisions and architecture
+- Daily logs and progress updates
+- Lessons learned and insights
+- Technical specifications and documentation
+
+## Navigation
+Use the memory tree on the left to browse other files, or use the search functionality to find specific content.
+
+---
+**Note**: This is mock content. In the full implementation, this would show actual file contents from the memory directory.`;
+                    }
+                    
+                    // Format and display content
+                    viewer.innerHTML = `<pre style="white-space: pre-wrap; font-family: 'Segoe UI', system-ui, monospace; margin: 0;">${escapeHtml(content)}</pre>`;
+                    
+                    // Add to current memories for navigation
+                    currentMemories = [{type, filename, content}];
+                    currentMemoryIndex = 0;
+                    
+                    addActivity(`Memory loaded: ${filename}`);
+                }, 500);
+                
+            } catch (error) {
+                console.error('Error loading memory:', error);
+                const viewer = document.getElementById('memory-viewer');
+                viewer.innerHTML = `<div style="color: var(--danger); padding: 2rem; text-align: center;">Error loading memory: ${error.message}</div>`;
+            }
+        }
+        
+        function searchMemories(query) {
+            if (!query.trim()) {
+                // Clear search
+                memorySearchResults = [];
+                return;
+            }
+            
+            // Mock search results
+            memorySearchResults = [
+                {type: 'daily', filename: '2026-03-21.md', snippet: `Found "mission control" in daily log about V0.9 development`},
+                {type: 'project', filename: 'mission-control/MEMORY.md', snippet: `Found "mission control" in project memory overview`},
+                {type: 'general', filename: 'MEMORY.md', snippet: `Found "mission control" in long-term memory under current projects`}
+            ];
+            
+            // Display search results
+            const viewer = document.getElementById('memory-viewer');
+            let resultsHtml = `<h4 style="margin-top: 0;">Search Results for "${query}"</h4>`;
+            
+            memorySearchResults.forEach((result, index) => {
+                resultsHtml += `
+                <div style="background: var(--bg-hover); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; cursor: pointer;" onclick="loadMemory('${result.type}', '${result.filename}')">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <div style="font-weight: bold;">${result.filename}</div>
+                            <div style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.3rem;">${result.snippet}</div>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--accent-color);">${result.type}</div>
+                    </div>
+                </div>
+                `;
+            });
+            
+            viewer.innerHTML = resultsHtml;
+            document.getElementById('memory-viewer-title').textContent = `Search: "${query}"`;
+            document.getElementById('memory-metadata').textContent = `${memorySearchResults.length} results found`;
+            
+            addActivity(`Searched memories for: "${query}"`);
+        }
+        
+        function refreshMemories() {
+            loadMemories();
+            addActivity('Memories refreshed');
+        }
+        
+        function clearFilters() {
+            document.getElementById('memory-filter-type').value = 'all';
+            document.getElementById('memory-filter-date').value = 'all';
+            document.getElementById('memory-search').value = '';
+            
+            // Clear search results
+            memorySearchResults = [];
+            
+            // Reset viewer to default state
+            document.getElementById('memory-viewer').innerHTML = `
+                <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">📄</div>
+                    <div>Select a memory file from the navigation tree to view its content</div>
+                    <div style="font-size: 0.8rem; margin-top: 0.5rem;">Browse daily logs, project memory, or general memory files</div>
+                </div>
+            `;
+            
+            document.getElementById('memory-viewer-title').textContent = 'Select a Memory';
+            document.getElementById('memory-metadata').textContent = 'No file selected';
+            
+            addActivity('Memory filters cleared');
+        }
+        
+        function copyMemoryContent() {
+            const viewer = document.getElementById('memory-viewer');
+            const text = viewer.innerText || viewer.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                addActivity('Memory content copied to clipboard');
+                // Show temporary feedback
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✅ Copied!';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                addActivity('Failed to copy memory content');
+            });
+        }
+        
+        function exportMemory() {
+            if (currentMemoryIndex < 0 || currentMemories.length === 0) return;
+            
+            const memory = currentMemories[currentMemoryIndex];
+            const exportData = {
+                timestamp: new Date().toISOString(),
+                type: memory.type,
+                filename: memory.filename,
+                content: memory.content
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `memory-${memory.filename.replace('.md', '')}-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            addActivity(`Memory exported: ${memory.filename}`);
+        }
+        
+        function prevMemory() {
+            if (currentMemoryIndex > 0) {
+                currentMemoryIndex--;
+                const memory = currentMemories[currentMemoryIndex];
+                loadMemory(memory.type, memory.filename);
+            }
+        }
+        
+        function nextMemory() {
+            if (currentMemoryIndex < currentMemories.length - 1) {
+                currentMemoryIndex++;
+                const memory = currentMemories[currentMemoryIndex];
+                loadMemory(memory.type, memory.filename);
+            }
+        }
+        
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
     </script>
 </body>
 </html>
