@@ -1476,7 +1476,7 @@
         
         // Projects Module JavaScript
         let allProjects = [];
-        let currentFilter = 'all';
+        let projectsCurrentFilter = 'all';
         
         async function loadProjects() {
             try {
@@ -1529,14 +1529,14 @@
             if (!grid) return;
             
             const filteredProjects = allProjects.filter(project => {
-                if (currentFilter === 'all') return true;
-                return project.status === currentFilter;
+                if (projectsCurrentFilter === 'all') return true;
+                return project.status === projectsCurrentFilter;
             });
             
             if (filteredProjects.length === 0) {
                 grid.innerHTML = `
                     <div class="no-projects" style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-secondary);">
-                        <p>No projects found with status: ${currentFilter}</p>
+                        <p>No projects found with status: ${projectsCurrentFilter}</p>
                     </div>
                 `;
                 return;
@@ -1614,7 +1614,7 @@
                 button.addEventListener('click', function() {
                     document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
                     this.classList.add('active');
-                    currentFilter = this.getAttribute('data-filter');
+                    projectsCurrentFilter = this.getAttribute('data-filter');
                     renderProjects();
                 });
             });
@@ -2152,7 +2152,7 @@
         
         // Backlog Module JavaScript
         let backlogData = null;
-        let currentFilter = 'all';
+        let backlogCurrentFilter = 'all';
         
         async function loadBacklog() {
             try {
@@ -2438,7 +2438,7 @@
         }
         
         function filterTasks(filterType) {
-            currentFilter = filterType;
+            backlogCurrentFilter = filterType;
             
             // Update button states
             document.querySelectorAll('.filter-btn').forEach(btn => {
