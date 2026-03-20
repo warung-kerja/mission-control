@@ -295,6 +295,191 @@ def list_workspaces():
             "path": agents_dir
         }), 500
 
+@app.route('/api/memory')
+def get_memory_files():
+    """Get memory files from Noona's workspace"""
+    memory_dir = os.path.join(VAULT_PATH, "06_Agents", "noona", "memory")
+    projects_dir = os.path.join(VAULT_PATH, "06_Agents", "noona", "projects")
+    
+    if not os.path.exists(memory_dir):
+        return jsonify({
+            "error": "Memory directory not found",
+            "path": memory_dir
+        }), 404
+    
+    try:
+        memory_files = []
+        project_files = []
+        
+        # Scan memory directory
+        if os.path.exists(memory_dir):
+            for filename in os.listdir(memory_dir):
+                if filename.endswith('.md'):
+                    filepath = os.path.join(memory_dir, filename)
+                    stat = os.stat(filepath)
+                    
+                    # Read first few lines for preview
+                    preview = ""
+                    try:
+                        with open(filepath, 'r', encoding='utf-8') as f:
+                            preview_lines = []
+                            for i in range(5):
+                                line = f.readline()
+                                if not line:
+                                    break
+                                preview_lines.append(line.strip())
+                            preview = " ".join(preview_lines[:3])[:200] + "..."
+                    except:
+                        preview = "Could not read file"
+                    
+                    memory_files.append({
+                        "name": filename,
+                        "path": filepath,
+                        "type": "daily",
+                        "size": stat.st_size,
+                        "modified": stat.st_mtime,
+                        "preview": preview,
+                        "date": filename.replace('.md', '') if filename.startswith('2026-') else None
+                    })
+        
+        # Scan projects directory
+        if os.path.exists(projects_dir):
+            for project_name in os.listdir(projects_dir):
+                project_path = os.path.join(projects_dir, project_name)
+                if os.path.isdir(project_path):
+                    memory_file = os.path.join(project_path, "MEMORY.md")
+                    if os.path.exists(memory_file):
+                        stat = os.stat(memory_file)
+                        
+                        # Read first few lines for preview
+                        preview = ""
+                        try:
+                            with open(memory_file, 'r', encoding='utf-8') as f:
+                                preview_lines = []
+                                for i in range(5):
+                                    line = f.readline()
+                                    if not line:
+                                        break
+                                    preview_lines.append(line.strip())
+                                preview = " ".join(preview_lines[:3])[:200] + "..."
+                        except:
+                            preview = "Could not read file"
+                        
+                        project_files.append({
+                            "name": f"{project_name}/MEMORY.md",
+                            "path": memory_file,
+                            "type": "project",
+                            "project": project_name,
+                            "size": stat.st_size,
+                            "modified": stat.st_mtime,
+                            "preview": preview
+                        })
+        
+        # Add general MEMORY.md
+        general_memory = os.path.join(VAULT_PATH, "06_Agents", "noona", "MEMORY.md")
+        if os.path.exists(general_memory):
+            stat = os.stat(general_memory)
+            
+            # Read first few lines for preview
+            preview = ""
+            try:
+                with open(general_memory, 'r', encoding='utf-8') as f:
+                    preview_lines = []
+                    for i in range(5):
+                        line = f.readline()
+                        if not line:
+                            break
+                        preview_lines.append(line.strip())
+                    preview = " ".join(preview_lines[:3])[:200] + "..."
+            except:
+                preview = "Could not read file"
+            
+            memory_files.append({
+                "name": "MEMORY.md",
+                "path": general_memory,
+                "type": "general",
+                "size": stat.st_size,
+                "modified": stat.st_mtime,
+                "preview": preview
+            })
+        
+        # Sort memory files by date (newest first)
+        memory_files.sort(key=lambda x: x.get('date', ''), reverse=True)
+        
+        # Sort project files by name
+        project_files.sort(key=lambda x: x['project'].lower())
+        
+        return jsonify({
+            "memory_directory": memory_dir,
+            "projects_directory": projects_dir,
+            "total_daily_files": len([f for f in memory_files if f['type'] == 'daily']),
+            "total_project_files": len(project_files),
+            "total_general_files": len([f for f in memory_files if f['type'] == 'general']),
+            "memory_files": memory_files,
+            "project_files": project_files,
+            "last_updated": datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        return jsonify({
+            "error": str(e),
+            "memory_dir": memory_dir,
+            "projects_dir": projects_dir
+        }), 500
+
+@app.route('/api/memory/<path:filename>')
+def get_memory_content(filename):
+    """Get content of a specific memory file"""
+    # Security check: ensure filename doesn't contain directory traversal
+    if '..' in filename or filename.startswith('/'):
+        return jsonify({"error": "Invalid filename"}), 400
+    
+    # Determine file path based on filename
+    if filename == "MEMORY.md":
+        filepath = os.path.join(VAULT_PATH, "06_Agents", "noona", filename)
+    elif filename.startswith("2026-"):
+        # Daily log file
+        filepath = os.path.join(VAULT_PATH, "06_Agents", "noona", "memory", filename)
+    elif '/' in filename:
+        # Project memory file (e.g., "mission-control/MEMORY.md")
+        parts = filename.split('/')
+        if len(parts) == 2 and parts[1] == "MEMORY.md":
+            filepath = os.path.join(VAULT_PATH, "06_Agents", "noona", "projects", parts[0], parts[1])
+        else:
+            return jsonify({"error": "Invalid project memory file"}), 400
+    else:
+        return jsonify({"error": "Invalid filename format"}), 400
+    
+    if not os.path.exists(filepath):
+        return jsonify({
+            "error": "File not found",
+            "filename": filename,
+            "path": filepath
+        }), 404
+    
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        stat = os.stat(filepath)
+        
+        return jsonify({
+            "filename": filename,
+            "path": filepath,
+            "content": content,
+            "size": stat.st_size,
+            "modified": stat.st_mtime,
+            "type": "daily" if filename.startswith("2026-") else "project" if '/' in filename else "general",
+            "last_updated": datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        return jsonify({
+            "error": str(e),
+            "filename": filename,
+            "path": filepath
+        }), 500
+
 if __name__ == '__main__':
     print("=" * 50)
     print("🚀 Warung-Kerja Mission Control Data Bridge")
@@ -305,6 +490,8 @@ if __name__ == '__main__':
     print(f"📅 Calendar Endpoint: http://localhost:{PORT}/api/calendar")
     print(f"👥 Workspace Endpoint: http://localhost:{PORT}/api/workspace")
     print(f"👤 Agent Workspace: http://localhost:{PORT}/api/workspace/<agent_name>")
+    print(f"🧠 Memory Endpoint: http://localhost:{PORT}/api/memory")
+    print(f"📄 Memory Content: http://localhost:{PORT}/api/memory/<filename>")
     print("=" * 50)
     print("Press Ctrl+C to stop")
     print()

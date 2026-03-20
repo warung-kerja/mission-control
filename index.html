@@ -1182,20 +1182,10 @@
                         <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
                             <h4 style="margin-top: 0; margin-bottom: 1rem;">🕒 Recent Memories</h4>
                             <div id="recent-memories" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
-                                <div style="text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px; cursor: pointer;" onclick="loadMemory('daily', '2026-03-21.md')">
-                                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📅</div>
-                                    <div style="font-weight: bold; font-size: 0.9rem;">Today</div>
-                                    <div style="font-size: 0.8rem; color: var(--text-secondary);">2026-03-21.md</div>
-                                </div>
-                                <div style="text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px; cursor: pointer;" onclick="loadMemory('project', 'mission-control/MEMORY.md')">
-                                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🏗️</div>
-                                    <div style="font-weight: bold; font-size: 0.9rem;">Mission Control</div>
-                                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Project Memory</div>
-                                </div>
-                                <div style="text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px; cursor: pointer;" onclick="loadMemory('general', 'MEMORY.md')">
-                                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧠</div>
-                                    <div style="font-weight: bold; font-size: 0.9rem;">General Memory</div>
-                                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Long-term memory</div>
+                                <!-- Recent memories will be loaded dynamically -->
+                                <div style="text-align: center; padding: 2rem; color: var(--text-secondary); grid-column: 1 / -1;">
+                                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⏳</div>
+                                    <div>Loading recent memories...</div>
                                 </div>
                             </div>
                         </div>
@@ -2598,21 +2588,36 @@
         
         async function loadMemoryStats() {
             try {
-                // In a real implementation, this would fetch from an API
-                // For now, use mock data
+                // Fetch real data from memories.json
+                const response = await fetch('memories.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                // Update stats with real data
+                document.getElementById('stat-total-files').textContent = data.stats.total_files;
+                document.getElementById('stat-daily-logs').textContent = data.stats.total_daily_files;
+                document.getElementById('stat-project-memory').textContent = data.stats.total_project_files;
+                document.getElementById('stat-last-updated').textContent = new Date(data.generated_at).toLocaleString();
+                
+                // Store data for later use
+                window.memoryData = data;
+                
+            } catch (error) {
+                console.error('Error loading memory stats:', error);
+                // Fallback to mock data if fetch fails
                 const stats = {
-                    totalFiles: 24,
-                    dailyLogs: 18,
-                    projectMemory: 5,
-                    lastUpdated: '2026-03-21 09:15'
+                    totalFiles: 9,
+                    dailyLogs: 5,
+                    projectMemory: 3,
+                    lastUpdated: new Date().toLocaleString()
                 };
                 
                 document.getElementById('stat-total-files').textContent = stats.totalFiles;
                 document.getElementById('stat-daily-logs').textContent = stats.dailyLogs;
                 document.getElementById('stat-project-memory').textContent = stats.projectMemory;
                 document.getElementById('stat-last-updated').textContent = stats.lastUpdated;
-            } catch (error) {
-                console.error('Error loading memory stats:', error);
             }
         }
         
@@ -2620,67 +2625,178 @@
             try {
                 const treeContainer = document.getElementById('memory-tree');
                 
-                // Mock memory structure
-                const memoryStructure = `
-                <div style="padding-left: 0.5rem;">
+                // Ensure memory data is loaded
+                if (!window.memoryData) {
+                    const response = await fetch('memories.json');
+                    window.memoryData = await response.json();
+                }
+                
+                const data = window.memoryData;
+                
+                // Build memory tree from real data
+                let memoryStructure = `<div style="padding-left: 0.5rem;">`;
+                
+                // Add general MEMORY.md
+                const generalMemory = data.memory_files.find(f => f.name === 'MEMORY.md');
+                if (generalMemory) {
+                    memoryStructure += `
                     <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; cursor: pointer;" onclick="loadMemory('general', 'MEMORY.md')">
                         <span>📄</span>
                         <span style="font-weight: bold;">MEMORY.md</span>
-                    </div>
-                    
+                    </div>`;
+                }
+                
+                // Add daily memory files
+                const dailyFiles = data.memory_files.filter(f => f.type === 'daily').sort((a, b) => b.date.localeCompare(a.date));
+                if (dailyFiles.length > 0) {
+                    memoryStructure += `
                     <div style="margin-left: 1rem;">
                         <div style="font-weight: bold; margin: 0.5rem 0; color: var(--text-secondary);">📁 memory/</div>
-                        <div style="margin-left: 1rem;">
-                            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('daily', '2026-03-21.md')">
-                                <span>📅</span>
-                                <span>2026-03-21.md</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('daily', '2026-03-20.md')">
-                                <span>📅</span>
-                                <span>2026-03-20.md</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('daily', '2026-03-19.md')">
-                                <span>📅</span>
-                                <span>2026-03-19.md</span>
-                            </div>
-                            <div style="color: var(--text-secondary); padding: 0.3rem 0;">+15 more daily logs</div>
-                        </div>
-                    </div>
+                        <div style="margin-left: 1rem;">`;
                     
+                    // Show up to 5 most recent daily files
+                    const filesToShow = dailyFiles.slice(0, 5);
+                    filesToShow.forEach(file => {
+                        const icon = file.name.startsWith('2026-') ? '📅' : '📝';
+                        memoryStructure += `
+                        <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('daily', '${file.name}')">
+                            <span>${icon}</span>
+                            <span>${file.name}</span>
+                        </div>`;
+                    });
+                    
+                    // Show count if there are more files
+                    if (dailyFiles.length > 5) {
+                        memoryStructure += `
+                        <div style="color: var(--text-secondary); padding: 0.3rem 0;">
+                            +${dailyFiles.length - 5} more daily logs
+                        </div>`;
+                    }
+                    
+                    memoryStructure += `</div></div>`;
+                }
+                
+                // Add project memory files
+                if (data.project_files.length > 0) {
+                    memoryStructure += `
                     <div style="margin-left: 1rem;">
                         <div style="font-weight: bold; margin: 0.5rem 0; color: var(--text-secondary);">📁 projects/</div>
-                        <div style="margin-left: 1rem;">
-                            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('project', 'mission-control/MEMORY.md')">
-                                <span>🏗️</span>
-                                <span>mission-control/</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('project', 'memories-browser/MEMORY.md')">
-                                <span>🧠</span>
-                                <span>memories-browser/</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('project', 'workspace-explorer/MEMORY.md')">
-                                <span>🔍</span>
-                                <span>workspace-explorer/</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                `;
+                        <div style="margin-left: 1rem;">`;
+                    
+                    data.project_files.forEach(file => {
+                        const icon = file.project === 'mission-control' ? '🏗️' : 
+                                    file.project === 'memories-browser' ? '🧠' : 
+                                    file.project === 'workspace-explorer' ? '🔍' : '📁';
+                        memoryStructure += `
+                        <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; cursor: pointer;" onclick="loadMemory('project', '${file.name}')">
+                            <span>${icon}</span>
+                            <span>${file.project}/</span>
+                        </div>`;
+                    });
+                    
+                    memoryStructure += `</div></div>`;
+                }
+                
+                memoryStructure += `</div>`;
                 
                 treeContainer.innerHTML = memoryStructure;
             } catch (error) {
                 console.error('Error loading memory tree:', error);
+                // Fallback to simple message
+                treeContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">⚠️</div>
+                    <div>Error loading memory tree</div>
+                    <div style="font-size: 0.8rem; margin-top: 0.5rem;">${error.message}</div>
+                </div>`;
             }
         }
         
         async function loadRecentMemories() {
             try {
-                // This would be populated from actual recent files
-                // For now, just update the UI to show it's working
                 const recentContainer = document.getElementById('recent-memories');
-                // Already has static content
+                
+                // Ensure memory data is loaded
+                if (!window.memoryData) {
+                    const response = await fetch('memories.json');
+                    window.memoryData = await response.json();
+                }
+                
+                const data = window.memoryData;
+                
+                // Get most recent daily files (sorted by date, newest first)
+                const dailyFiles = data.memory_files
+                    .filter(f => f.type === 'daily' && f.date)
+                    .sort((a, b) => b.date.localeCompare(a.date))
+                    .slice(0, 3);
+                
+                // Get project files
+                const projectFiles = data.project_files.slice(0, 2);
+                
+                // Get general memory
+                const generalMemory = data.memory_files.find(f => f.name === 'MEMORY.md');
+                
+                // Clear container
+                recentContainer.innerHTML = '';
+                
+                // Add today's daily log if available
+                if (dailyFiles.length > 0) {
+                    const todayFile = dailyFiles[0];
+                    const div = document.createElement('div');
+                    div.style.cssText = 'text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px; cursor: pointer;';
+                    div.onclick = () => loadMemory('daily', todayFile.name);
+                    div.innerHTML = `
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📅</div>
+                        <div style="font-weight: bold; font-size: 0.9rem;">Today</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">${todayFile.name}</div>
+                    `;
+                    recentContainer.appendChild(div);
+                }
+                
+                // Add general memory
+                if (generalMemory) {
+                    const div = document.createElement('div');
+                    div.style.cssText = 'text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px; cursor: pointer;';
+                    div.onclick = () => loadMemory('general', 'MEMORY.md');
+                    div.innerHTML = `
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧠</div>
+                        <div style="font-weight: bold; font-size: 0.9rem;">General Memory</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">MEMORY.md</div>
+                    `;
+                    recentContainer.appendChild(div);
+                }
+                
+                // Add mission control project memory
+                const missionControlFile = projectFiles.find(f => f.project === 'mission-control');
+                if (missionControlFile) {
+                    const div = document.createElement('div');
+                    div.style.cssText = 'text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px; cursor: pointer;';
+                    div.onclick = () => loadMemory('project', missionControlFile.name);
+                    div.innerHTML = `
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🏗️</div>
+                        <div style="font-weight: bold; font-size: 0.9rem;">Mission Control</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Project Memory</div>
+                    `;
+                    recentContainer.appendChild(div);
+                }
+                
+                // Add yesterday's daily log if available
+                if (dailyFiles.length > 1) {
+                    const yesterdayFile = dailyFiles[1];
+                    const div = document.createElement('div');
+                    div.style.cssText = 'text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px; cursor: pointer;';
+                    div.onclick = () => loadMemory('daily', yesterdayFile.name);
+                    div.innerHTML = `
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📝</div>
+                        <div style="font-weight: bold; font-size: 0.9rem;">Yesterday</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">${yesterdayFile.name}</div>
+                    `;
+                    recentContainer.appendChild(div);
+                }
+                
             } catch (error) {
                 console.error('Error loading recent memories:', error);
+                // Keep the static content as fallback
             }
         }
         
@@ -2703,9 +2819,50 @@
                     </div>
                 `;
                 
-                // In a real implementation, this would fetch from an API
-                // For now, use mock content based on filename
-                setTimeout(() => {
+                // Ensure memory data is loaded
+                if (!window.memoryData) {
+                    const response = await fetch('memories.json');
+                    window.memoryData = await response.json();
+                }
+                
+                const data = window.memoryData;
+                
+                // Find the memory file
+                let memoryFile = null;
+                
+                if (type === 'general' && filename === 'MEMORY.md') {
+                    memoryFile = data.memory_files.find(f => f.name === 'MEMORY.md');
+                } else if (type === 'daily') {
+                    memoryFile = data.memory_files.find(f => f.name === filename);
+                } else if (type === 'project') {
+                    memoryFile = data.project_files.find(f => f.name === filename);
+                }
+                
+                if (memoryFile) {
+                    // Show real preview from memory file
+                    const content = `# ${filename}
+
+**Type**: ${type}
+**Path**: ${memoryFile.path}
+**Size**: ${Math.round(memoryFile.size / 1024)} KB
+**Last Modified**: ${new Date(memoryFile.modified * 1000).toLocaleString()}
+
+## Preview
+${memoryFile.preview}
+
+---
+**Note**: This is a preview of the memory file. For Phase 3, full file content will be available.`;
+                    
+                    // Format and display content
+                    viewer.innerHTML = `<pre style="white-space: pre-wrap; font-family: 'Segoe UI', system-ui, monospace; margin: 0;">${escapeHtml(content)}</pre>`;
+                    
+                    // Add to current memories for navigation
+                    currentMemories = [{type, filename, content, memoryFile}];
+                    currentMemoryIndex = 0;
+                    
+                    addActivity(`Memory loaded: ${filename} (real data)`);
+                } else {
+                    // Fallback to mock content if file not found
                     let content = '';
                     
                     if (filename === '2026-03-21.md') {
@@ -2812,7 +2969,7 @@ Memory files contain important information about:
 Use the memory tree on the left to browse other files, or use the search functionality to find specific content.
 
 ---
-**Note**: This is mock content. In the full implementation, this would show actual file contents from the memory directory.`;
+**Note**: This is mock content. File not found in memories.json.`;
                     }
                     
                     // Format and display content
@@ -2822,8 +2979,8 @@ Use the memory tree on the left to browse other files, or use the search functio
                     currentMemories = [{type, filename, content}];
                     currentMemoryIndex = 0;
                     
-                    addActivity(`Memory loaded: ${filename}`);
-                }, 500);
+                    addActivity(`Memory loaded: ${filename} (mock data)`);
+                }
                 
             } catch (error) {
                 console.error('Error loading memory:', error);
@@ -2832,43 +2989,145 @@ Use the memory tree on the left to browse other files, or use the search functio
             }
         }
         
-        function searchMemories(query) {
+        async function searchMemories(query) {
             if (!query.trim()) {
                 // Clear search
                 memorySearchResults = [];
                 return;
             }
             
-            // Mock search results
-            memorySearchResults = [
-                {type: 'daily', filename: '2026-03-21.md', snippet: `Found "mission control" in daily log about V0.9 development`},
-                {type: 'project', filename: 'mission-control/MEMORY.md', snippet: `Found "mission control" in project memory overview`},
-                {type: 'general', filename: 'MEMORY.md', snippet: `Found "mission control" in long-term memory under current projects`}
-            ];
-            
-            // Display search results
-            const viewer = document.getElementById('memory-viewer');
-            let resultsHtml = `<h4 style="margin-top: 0;">Search Results for "${query}"</h4>`;
-            
-            memorySearchResults.forEach((result, index) => {
-                resultsHtml += `
-                <div style="background: var(--bg-hover); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; cursor: pointer;" onclick="loadMemory('${result.type}', '${result.filename}')">
-                    <div style="display: flex; justify-content: space-between; align-items: start;">
-                        <div>
-                            <div style="font-weight: bold;">${result.filename}</div>
-                            <div style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.3rem;">${result.snippet}</div>
+            try {
+                // Ensure memory data is loaded
+                if (!window.memoryData) {
+                    const response = await fetch('memories.json');
+                    window.memoryData = await response.json();
+                }
+                
+                const data = window.memoryData;
+                const searchLower = query.toLowerCase();
+                memorySearchResults = [];
+                
+                // Search in memory files
+                data.memory_files.forEach(file => {
+                    const nameMatch = file.name.toLowerCase().includes(searchLower);
+                    const previewMatch = file.preview.toLowerCase().includes(searchLower);
+                    
+                    if (nameMatch || previewMatch) {
+                        let snippet = '';
+                        if (nameMatch) {
+                            snippet = `Filename contains "${query}"`;
+                        } else if (previewMatch) {
+                            // Extract context around match
+                            const previewLower = file.preview.toLowerCase();
+                            const matchIndex = previewLower.indexOf(searchLower);
+                            const start = Math.max(0, matchIndex - 50);
+                            const end = Math.min(file.preview.length, matchIndex + searchLower.length + 50);
+                            snippet = `..."${file.preview.substring(start, end)}"...`;
+                        }
+                        
+                        memorySearchResults.push({
+                            type: file.type,
+                            filename: file.name,
+                            snippet: snippet,
+                            file: file
+                        });
+                    }
+                });
+                
+                // Search in project files
+                data.project_files.forEach(file => {
+                    const nameMatch = file.name.toLowerCase().includes(searchLower);
+                    const projectMatch = file.project.toLowerCase().includes(searchLower);
+                    const previewMatch = file.preview.toLowerCase().includes(searchLower);
+                    
+                    if (nameMatch || projectMatch || previewMatch) {
+                        let snippet = '';
+                        if (nameMatch || projectMatch) {
+                            snippet = `Project "${file.project}" matches search`;
+                        } else if (previewMatch) {
+                            // Extract context around match
+                            const previewLower = file.preview.toLowerCase();
+                            const matchIndex = previewLower.indexOf(searchLower);
+                            const start = Math.max(0, matchIndex - 50);
+                            const end = Math.min(file.preview.length, matchIndex + searchLower.length + 50);
+                            snippet = `..."${file.preview.substring(start, end)}"...`;
+                        }
+                        
+                        memorySearchResults.push({
+                            type: 'project',
+                            filename: file.name,
+                            snippet: snippet,
+                            file: file
+                        });
+                    }
+                });
+                
+                // Display search results
+                const viewer = document.getElementById('memory-viewer');
+                let resultsHtml = `<h4 style="margin-top: 0;">Search Results for "${query}"</h4>`;
+                
+                if (memorySearchResults.length === 0) {
+                    resultsHtml += `
+                    <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">🔍</div>
+                        <div>No results found for "${query}"</div>
+                        <div style="font-size: 0.8rem; margin-top: 0.5rem;">Try different search terms</div>
+                    </div>`;
+                } else {
+                    memorySearchResults.forEach((result, index) => {
+                        resultsHtml += `
+                        <div style="background: var(--bg-hover); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; cursor: pointer;" onclick="loadMemory('${result.type}', '${result.filename}')">
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <div>
+                                    <div style="font-weight: bold;">${result.filename}</div>
+                                    <div style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.3rem;">${result.snippet}</div>
+                                </div>
+                                <div style="font-size: 0.8rem; color: var(--accent-color);">${result.type}</div>
+                            </div>
                         </div>
-                        <div style="font-size: 0.8rem; color: var(--accent-color);">${result.type}</div>
+                        `;
+                    });
+                }
+                
+                viewer.innerHTML = resultsHtml;
+                document.getElementById('memory-viewer-title').textContent = `Search: "${query}"`;
+                document.getElementById('memory-metadata').textContent = `${memorySearchResults.length} results found`;
+                
+                addActivity(`Searched memories for: "${query}" (${memorySearchResults.length} results)`);
+                
+            } catch (error) {
+                console.error('Error searching memories:', error);
+                
+                // Fallback to mock search
+                memorySearchResults = [
+                    {type: 'daily', filename: '2026-03-21.md', snippet: `Found "${query}" in daily log about V0.9 development`},
+                    {type: 'project', filename: 'mission-control/MEMORY.md', snippet: `Found "${query}" in project memory overview`},
+                    {type: 'general', filename: 'MEMORY.md', snippet: `Found "${query}" in long-term memory under current projects`}
+                ];
+                
+                const viewer = document.getElementById('memory-viewer');
+                let resultsHtml = `<h4 style="margin-top: 0;">Search Results for "${query}" (mock data)</h4>`;
+                
+                memorySearchResults.forEach((result, index) => {
+                    resultsHtml += `
+                    <div style="background: var(--bg-hover); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; cursor: pointer;" onclick="loadMemory('${result.type}', '${result.filename}')">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div>
+                                <div style="font-weight: bold;">${result.filename}</div>
+                                <div style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.3rem;">${result.snippet}</div>
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--accent-color);">${result.type}</div>
+                        </div>
                     </div>
-                </div>
-                `;
-            });
-            
-            viewer.innerHTML = resultsHtml;
-            document.getElementById('memory-viewer-title').textContent = `Search: "${query}"`;
-            document.getElementById('memory-metadata').textContent = `${memorySearchResults.length} results found`;
-            
-            addActivity(`Searched memories for: "${query}"`);
+                    `;
+                });
+                
+                viewer.innerHTML = resultsHtml;
+                document.getElementById('memory-viewer-title').textContent = `Search: "${query}" (mock)`;
+                document.getElementById('memory-metadata').textContent = `${memorySearchResults.length} mock results`;
+                
+                addActivity(`Searched memories for: "${query}" (mock data)`);
+            }
         }
         
         function refreshMemories() {
