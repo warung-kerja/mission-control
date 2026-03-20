@@ -277,6 +277,30 @@
             color: var(--accent);
         }
         
+        /* Backlog filter buttons */
+        .filter-btn {
+            padding: 0.3rem 0.8rem;
+            background: var(--bg-hover);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        
+        .filter-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        
         .quick-panel {
             background: var(--bg-card);
             border: 1px solid var(--border);
