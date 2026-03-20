@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control - Projects Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 2rem;
+        }
+        
+        .project-card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #334155;
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .project-title {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        
+        .project-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-active { background: #10b981; color: white; }
+        .status-planned { background: #f59e0b; color: white; }
+        .status-on-hold { background: #8b5cf6; color: white; }
+        
+        .progress-bar {
+            height: 8px;
+            background: #334155;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mission Control - Projects Test</h1>
+    <p>Testing the new Projects Tracker (V0.7) functionality</p>
+    
+    <div id="projects-container"></div>
+    
+    <script>
+        // Sample project data matching the new structure
+        const projects = [
+            {
+                id: 'project-1',
+                name: 'Mission Control Dashboard',
+                description: 'Central dashboard for team coordination, project tracking, and agent management',
+                status: 'active',
+                progress: 75,
+                version: 'V0.8',
+                lead: 'Noona',
+                startDate: '2026-03-17',
+                dueDate: '2026-03-25',
+                priority: 'high',
+                color: '#6366f1',
+                icon: '🚀',
+                features: [
+                    {name: 'Task Board', status: 'done', version: 'V0.5'},
+                    {name: 'Calendar Module', status: 'in-progress', version: 'V0.6'},
+                    {name: 'Projects Tracker', status: 'in-progress', version: 'V0.7'},
+                    {name: 'Team Org Chart', status: 'done', version: 'V0.8'}
+                ],
+                lastUpdated: '2026-03-19T22:17:00+11:00'
+            },
+            {
+                id: 'project-2',
+                name: 'Amazon Short Stories',
+                description: 'Passive income product: Series of short stories for Amazon Kindle',
+                status: 'active',
+                progress: 40,
+                version: 'V0.3',
+                lead: 'Baro',
+                startDate: '2026-03-15',
+                dueDate: '2026-04-15',
+                priority: 'medium',
+                color: '#10b981',
+                icon: '📚',
+                features: [
+                    {name: 'Series Bible', status: 'done'},
+                    {name: 'Story Outlines', status: 'in-progress'},
+                    {name: 'First Story Draft', status: 'in-progress'}
+                ],
+                lastUpdated: '2026-03-18T15:30:00+11:00'
+            }
+        ];
+        
+        function renderProjects() {
+            const container = document.getElementById('projects-container');
+            
+            container.innerHTML = projects.map(project => `
+                <div class="project-card">
+                    <div class="project-header">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="font-size: 1.2rem;">${project.icon}</span>
+                            <h3 class="project-title">${project.name}</h3>
+                        </div>
+                        <span class="project-status status-${project.status}" style="background: ${project.color}">
+                            ${project.status.charAt(0).toUpperCase() + project.status.slice(1)}
+                        </span>
+                    </div>
+                    <p>${project.description}</p>
+                    
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span><strong>Lead:</strong> ${project.lead}</span>
+                            <span><strong>Version:</strong> ${project.version}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <span><strong>Start:</strong> ${project.startDate}</span>
+                            <span><strong>Due:</strong> ${project.dueDate}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${project.progress}%; background: ${project.color}"></div>
+                    </div>
+                    <div style="text-align: center; font-size: 0.9rem; margin-top: 0.3rem;">
+                        Progress: ${project.progress}%
+                    </div>
+                    
+                    ${project.features && project.features.length > 0 ? `
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #334155;">
+                        <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 0.5rem;">Features:</div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.3rem;">
+                            ${project.features.slice(0, 3).map(feature => `
+                                <span style="font-size: 0.8rem; padding: 0.2rem 0.5rem; background: #334155; border-radius: 4px;">
+                                    ${feature.name}
+                                </span>
+                            `).join('')}
+                            ${project.features.length > 3 ? `<span style="font-size: 0.8rem; padding: 0.2rem 0.5rem; color: #94a3b8;">+${project.features.length - 3} more</span>` : ''}
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+        
+        // Render on load
+        renderProjects();
+    </script>
+</body>
+</html>

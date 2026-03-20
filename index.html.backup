@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warung-Kerja Mission Control</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-hover: #1a1a25;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #1e293b;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .logo span {
+            color: var(--accent);
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .nav-tab {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        
+        .nav-tab:hover, .nav-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        
+        .status-bar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Task Board Styles */
+        .taskboard {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 1rem;
+            height: calc(100vh - 140px);
+        }
+        
+        .activity-feed {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        
+        .activity-feed h3 {
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .activity-item {
+            padding: 0.75rem;
+            background: var(--bg-hover);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.8125rem;
+        }
+        
+        .activity-time {
+            color: var(--accent);
+            font-size: 0.75rem;
+        }
+        
+        .activity-agent {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+        
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            overflow-x: auto;
+        }
+        
+        .kanban-column {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem;
+            min-width: 220px;
+        }
+        
+        .kanban-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .kanban-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .kanban-count {
+            background: var(--bg-hover);
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .task-card {
+            background: var(--bg-hover);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            cursor: grab;
+            transition: all 0.2s;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .task-card:hover {
+            transform: translateX(2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        .task-card.dragging {
+            opacity: 0.5;
+        }
+        
+        .task-title {
+            font-size: 0.8125rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .task-assignee {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .assignee-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.625rem;
+            font-weight: 600;
+        }
+        
+        .task-priority {
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        
+        .priority-high { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .priority-medium { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .priority-low { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        
+        .new-task-btn {
+            width: 100%;
+            padding: 0.5rem;
+            background: transparent;
+            border: 1px dashed var(--border);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+        
+        .new-task-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        .quick-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+        
+        .quick-panel h3 {
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .quick-action-btn {
+            padding: 0.75rem;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8125rem;
+            text-align: left;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .quick-action-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+        
+        .version-badge {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .version-badge span {
+            color: var(--accent);
+        }
+        
+        @media (max-width: 1200px) {
+            .taskboard {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .activity-feed, .quick-panel {
+                display: none;
+            }
+        }
+        
+        /* Calendar CSS */
+        .calendar-container {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .calendar-nav {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .calendar-nav:hover {
+            background: var(--bg-hover);
+        }
+        
+        #current-month {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        
+        .calendar-day {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            min-height: 100px;
+            padding: 8px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .calendar-day:hover {
+            background: var(--bg-hover);
+        }
+        
+        .calendar-day.empty {
+            background: transparent;
+            border-color: transparent;
+            cursor: default;
+        }
+        
+        .calendar-day.empty:hover {
+            background: transparent;
+        }
+        
+        .calendar-day.today {
+            border-color: var(--accent-color);
+            border-width: 2px;
+        }
+        
+        .calendar-day-number {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+        
+        .calendar-day-events {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        
+        .calendar-event {
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: white;
+        }
+        
+        .calendar-legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+        
+        .calendar-events {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-surface);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        
+        #events-list {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .event-item {
+            padding: 0.75rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .event-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">🚀</div>
+                <div>
+                    <h1>Warung<span>Kerja</span></h1>
+                </div>
+            </div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('tasks')">📋 Tasks</button>
+                <button class="nav-tab" onclick="showTab('calendar')">📅 Calendar</button>
+                <button class="nav-tab" onclick="showTab('projects')">🎯 Projects</button>
+                <button class="nav-tab" onclick="showTab('team')">👥 Team</button>
+                <button class="nav-tab" onclick="showTab('office')">🏢 Office</button>
+            </div>
+            <div class="status-bar">
+                <div class="status-dot"></div>
+                <span>System Online</span>
+            </div>
+        </header>
+        
+        <div id="tasks-tab" class="tab-content">
+            <div class="taskboard">
+                <div class="activity-feed">
+                    <h3>📡 Live Activity</h3>
+                    <div id="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-time">15:45</div>
+                            <div>Task Board V0.6 deployed</div>
+                            <div class="activity-agent">Baro the Creator</div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-time">15:30</div>
+                            <div>Building Task Board module</div>
+                            <div class="activity-agent">Baro the Creator</div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-time">14:38</div>
+                            <div>Mission Control V0.6 started</div>
+                            <div class="activity-agent">Raz</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="kanban-board">
+                    <div class="kanban-column" data-status="backlog">
+                        <div class="kanban-header">
+                            <div class="kanban-title">📥 Backlog</div>
+                            <span class="kanban-count">2</span>
+                        </div>
+                        <div class="tasks-container">
+                            <div class="task-card" draggable="true" data-task-id="1">
+                                <div class="task-title">Build Calendar module</div>
+                                <div class="task-meta">
+                                    <div class="task-assignee">
+                                        <div class="assignee-avatar">B</div>
+                                        <span>Baro</span>
+                                    </div>
+                                    <span class="task-priority priority-medium">Medium</span>
+                                </div>
+                            </div>
+                            <div class="task-card" draggable="true" data-task-id="2">
+                                <div class="task-title">Build Projects tracker</div>
+                                <div class="task-meta">
+                                    <div class="task-assignee">
+                                        <div class="assignee-avatar">B</div>
+                                        <span>Baro</span>
+                                    </div>
+                                    <span class="task-priority priority-low">Low</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="new-task-btn" onclick="addTask('backlog')">+ New Task</button>
+                    </div>
+                    
+                    <div class="kanban-column" data-status="todo">
+                        <div class="kanban-header">
+                            <div class="kanban-title">📝 To Do</div>
+                            <span class="kanban-count">1</span>
+                        </div>
+                        <div class="tasks-container">
+                            <div class="task-card" draggable="true" data-task-id="3">
+                                <div class="task-title">Build Data Bridge</div>
+                                <div class="task-meta">
+                                    <div class="task-assignee">
+                                        <div class="assignee-avatar">B</div>
+                                        <span>Baro</span>
+                                    </div>
+                                    <span class="task-priority priority-high">High</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="new-task-btn" onclick="addTask('todo')">+ New Task</button>
+                    </div>
+                    
+                    <div class="kanban-column" data-status="inprogress">
+                        <div class="kanban-header">
+                            <div class="kanban-title">⚡ In Progress</div>
+                            <span class="kanban-count">1</span>
+                        </div>
+                        <div class="tasks-container">
+                            <div class="task-card" draggable="true" data-task-id="4">
+                                <div class="task-title">Mission Control V0.6</div>
+                                <div class="task-meta">
+                                    <div class="task-assignee">
+                                        <div class="assignee-avatar">B</div>
+                                        <span>Baro</span>
+                                    </div>
+                                    <span class="task-priority priority-high">High</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="new-task-btn" onclick="addTask('inprogress')">+ New Task</button>
+                    </div>
+                    
+                    <div class="kanban-column" data-status="done">
+                        <div class="kanban-header">
+                            <div class="kanban-title">✅ Done</div>
+                            <span class="kanban-count">1</span>
+                        </div>
+                        <div class="tasks-container">
+                            <div class="task-card" draggable="true" data-task-id="5" style="border-left-color: var(--success);">
+                                <div class="task-title">Initial Dashboard</div>
+                                <div class="task-meta">
+                                    <div class="task-assignee">
+                                        <div class="assignee-avatar">B</div>
+                                        <span>Baro</span>
+                                    </div>
+                                    <span class="task-priority priority-low">Done</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="new-task-btn" onclick="addTask('done')">+ New Task</button>
+                    </div>
+                </div>
+                
+                <div class="quick-panel">
+                    <h3>⚡ Quick Actions</h3>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" onclick="alert('Deploying agent...')">🤖 Deploy Agent</button>
+                        <button class="quick-action-btn" onclick="alert('Scanning visual diary...')">🎨 Scan Visuals</button>
+                        <button class="quick-action-btn" onclick="alert('Generating morning brief...')">📋 Morning Brief</button>
+                        <button class="quick-action-btn" onclick="alert('Creating new project...')">🎯 New Project</button>
+                        <button class="quick-action-btn" onclick="alert('Syncing with vault...')">🔄 Sync Vault</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="calendar-tab" class="tab-content" style="display: none;">
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button id="prev-month" class="calendar-nav">&lt;</button>
+                    <h2 id="current-month">March 2026</h2>
+                    <button id="next-month" class="calendar-nav">&gt;</button>
+                </div>
+                
+                <div class="calendar-weekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+                
+                <div id="calendar-grid" class="calendar-grid">
+                    <!-- Calendar days will be generated by JavaScript -->
+                </div>
+                
+                <div class="calendar-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #10b981;"></div>
+                        <span>Meetings</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #8b5cf6;"></div>
+                        <span>Cron Jobs</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #f59e0b;"></div>
+                        <span>Tasks</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #ef4444;"></div>
+                        <span>Milestones</span>
+                    </div>
+                </div>
+                
+                <div id="calendar-events" class="calendar-events">
+                    <h3>Events for <span id="selected-date">Select a date</span></h3>
+                    <div id="events-list">
+                        <!-- Events will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="projects-tab" class="tab-content" style="display: none;">
+            <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
+                <h2>🎯 Projects Module</h2>
+                <p>Coming in V0.7 — Project tracker with progress & documents</p>
+            </div>
+        </div>
+        
+        <div id="team-tab" class="tab-content" style="display: none;">
+            <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
+                <h2>👥 Team Module</h2>
+                <p>Coming in V0.8 — Org chart with mission statement</p>
+            </div>
+        </div>
+        
+        <div id="office-tab" class="tab-content" style="display: none;">
+            <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
+                <h2>🏢 Office Visualization</h2>
+                <p>Coming in V1.0 — 2D pixel art office with agents at work</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="version-badge">Version <span>V0.6</span> — Calendar Module Live</div>
+    
+    <script>
+        // Tab switching
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            event.target.classList.add('active');
+        }
+        
+        // Drag and drop
+        let draggedElement = null;
+        
+        document.querySelectorAll('.task-card').forEach(card => {
+            card.addEventListener('dragstart', function(e) {
+                draggedElement = this;
+                this.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            
+            card.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+                draggedElement = null;
+                updateCounts();
+            });
+        });
+        
+        document.querySelectorAll('.kanban-column').forEach(column => {
+            column.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            });
+            
+            column.addEventListener('drop', function(e) {
+                e.preventDefault();
+                if (draggedElement) {
+                    const container = this.querySelector('.tasks-container');
+                    container.appendChild(draggedElement);
+                    addActivity(`Task moved to ${this.querySelector('.kanban-title').textContent}`);
+                }
+            });
+        });
+        
+        function updateCounts() {
+            document.querySelectorAll('.kanban-column').forEach(column => {
+                const count = column.querySelectorAll('.task-card').length;
+                column.querySelector('.kanban-count').textContent = count;
+            });
+        }
+        
+        function addActivity(message) {
+            const activityList = document.getElementById('activity-list');
+            const time = new Date().toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            });
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item';
+            newActivity.innerHTML = `
+                <div class="activity-time">${time}</div>
+                <div>${message}</div>
+                <div class="activity-agent">Baro the Creator</div>
+            `;
+            activityList.insertBefore(newActivity, activityList.firstChild);
+        }
+        
+        function addTask(column) {
+            const title = prompt('Task title:');
+            if (title) {
+                const columnEl = document.querySelector(`[data-status="${column}"] .tasks-container`);
+                const newTask = document.createElement('div');
+                newTask.className = 'task-card';
+                newTask.draggable = true;
+                newTask.innerHTML = `
+                    <div class="task-title">${title}</div>
+                    <div class="task-meta">
+                        <div class="task-assignee">
+                            <div class="assignee-avatar">R</div>
+                            <span>Raz</span>
+                        </div>
+                        <span class="task-priority priority-medium">Medium</span>
+                    </div>
+                `;
+                
+                newTask.addEventListener('dragstart', function(e) {
+                    draggedElement = this;
+                    this.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                
+                newTask.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    draggedElement = null;
+                    updateCounts();
+                });
+                
+                columnEl.appendChild(newTask);
+                updateCounts();
+                addActivity(`New task created: ${title}`);
+            }
+        }
+        
+        // Auto-refresh activity feed
+        setInterval(() => {
+            const messages = [
+                'Scanning passive income opportunities...',
+                'Checking project status...',
+                'Syncing with vault...',
+                'Agent heartbeat check...'
+            ];
+            if (Math.random() > 0.7) {
+                addActivity(messages[Math.floor(Math.random() * messages.length)]);
+            }
+        }, 30000);
+        
+        // Calendar Module
+        let currentDate = new Date();
+        let calendarEvents = [];
+        
+        async function fetchCalendarEvents() {
+            try {
+                // Fetch from static calendar.json file
+                const response = await fetch('calendar.json');
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                calendarEvents = data.events || [];
+                renderCalendar();
+            } catch (error) {
+                console.error('Error fetching calendar events:', error);
+                // Fallback to mock data if static file is unavailable
+                calendarEvents = [
+                    { id: "1", title: "Weekly Review", date: "2026-03-20", type: "meeting", source: "manual", color: "#10b981" },
+                    { id: "2", title: "Mission Control V0.6 Launch", date: "2026-03-22", type: "milestone", source: "manual", color: "#8b5cf6" },
+                    { id: "3", title: "Figma Template Review", date: "2026-03-19", type: "task", source: "manual", color: "#f59e0b" },
+                    { id: "4", title: "[CRON] Heartbeat", date: "2026-03-20", type: "cron", source: "openclaw", color: "#8b5cf6" },
+                    { id: "5", title: "Team Sync", date: "2026-03-21", type: "meeting", source: "manual", color: "#10b981" },
+                ];
+                renderCalendar();
+            }
+        }
+        
+        function getEventsForDate(date) {
+            const dateStr = date.toISOString().split('T')[0];
+            return calendarEvents.filter(event => event.date === dateStr);
+        }
+        
+        function renderCalendar() {
+            const calendarGrid = document.getElementById('calendar-grid');
+            if (!calendarGrid) return;
+            
+            calendarGrid.innerHTML = '';
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // Update month header
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('current-month').textContent = `${monthNames[month]} ${year}`;
+            
+            // Get first day of month and how many days
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            
+            // Day of week for first day (0 = Sunday, 6 = Saturday)
+            const firstDayIndex = firstDay.getDay();
+            
+            // Add empty cells for days before first day of month
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            // Add days of the month
+            const today = new Date();
+            const todayStr = today.toDateString();
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayDate = new Date(year, month, day);
+                const dayStr = dayDate.toDateString();
+                const dateStr = dayDate.toISOString().split('T')[0];
+                const isToday = dayStr === todayStr;
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = `calendar-day ${isToday ? 'today' : ''}`;
+                dayElement.dataset.date = dateStr;
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'calendar-day-number';
+                dayNumber.textContent = day;
+                
+                const eventsContainer = document.createElement('div');
+                eventsContainer.className = 'calendar-day-events';
+                
+                const eventsForDay = getEventsForDate(dayDate);
+                eventsForDay.slice(0, 2).forEach(event => {
+                    const eventElement = document.createElement('div');
+                    eventElement.className = 'calendar-event';
+                    eventElement.textContent = event.title;
+                    eventElement.style.backgroundColor = event.color;
+                    eventsContainer.appendChild(eventElement);
+                });
+                
+                if (eventsForDay.length > 2) {
+                    const moreElement = document.createElement('div');
+                    moreElement.className = 'calendar-event';
+                    moreElement.textContent = `+${eventsForDay.length - 2} more`;
+                    moreElement.style.backgroundColor = '#6b7280';
+                    eventsContainer.appendChild(moreElement);
+                }
+                
+                dayElement.appendChild(dayNumber);
+                dayElement.appendChild(eventsContainer);
+                
+                dayElement.addEventListener('click', () => selectDate(dayDate));
+                calendarGrid.appendChild(dayElement);
+            }
+            
+            // Select today's date by default
+            selectDate(today);
+        }
+        
+        function selectDate(date) {
+            const dateStr = date.toDateString();
+            document.getElementById('selected-date').textContent = dateStr;
+            
+            const eventsList = document.getElementById('events-list');
+            eventsList.innerHTML = '';
+            
+            const eventsForDate = getEventsForDate(date);
+            
+            if (eventsForDate.length === 0) {
+                eventsList.innerHTML = '<div class="event-item"><div class="event-title">No events scheduled</div><div class="event-meta">Add an event in calendar_entries.json</div></div>';
+                return;
+            }
+            
+            eventsForDate.forEach(event => {
+                const eventElement = document.createElement('div');
+                eventElement.className = 'event-item';
+                eventElement.style.borderLeftColor = event.color;
+                
+                const title = document.createElement('div');
+                title.className = 'event-title';
+                title.textContent = event.title;
+                
+                const meta = document.createElement('div');
+                meta.className = 'event-meta';
+                meta.textContent = `${event.type.charAt(0).toUpperCase() + event.type.slice(1)} • ${event.source}`;
+                
+                eventElement.appendChild(title);
+                eventElement.appendChild(meta);
+                eventsList.appendChild(eventElement);
+            });
+        }
+        
+        // Initialize calendar when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchCalendarEvents();
+            
+            document.getElementById('prev-month').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar();
+            });
+            
+            document.getElementById('next-month').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar();
+            });
+            
+            // Also render calendar when tab is switched (in case it's not active initially)
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    if (button.getAttribute('onclick').includes('calendar')) {
+                        renderCalendar();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -183,6 +183,118 @@ def vault_status():
         "folders": folders
     })
 
+@app.route('/api/workspace/<agent_name>')
+def get_workspace(agent_name):
+    """Get workspace contents for an agent"""
+    agent_workspace = os.path.join(VAULT_PATH, "06_Agents", agent_name)
+    
+    if not os.path.exists(agent_workspace):
+        return jsonify({
+            "error": f"Workspace not found for agent: {agent_name}",
+            "path": agent_workspace
+        }), 404
+    
+    try:
+        contents = []
+        for root, dirs, files in os.walk(agent_workspace):
+            # Skip hidden directories
+            dirs[:] = [d for d in dirs if not d.startswith('.')]
+            
+            for file in files:
+                if file.startswith('.'):
+                    continue
+                    
+                file_path = os.path.join(root, file)
+                rel_path = os.path.relpath(file_path, agent_workspace)
+                
+                # Get file stats
+                stat = os.stat(file_path)
+                file_size = stat.st_size
+                
+                # Get file extension
+                _, ext = os.path.splitext(file)
+                ext = ext.lower()
+                
+                # Determine file type
+                if ext in ['.md', '.txt', '.json', '.py', '.js', '.html', '.css']:
+                    file_type = "text"
+                elif ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg']:
+                    file_type = "image"
+                else:
+                    file_type = "other"
+                
+                contents.append({
+                    "name": file,
+                    "path": rel_path,
+                    "type": file_type,
+                    "size": file_size,
+                    "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
+                    "extension": ext if ext else "none"
+                })
+        
+        # Sort by name
+        contents.sort(key=lambda x: x["name"].lower())
+        
+        return jsonify({
+            "agent": agent_name,
+            "workspace_path": agent_workspace,
+            "total_files": len(contents),
+            "contents": contents
+        })
+        
+    except Exception as e:
+        return jsonify({
+            "error": str(e),
+            "agent": agent_name,
+            "path": agent_workspace
+        }), 500
+
+@app.route('/api/workspace')
+def list_workspaces():
+    """List all agent workspaces"""
+    agents_dir = os.path.join(VAULT_PATH, "06_Agents")
+    
+    if not os.path.exists(agents_dir):
+        return jsonify({
+            "error": "Agents directory not found",
+            "path": agents_dir
+        }), 404
+    
+    try:
+        workspaces = []
+        for item in os.listdir(agents_dir):
+            item_path = os.path.join(agents_dir, item)
+            if os.path.isdir(item_path):
+                # Count files
+                file_count = 0
+                for root, dirs, files in os.walk(item_path):
+                    # Skip hidden
+                    dirs[:] = [d for d in dirs if not d.startswith('.')]
+                    files = [f for f in files if not f.startswith('.')]
+                    file_count += len(files)
+                
+                workspaces.append({
+                    "name": item,
+                    "path": item_path,
+                    "file_count": file_count,
+                    "is_agent": True
+                })
+        
+        # Sort by name
+        workspaces.sort(key=lambda x: x["name"].lower())
+        
+        return jsonify({
+            "agents_directory": agents_dir,
+            "total_workspaces": len(workspaces),
+            "workspaces": workspaces
+        })
+        
+    except Exception as e:
+        return jsonify({
+            "error": str(e),
+            "path": agents_dir
+        }), 500
+
 if __name__ == '__main__':
     print("=" * 50)
     print("🚀 Warung-Kerja Mission Control Data Bridge")
@@ -191,6 +303,8 @@ if __name__ == '__main__':
     print(f"🌐 API URL: http://localhost:{PORT}")
     print(f"📋 Tasks Endpoint: http://localhost:{PORT}/api/tasks")
     print(f"📅 Calendar Endpoint: http://localhost:{PORT}/api/calendar")
+    print(f"👥 Workspace Endpoint: http://localhost:{PORT}/api/workspace")
+    print(f"👤 Agent Workspace: http://localhost:{PORT}/api/workspace/<agent_name>")
     print("=" * 50)
     print("Press Ctrl+C to stop")
     print()

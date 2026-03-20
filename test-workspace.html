@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workspace Explorer Test</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #0a0a0f;
+            color: white;
+            padding: 2rem;
+        }
+        .workspace-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .workspace-tab {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            background: #6366f1;
+            color: white;
+        }
+        #workspace-content {
+            background: #12121a;
+            border-radius: 12px;
+            padding: 2rem;
+            min-height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Workspace Explorer Test</h1>
+    
+    <div class="workspace-container">
+        <button class="workspace-tab" onclick="showWorkspace('Baro')">🎨 Baro</button>
+        <button class="workspace-tab" onclick="showWorkspace('noona')">🔧 Noona</button>
+        <button class="workspace-tab" onclick="showWorkspace('_Shared_Memory')">🧠 Shared Memory</button>
+    </div>
+    
+    <div id="workspace-content">
+        Select an agent workspace to explore
+    </div>
+    
+    <div id="workspace-stats" style="margin-top: 1rem; color: #94a3b8;"></div>
+    
+    <script>
+        let workspaceData = null;
+        
+        async function loadWorkspaceData() {
+            try {
+                const response = await fetch('workspaces.json');
+                workspaceData = await response.json();
+                console.log('Workspace data loaded');
+            } catch (error) {
+                console.error('Error loading workspace data:', error);
+                workspaceData = { workspaces: {} };
+            }
+        }
+        
+        function showWorkspace(agentName) {
+            if (!workspaceData) {
+                alert('Data not loaded');
+                return;
+            }
+            
+            const workspace = workspaceData.workspaces[agentName];
+            if (!workspace) {
+                document.getElementById('workspace-content').innerHTML = `Workspace not found: ${agentName}`;
+                return;
+            }
+            
+            let html = `<h2>${agentName} Workspace</h2>`;
+            html += `<p>${workspace.file_count} files</p>`;
+            
+            if (workspace.contents && workspace.contents.length > 0) {
+                html += '<ul>';
+                workspace.contents.forEach(file => {
+                    html += `<li>${file.name} (${file.type})</li>`;
+                });
+                html += '</ul>';
+            }
+            
+            document.getElementById('workspace-content').innerHTML = html;
+            document.getElementById('workspace-stats').textContent = 
+                `Showing ${workspace.contents.length} files from ${agentName}`;
+        }
+        
+        // Load data on page load
+        loadWorkspaceData();
+    </script>
+</body>
+</html>

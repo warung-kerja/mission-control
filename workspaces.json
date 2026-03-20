@@ -1,0 +1,239 @@
+{
+  "generated_at": "2026-03-20T00:17:41.123834",
+  "agents_directory": "/mnt/d/Warung Kerja 1.0/06_Agents",
+  "total_workspaces": 3,
+  "workspaces": {
+    "Baro": {
+      "name": "Baro",
+      "path": "/mnt/d/Warung Kerja 1.0/06_Agents/Baro",
+      "file_count": 10,
+      "contents": [
+        {
+          "name": "AGENTS.md",
+          "path": "AGENTS.md",
+          "type": "text",
+          "size": 8347,
+          "modified": "2026-03-18T07:59:52.428000",
+          "extension": ".md"
+        },
+        {
+          "name": "DELEGATION.md",
+          "path": "DELEGATION.md",
+          "type": "text",
+          "size": 5178,
+          "modified": "2026-03-18T08:07:41.380000",
+          "extension": ".md"
+        },
+        {
+          "name": "heartbeat-state.json",
+          "path": "memory/heartbeat-state.json",
+          "type": "text",
+          "size": 3145,
+          "modified": "2026-03-19T22:29:40.262940",
+          "extension": ".json"
+        },
+        {
+          "name": "HEARTBEAT.md",
+          "path": "HEARTBEAT.md",
+          "type": "text",
+          "size": 667,
+          "modified": "2026-03-18T06:59:55.396521",
+          "extension": ".md"
+        },
+        {
+          "name": "IDENTITY.md",
+          "path": "IDENTITY.md",
+          "type": "text",
+          "size": 1507,
+          "modified": "2026-03-18T08:00:10.525000",
+          "extension": ".md"
+        },
+        {
+          "name": "MEMORY.md",
+          "path": "MEMORY.md",
+          "type": "text",
+          "size": 3324,
+          "modified": "2026-03-18T08:26:44.721345",
+          "extension": ".md"
+        },
+        {
+          "name": "SOUL.md",
+          "path": "SOUL.md",
+          "type": "text",
+          "size": 10315,
+          "modified": "2026-03-18T08:06:55.055000",
+          "extension": ".md"
+        },
+        {
+          "name": "TOOLS.md",
+          "path": "TOOLS.md",
+          "type": "text",
+          "size": 860,
+          "modified": "2026-03-17T22:46:20.754603",
+          "extension": ".md"
+        },
+        {
+          "name": "USER.md",
+          "path": "USER.md",
+          "type": "text",
+          "size": 9669,
+          "modified": "2026-03-17T23:37:44.449000",
+          "extension": ".md"
+        },
+        {
+          "name": "Writing_Style_Guide.md",
+          "path": "Writing_Style_Guide.md",
+          "type": "text",
+          "size": 3655,
+          "modified": "2026-03-18T12:46:55.277738",
+          "extension": ".md"
+        }
+      ],
+      "last_updated": "2026-03-20T00:17:41.102236"
+    },
+    "noona": {
+      "name": "noona",
+      "path": "/mnt/d/Warung Kerja 1.0/06_Agents/noona",
+      "file_count": 14,
+      "contents": [
+        {
+          "name": "2026-03-18.md",
+          "path": "memory/2026-03-18.md",
+          "type": "text",
+          "size": 18437,
+          "modified": "2026-03-18T22:22:38.417458",
+          "extension": ".md"
+        },
+        {
+          "name": "2026-03-19.md",
+          "path": "memory/2026-03-19.md",
+          "type": "text",
+          "size": 104500,
+          "modified": "2026-03-19T22:14:33.273129",
+          "extension": ".md"
+        },
+        {
+          "name": "AGENTS.md",
+          "path": "AGENTS.md",
+          "type": "text",
+          "size": 7874,
+          "modified": "2026-03-17T23:15:27.612602",
+          "extension": ".md"
+        },
+        {
+          "name": "BOOTSTRAP.md",
+          "path": "BOOTSTRAP.md",
+          "type": "text",
+          "size": 1470,
+          "modified": "2026-03-17T23:15:27.674115",
+          "extension": ".md"
+        },
+        {
+          "name": "create_channels.sh",
+          "path": "create_channels.sh",
+          "type": "other",
+          "size": 2502,
+          "modified": "2026-03-18T22:40:49.314215",
+          "extension": ".sh"
+        },
+        {
+          "name": "create_discord_channels.py",
+          "path": "create_discord_channels.py",
+          "type": "text",
+          "size": 5478,
+          "modified": "2026-03-18T22:38:55.632692",
+          "extension": ".py"
+        },
+        {
+          "name": "cron-setup-reference.md",
+          "path": "cron-setup-reference.md",
+          "type": "text",
+          "size": 1811,
+          "modified": "2026-03-19T23:51:10.446905",
+          "extension": ".md"
+        },
+        {
+          "name": "DISCORD_CHANNELS_README.md",
+          "path": "DISCORD_CHANNELS_README.md",
+          "type": "text",
+          "size": 3671,
+          "modified": "2026-03-18T22:40:21.100837",
+          "extension": ".md"
+        },
+        {
+          "name": "HEARTBEAT.md",
+          "path": "HEARTBEAT.md",
+          "type": "text",
+          "size": 168,
+          "modified": "2026-03-17T23:15:27.646962",
+          "extension": ".md"
+        },
+        {
+          "name": "IDENTITY.md",
+          "path": "IDENTITY.md",
+          "type": "text",
+          "size": 636,
+          "modified": "2026-03-17T23:15:27.628602",
+          "extension": ".md"
+        },
+        {
+          "name": "MEMORY.md",
+          "path": "MEMORY.md",
+          "type": "text",
+          "size": 5643,
+          "modified": "2026-03-19T22:16:23.118202",
+          "extension": ".md"
+        },
+        {
+          "name": "SOUL.md",
+          "path": "SOUL.md",
+          "type": "text",
+          "size": 8786,
+          "modified": "2026-03-19T22:18:42.097887",
+          "extension": ".md"
+        },
+        {
+          "name": "TOOLS.md",
+          "path": "TOOLS.md",
+          "type": "text",
+          "size": 860,
+          "modified": "2026-03-17T23:15:27.624603",
+          "extension": ".md"
+        },
+        {
+          "name": "USER.md",
+          "path": "USER.md",
+          "type": "text",
+          "size": 477,
+          "modified": "2026-03-17T23:15:27.639281",
+          "extension": ".md"
+        }
+      ],
+      "last_updated": "2026-03-20T00:17:41.110667"
+    },
+    "_Shared_Memory": {
+      "name": "_Shared_Memory",
+      "path": "/mnt/d/Warung Kerja 1.0/06_Agents/_Shared_Memory",
+      "file_count": 2,
+      "contents": [
+        {
+          "name": "Amazon_Short_Stories_Business.md",
+          "path": "Business_Plans/Amazon_Short_Stories_Business.md",
+          "type": "text",
+          "size": 13983,
+          "modified": "2026-03-18T08:15:10.781560",
+          "extension": ".md"
+        },
+        {
+          "name": "USER.md",
+          "path": "USER.md",
+          "type": "text",
+          "size": 9669,
+          "modified": "2026-03-17T23:37:44.449000",
+          "extension": ".md"
+        }
+      ],
+      "last_updated": "2026-03-20T00:17:41.123695"
+    }
+  }
+}
