@@ -1024,6 +1024,27 @@
                         <button class="workspace-tab" onclick="showWorkspace('_Shared_Memory')" style="background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); color: white;">🧠 Shared Memory</button>
                     </div>
                     
+                    <!-- Search and Filter Bar -->
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                        <div style="flex-grow: 1; position: relative;">
+                            <input type="text" id="workspace-search" placeholder="Search files by name, type, or extension..." 
+                                   style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-color); font-size: 0.9rem;"
+                                   oninput="filterWorkspaceFiles()">
+                            <span style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); opacity: 0.7;">🔍</span>
+                        </div>
+                        <select id="workspace-filter-type" onchange="filterWorkspaceFiles()" 
+                                style="padding: 0.75rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-color); font-size: 0.9rem; min-width: 120px;">
+                            <option value="all">All File Types</option>
+                            <option value="text">Text Files</option>
+                            <option value="image">Images</option>
+                            <option value="other">Other Files</option>
+                        </select>
+                        <button onclick="clearWorkspaceFilters()" 
+                                style="padding: 0.75rem 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-color); font-size: 0.9rem; cursor: pointer;">
+                            Clear Filters
+                        </button>
+                    </div>
+                    
                     <div id="workspace-content" style="min-height: 300px; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 1rem; border: 1px solid var(--border-color);">
                         <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
                             <div style="font-size: 2rem; margin-bottom: 1rem;">📁</div>
@@ -1699,7 +1720,7 @@
         }
         
         // Render workspace contents
-        function renderWorkspace(workspace) {
+        function renderWorkspace(workspace, workspaceName = currentWorkspace) {
             const container = document.getElementById('workspace-content');
             
             if (!workspace.contents || workspace.contents.length === 0) {
@@ -1765,7 +1786,11 @@
                     }
                     
                     html += `
-                        <div style="background: rgba(0,0,0,0.2); border-radius: 6px; padding: 0.75rem; border-left: 3px solid ${color};">
+                        <div onclick="showFilePreview(${JSON.stringify(file).replace(/"/g, '&quot;')}, '${workspaceName}')" 
+                             style="background: rgba(0,0,0,0.2); border-radius: 6px; padding: 0.75rem; border-left: 3px solid ${color}; cursor: pointer; transition: all 0.2s;"
+                             onmouseover="this.style.transform='translateY(-2px)'; this.style.background='rgba(0,0,0,0.3)';"
+                             onmouseout="this.style.transform='translateY(0)'; this.style.background='rgba(0,0,0,0.2)';"
+                             title="Click to preview ${file.name}">
                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
                                 <span>${icon}</span>
                                 <div style="font-weight: 500; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${file.name}">
@@ -1791,6 +1816,63 @@
             
             html += '</div>';
             container.innerHTML = html;
+        }
+        
+        // Filter workspace files based on search and type
+        function filterWorkspaceFiles() {
+            if (!currentWorkspace || !workspaceData) return;
+            
+            const searchTerm = document.getElementById('workspace-search').value.toLowerCase();
+            const filterType = document.getElementById('workspace-filter-type').value;
+            const workspace = workspaceData.workspaces[currentWorkspace];
+            
+            if (!workspace || !workspace.contents) return;
+            
+            // Filter files
+            const filteredFiles = workspace.contents.filter(file => {
+                // Filter by type
+                if (filterType !== 'all' && file.type !== filterType) {
+                    return false;
+                }
+                
+                // Filter by search term
+                if (searchTerm) {
+                    const searchIn = `${file.name} ${file.path} ${file.extension} ${file.type}`.toLowerCase();
+                    return searchIn.includes(searchTerm);
+                }
+                
+                return true;
+            });
+            
+            // Create a temporary workspace object with filtered contents
+            const filteredWorkspace = {
+                ...workspace,
+                contents: filteredFiles
+            };
+            
+            // Re-render with filtered files
+            renderWorkspace(filteredWorkspace, currentWorkspace);
+            
+            // Update stats
+            const totalFiles = workspace.contents.length;
+            const shownFiles = filteredFiles.length;
+            document.getElementById('workspace-stats').textContent = 
+                `${shownFiles} of ${totalFiles} files • ${filterType !== 'all' ? filterType + ' only • ' : ''}${searchTerm ? 'search: "' + searchTerm + '" • ' : ''}Updated: ${new Date().toLocaleTimeString()}`;
+        }
+        
+        // Clear all filters
+        function clearWorkspaceFilters() {
+            document.getElementById('workspace-search').value = '';
+            document.getElementById('workspace-filter-type').value = 'all';
+            
+            if (currentWorkspace && workspaceData) {
+                const workspace = workspaceData.workspaces[currentWorkspace];
+                if (workspace) {
+                    renderWorkspace(workspace);
+                    document.getElementById('workspace-stats').textContent = 
+                        `${workspace.file_count} files • ${workspace.contents.length} items • Updated: ${new Date(workspace.last_updated).toLocaleTimeString()}`;
+                }
+            }
         }
         
         // Initialize workspace explorer when page loads
@@ -2503,6 +2585,163 @@
                 });
             });
         });
+        
+        // File Preview Modal Functions
+        function showFilePreview(file, workspaceName) {
+            const modal = document.getElementById('file-preview-modal');
+            const title = document.getElementById('preview-title');
+            const content = document.getElementById('preview-content');
+            
+            // Set title
+            title.textContent = `${file.name} (${workspaceName})`;
+            
+            // Show loading
+            content.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">⏳</div>
+                    <div>Loading preview...</div>
+                </div>
+            `;
+            
+            // Show modal
+            modal.style.display = 'flex';
+            
+            // Load file content based on type
+            setTimeout(() => {
+                loadFileContent(file, workspaceName, content);
+            }, 100);
+        }
+        
+        function loadFileContent(file, workspaceName, contentElement) {
+            // For now, show file info. In a real implementation, this would fetch the file content
+            const fileInfo = `
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div style="background: rgba(0,0,0,0.1); padding: 0.75rem; border-radius: 6px;">
+                            <div style="font-size: 0.8rem; opacity: 0.7;">File Type</div>
+                            <div style="font-weight: bold;">${file.type === 'text' ? 'Text' : file.type === 'image' ? 'Image' : 'Other'}</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.1); padding: 0.75rem; border-radius: 6px;">
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Size</div>
+                            <div style="font-weight: bold;">${formatFileSize(file.size)}</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.1); padding: 0.75rem; border-radius: 6px;">
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Modified</div>
+                            <div style="font-weight: bold;">${new Date(file.modified).toLocaleString()}</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.1); padding: 0.75rem; border-radius: 6px;">
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Extension</div>
+                            <div style="font-weight: bold;">${file.extension}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(0,0,0,0.1); padding: 0.75rem; border-radius: 6px;">
+                        <div style="font-size: 0.8rem; opacity: 0.7;">Full Path</div>
+                        <div style="font-family: monospace; font-size: 0.9rem; word-break: break-all;">${workspaceName}/${file.path}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Show content based on file type
+            let fileContent = '';
+            
+            if (file.type === 'text') {
+                // For text files, we could fetch content, but for now show placeholder
+                fileContent = `
+                    <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 1rem; margin-top: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <div style="font-weight: bold;">Content Preview</div>
+                            <button onclick="copyToClipboard('${file.name}')" style="background: var(--accent-color); color: white; border: none; padding: 0.3rem 0.75rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">
+                                📋 Copy Path
+                            </button>
+                        </div>
+                        <div style="background: black; color: #00ff00; font-family: monospace; padding: 1rem; border-radius: 4px; max-height: 300px; overflow: auto; font-size: 0.85rem;">
+                            # Text file preview would be shown here
+                            # In a real implementation, this would fetch the file content
+                            # For security reasons, we're not fetching arbitrary files
+                            
+                            File: ${file.name}
+                            Type: ${file.type}
+                            Size: ${file.size} bytes
+                            Path: ${file.path}
+                            
+                            # This is a placeholder preview
+                            # Actual file content would be loaded via API
+                        </div>
+                    </div>
+                `;
+            } else if (file.type === 'image') {
+                fileContent = `
+                    <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 1rem; margin-top: 1rem;">
+                        <div style="font-weight: bold; margin-bottom: 0.5rem;">Image Preview</div>
+                        <div style="text-align: center; padding: 2rem; background: rgba(0,0,0,0.3); border-radius: 6px;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🖼️</div>
+                            <div>Image preview would be shown here</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">
+                                ${file.name} (${formatFileSize(file.size)})
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                fileContent = `
+                    <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 1rem; margin-top: 1rem;">
+                        <div style="font-weight: bold; margin-bottom: 0.5rem;">File Information</div>
+                        <div style="text-align: center; padding: 2rem; background: rgba(0,0,0,0.3); border-radius: 6px;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📄</div>
+                            <div>Preview not available for this file type</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">
+                                ${file.extension} files cannot be previewed in this version
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            contentElement.innerHTML = fileInfo + fileContent;
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+        
+        function closeFilePreview() {
+            document.getElementById('file-preview-modal').style.display = 'none';
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard: ' + text);
+            });
+        }
+        
+        // Close modal when clicking outside
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('file-preview-modal');
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeFilePreview();
+                }
+            });
+        });
     </script>
+    
+    <!-- File Preview Modal -->
+    <div id="file-preview-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 1rem;">
+        <div style="background: var(--card-bg); border-radius: 12px; width: 100%; max-width: 900px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--border-color);">
+            <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0;" id="preview-title">File Preview</h3>
+                <button onclick="closeFilePreview()" style="background: none; border: none; color: var(--text-color); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; line-height: 1;">×</button>
+            </div>
+            <div id="preview-content" style="padding: 1.5rem; overflow-y: auto; flex-grow: 1;">
+                <!-- File preview content will be loaded here -->
+            </div>
+            <div style="padding: 1rem; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.8rem; color: var(--text-secondary);">
+                Use Ctrl+Click to open in new tab • Esc to close
+            </div>
+        </div>
+    </div>
 </body>
 </html>
