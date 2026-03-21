@@ -1103,6 +1103,9 @@
                             <button id="view-timeline-btn" onclick="switchMemoryView('timeline')" style="padding: 0.4rem 0.8rem; background: transparent; color: var(--text-primary); border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 0.3rem;">
                                 📅 Timeline
                             </button>
+                            <button id="view-insights-btn" onclick="switchMemoryView('insights')" style="padding: 0.4rem 0.8rem; background: transparent; color: var(--text-primary); border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 0.3rem;">
+                                📊 Insights
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1254,6 +1257,139 @@
                         <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
                             <div style="font-size: 2rem; margin-bottom: 1rem;">📅</div>
                             <div>Loading timeline...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Insights View (Hidden by default) -->
+                <div id="memory-insights-view" style="display: none;">
+                    <!-- Insights Header -->
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid var(--border-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                            <div>
+                                <h3 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">📊 Insights Dashboard</h3>
+                                <p style="margin: 0.5rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">
+                                    Analyze writing patterns, activity trends, and content distribution
+                                </p>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <select id="insights-period" onchange="renderInsights()" style="padding: 0.5rem; background: var(--bg-hover); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 0.85rem;">
+                                    <option value="28">Last 28 Days</option>
+                                    <option value="90">Last 90 Days</option>
+                                    <option value="180">Last 6 Months</option>
+                                    <option value="365">Last Year</option>
+                                </select>
+                                <button onclick="refreshInsights()" style="padding: 0.5rem 1rem; background: var(--accent-color); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    🔄 Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Key Metrics -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <div style="font-size: 1.2rem;">📈</div>
+                                <div style="font-weight: bold; font-size: 0.9rem;">Activity Trend</div>
+                            </div>
+                            <div style="font-size: 1.5rem; font-weight: bold;" id="insight-trend">-</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">vs previous period</div>
+                        </div>
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <div style="font-size: 1.2rem;">📝</div>
+                                <div style="font-weight: bold; font-size: 0.9rem;">Avg Words/Day</div>
+                            </div>
+                            <div style="font-size: 1.5rem; font-weight: bold;" id="insight-avg-words">-</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Writing volume</div>
+                        </div>
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <div style="font-size: 1.2rem;">🔥</div>
+                                <div style="font-weight: bold; font-size: 0.9rem;">Most Active Day</div>
+                            </div>
+                            <div style="font-size: 1.5rem; font-weight: bold;" id="insight-most-active">-</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Peak productivity</div>
+                        </div>
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <div style="font-size: 1.2rem;">📚</div>
+                                <div style="font-weight: bold; font-size: 0.9rem;">Top Topic</div>
+                            </div>
+                            <div style="font-size: 1.5rem; font-weight: bold;" id="insight-top-topic">-</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Most discussed</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Activity Heatmap -->
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid var(--border-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h4 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">🔥 Activity Heatmap</h4>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="display: flex; align-items: center; gap: 0.2rem;">
+                                    <div style="width: 12px; height: 12px; background: #ebedf0; border-radius: 2px;"></div>
+                                    <span>No activity</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.2rem;">
+                                    <div style="width: 12px; height: 12px; background: #9be9a8; border-radius: 2px;"></div>
+                                    <span>Low</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.2rem;">
+                                    <div style="width: 12px; height: 12px; background: #40c463; border-radius: 2px;"></div>
+                                    <span>Medium</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.2rem;">
+                                    <div style="width: 12px; height: 12px; background: #30a14e; border-radius: 2px;"></div>
+                                    <span>High</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.2rem;">
+                                    <div style="width: 12px; height: 12px; background: #216e39; border-radius: 2px;"></div>
+                                    <span>Very High</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="heatmap-container" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                                <div style="font-size: 2rem; margin-bottom: 1rem;">📊</div>
+                                <div>Loading activity heatmap...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Content Distribution -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                            <h4 style="margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">📊 Content Distribution</h4>
+                            <div id="content-distribution-chart" style="height: 200px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
+                                Loading distribution chart...
+                            </div>
+                        </div>
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                            <h4 style="margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">📈 Writing Patterns</h4>
+                            <div id="writing-patterns-chart" style="height: 200px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
+                                Loading patterns chart...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Top Topics & Milestones -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                            <h4 style="margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">🏆 Top Topics</h4>
+                            <div id="top-topics-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                    Loading topics...
+                                </div>
+                            </div>
+                        </div>
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                            <h4 style="margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">🎯 Key Milestones</h4>
+                            <div id="milestones-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                    Loading milestones...
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3230,6 +3366,7 @@ Use the memory tree on the left to browse other files, or use the search functio
         
         let currentMemoryView = 'browser';
         let timelineData = null;
+        let insightsData = null;
         
         function switchMemoryView(view) {
             currentMemoryView = view;
@@ -3237,27 +3374,43 @@ Use the memory tree on the left to browse other files, or use the search functio
             // Update button styles
             const browserBtn = document.getElementById('view-browser-btn');
             const timelineBtn = document.getElementById('view-timeline-btn');
+            const insightsBtn = document.getElementById('view-insights-btn');
             
+            // Reset all buttons
+            browserBtn.style.background = 'transparent';
+            browserBtn.style.color = 'var(--text-primary)';
+            timelineBtn.style.background = 'transparent';
+            timelineBtn.style.color = 'var(--text-primary)';
+            insightsBtn.style.background = 'transparent';
+            insightsBtn.style.color = 'var(--text-primary)';
+            
+            // Hide all views
+            document.getElementById('memory-browser-view').style.display = 'none';
+            document.getElementById('memory-timeline-view').style.display = 'none';
+            document.getElementById('memory-insights-view').style.display = 'none';
+            
+            // Show selected view and update button
             if (view === 'browser') {
                 browserBtn.style.background = 'var(--accent-color)';
                 browserBtn.style.color = 'white';
-                timelineBtn.style.background = 'transparent';
-                timelineBtn.style.color = 'var(--text-primary)';
-                
                 document.getElementById('memory-browser-view').style.display = 'grid';
-                document.getElementById('memory-timeline-view').style.display = 'none';
-            } else {
+            } else if (view === 'timeline') {
                 timelineBtn.style.background = 'var(--accent-color)';
                 timelineBtn.style.color = 'white';
-                browserBtn.style.background = 'transparent';
-                browserBtn.style.color = 'var(--text-primary)';
-                
-                document.getElementById('memory-browser-view').style.display = 'none';
                 document.getElementById('memory-timeline-view').style.display = 'block';
                 
                 // Load timeline data if not already loaded
                 if (!timelineData) {
                     renderTimeline();
+                }
+            } else if (view === 'insights') {
+                insightsBtn.style.background = 'var(--accent-color)';
+                insightsBtn.style.color = 'white';
+                document.getElementById('memory-insights-view').style.display = 'block';
+                
+                // Load insights data if not already loaded
+                if (!insightsData) {
+                    renderInsights();
                 }
             }
             
@@ -3536,6 +3689,288 @@ Use the memory tree on the left to browse other files, or use the search functio
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+        
+        // Insights Dashboard Functions
+        
+        async function renderInsights() {
+            try {
+                // Fetch memory data
+                if (!window.memoryData) {
+                    const response = await fetch('memories.json');
+                    window.memoryData = await response.json();
+                }
+                
+                const data = window.memoryData;
+                insightsData = data;
+                
+                // Calculate insights
+                const period = parseInt(document.getElementById('insights-period').value);
+                const dailyFiles = data.memory_files.filter(f => f.type === 'daily' && f.date);
+                
+                // Calculate date range
+                const dates = dailyFiles.map(f => new Date(f.date)).sort((a, b) => a - b);
+                const startDate = dates[0];
+                const endDate = dates[dates.length - 1];
+                const dayDiff = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                
+                // Calculate metrics
+                const totalFiles = dailyFiles.length;
+                const avgFilesPerDay = totalFiles / Math.max(dayDiff, 1);
+                
+                // Find most active day
+                const filesByDate = {};
+                dailyFiles.forEach(file => {
+                    const dateStr = file.date.split('T')[0];
+                    filesByDate[dateStr] = (filesByDate[dateStr] || 0) + 1;
+                });
+                
+                let mostActiveDate = null;
+                let maxFiles = 0;
+                for (const [date, count] of Object.entries(filesByDate)) {
+                    if (count > maxFiles) {
+                        maxFiles = count;
+                        mostActiveDate = date;
+                    }
+                }
+                
+                // Update metrics display
+                document.getElementById('insight-trend').textContent = avgFilesPerDay > 1 ? '📈 Growing' : avgFilesPerDay > 0.5 ? '↔️ Stable' : '📉 Low';
+                document.getElementById('insight-avg-words').textContent = Math.round(avgFilesPerDay * 500); // Estimate 500 words per file
+                document.getElementById('insight-most-active').textContent = mostActiveDate ? new Date(mostActiveDate).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }) : '-';
+                document.getElementById('insight-top-topic').textContent = 'Mission Control'; // Placeholder
+                
+                // Render heatmap
+                renderHeatmap(dailyFiles, period);
+                
+                // Render charts
+                renderContentDistribution(data.memory_files);
+                renderWritingPatterns(dailyFiles);
+                
+                // Render top topics and milestones
+                renderTopTopics(data.memory_files);
+                renderMilestones(data.memory_files);
+                
+                addActivity('Insights dashboard loaded');
+                
+            } catch (error) {
+                console.error('Error loading insights:', error);
+                addActivity('Failed to load insights dashboard');
+            }
+        }
+        
+        function renderHeatmap(dailyFiles, days) {
+            const container = document.getElementById('heatmap-container');
+            container.innerHTML = '';
+            
+            // Create heatmap data for last N days
+            const heatmapData = {};
+            const today = new Date();
+            const startDate = new Date(today);
+            startDate.setDate(today.getDate() - days);
+            
+            // Initialize all days with 0
+            for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
+                const dateStr = d.toISOString().split('T')[0];
+                heatmapData[dateStr] = 0;
+            }
+            
+            // Count files per day
+            dailyFiles.forEach(file => {
+                if (file.date) {
+                    const fileDate = new Date(file.date);
+                    if (fileDate >= startDate && fileDate <= today) {
+                        const dateStr = fileDate.toISOString().split('T')[0];
+                        heatmapData[dateStr] = (heatmapData[dateStr] || 0) + 1;
+                    }
+                }
+            });
+            
+            // Group by weeks
+            const weeks = [];
+            let currentWeek = [];
+            let currentDate = new Date(startDate);
+            
+            while (currentDate <= today) {
+                currentWeek.push({
+                    date: new Date(currentDate),
+                    count: heatmapData[currentDate.toISOString().split('T')[0]] || 0
+                });
+                
+                if (currentDate.getDay() === 6 || currentDate >= today) { // Saturday or end date
+                    weeks.push([...currentWeek]);
+                    currentWeek = [];
+                }
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            // Create heatmap HTML
+            weeks.forEach(week => {
+                const weekDiv = document.createElement('div');
+                weekDiv.style.display = 'flex';
+                weekDiv.style.gap = '2px';
+                
+                week.forEach(day => {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.style.width = '12px';
+                    dayDiv.style.height = '12px';
+                    dayDiv.style.borderRadius = '2px';
+                    dayDiv.style.position = 'relative';
+                    
+                    // Color based on activity level
+                    let color = '#ebedf0'; // No activity
+                    if (day.count > 0) color = '#9be9a8'; // Low
+                    if (day.count > 1) color = '#40c463'; // Medium
+                    if (day.count > 2) color = '#30a14e'; // High
+                    if (day.count > 3) color = '#216e39'; // Very high
+                    
+                    dayDiv.style.background = color;
+                    
+                    // Tooltip
+                    dayDiv.title = `${day.date.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}: ${day.count} memory file${day.count !== 1 ? 's' : ''}`;
+                    
+                    weekDiv.appendChild(dayDiv);
+                });
+                
+                container.appendChild(weekDiv);
+            });
+        }
+        
+        function renderContentDistribution(memoryFiles) {
+            const container = document.getElementById('content-distribution-chart');
+            
+            // Count by type
+            const typeCounts = {};
+            memoryFiles.forEach(file => {
+                typeCounts[file.type] = (typeCounts[file.type] || 0) + 1;
+            });
+            
+            // Create simple text visualization
+            let html = '<div style="display: flex; flex-direction: column; gap: 0.5rem; width: 100%;">';
+            for (const [type, count] of Object.entries(typeCounts)) {
+                const percentage = Math.round((count / memoryFiles.length) * 100);
+                html += `
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="font-size: 0.8rem; min-width: 80px;">${type.charAt(0).toUpperCase() + type.slice(1)}</div>
+                        <div style="flex: 1; height: 8px; background: var(--bg-hover); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: ${percentage}%; background: var(--accent-color);"></div>
+                        </div>
+                        <div style="font-size: 0.8rem; min-width: 30px; text-align: right;">${percentage}%</div>
+                    </div>
+                `;
+            }
+            html += '</div>';
+            
+            container.innerHTML = html;
+        }
+        
+        function renderWritingPatterns(dailyFiles) {
+            const container = document.getElementById('writing-patterns-chart');
+            
+            // Group by day of week
+            const dayCounts = { Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0 };
+            const dayMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            
+            dailyFiles.forEach(file => {
+                if (file.date) {
+                    const date = new Date(file.date);
+                    const dayName = dayMap[date.getDay()];
+                    dayCounts[dayName]++;
+                }
+            });
+            
+            // Find max for scaling
+            const maxCount = Math.max(...Object.values(dayCounts));
+            
+            // Create bar chart
+            let html = '<div style="display: flex; align-items: flex-end; gap: 4px; height: 100%; padding: 0 1rem;">';
+            for (const day of dayMap) {
+                const count = dayCounts[day];
+                const height = maxCount > 0 ? (count / maxCount) * 100 : 0;
+                
+                html += `
+                    <div style="display: flex; flex-direction: column; align-items: center; flex: 1; gap: 4px;">
+                        <div style="width: 100%; height: ${height}%; background: var(--accent-color); border-radius: 2px 2px 0 0;"></div>
+                        <div style="font-size: 0.7rem; color: var(--text-secondary);">${day}</div>
+                    </div>
+                `;
+            }
+            html += '</div>';
+            
+            container.innerHTML = html;
+        }
+        
+        function renderTopTopics(memoryFiles) {
+            const container = document.getElementById('top-topics-list');
+            
+            // Simple topic extraction (placeholder)
+            const topics = [
+                { name: 'Mission Control', count: 12 },
+                { name: 'Development', count: 8 },
+                { name: 'Automation', count: 6 },
+                { name: 'Memory System', count: 5 },
+                { name: 'Cron Jobs', count: 4 }
+            ];
+            
+            let html = '';
+            topics.forEach(topic => {
+                html += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background: var(--bg-hover); border-radius: 6px;">
+                        <span style="font-size: 0.85rem;">${topic.name}</span>
+                        <span style="font-size: 0.75rem; color: var(--text-secondary);">${topic.count} mentions</span>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function renderMilestones(memoryFiles) {
+            const container = document.getElementById('milestones-list');
+            
+            // Extract milestones from memory files
+            const milestones = [];
+            
+            // Look for version markers and significant dates
+            memoryFiles.forEach(file => {
+                if (file.filename.includes('MEMORY.md') || file.content?.includes('Version') || file.content?.includes('V0.')) {
+                    const lines = file.content?.split('\n') || [];
+                    lines.forEach(line => {
+                        if (line.includes('V0.') || line.includes('Phase') || line.includes('launch') || line.includes('deploy')) {
+                            const date = file.date ? new Date(file.date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }) : 'Unknown date';
+                            milestones.push({
+                                date: date,
+                                text: line.trim().substring(0, 60) + (line.length > 60 ? '...' : '')
+                            });
+                        }
+                    });
+                }
+            });
+            
+            // Take up to 5 most recent
+            const recentMilestones = milestones.slice(0, 5);
+            
+            let html = '';
+            if (recentMilestones.length > 0) {
+                recentMilestones.forEach(milestone => {
+                    html += `
+                        <div style="padding: 0.5rem; border-left: 3px solid var(--accent-color); background: var(--bg-hover); border-radius: 0 6px 6px 0;">
+                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">${milestone.date}</div>
+                            <div style="font-size: 0.85rem;">${milestone.text}</div>
+                        </div>
+                    `;
+                });
+            } else {
+                html = '<div style="text-align: center; padding: 1rem; color: var(--text-secondary);">No milestones found</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        function refreshInsights() {
+            insightsData = null;
+            renderInsights();
         }
     </script>
 </body>
