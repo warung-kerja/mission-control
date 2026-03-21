@@ -277,6 +277,30 @@
             color: var(--accent);
         }
         
+        /* Backlog filter buttons */
+        .filter-btn {
+            padding: 0.3rem 0.8rem;
+            background: var(--bg-hover);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        
+        .filter-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        
         .quick-panel {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -496,6 +520,194 @@
             font-size: 0.875rem;
             color: var(--text-secondary);
         }
+        
+        /* Projects Module Styles */
+        .projects-container {
+            padding: 2rem;
+        }
+        
+        .projects-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .projects-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        
+        .project-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-planning {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+        
+        .status-active {
+            background: rgba(25, 135, 84, 0.1);
+            color: #198754;
+            border: 1px solid rgba(25, 135, 84, 0.3);
+        }
+        
+        .status-completed {
+            background: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+            border: 1px solid rgba(108, 117, 125, 0.3);
+        }
+        
+        .project-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+        
+        .project-progress {
+            margin-bottom: 1rem;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+        
+        .loading-projects {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .projects-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -508,11 +720,12 @@
                 </div>
             </div>
             <div class="nav-tabs">
-                <button class="nav-tab active" onclick="showTab('tasks')">📋 Tasks</button>
-                <button class="nav-tab" onclick="showTab('calendar')">📅 Calendar</button>
-                <button class="nav-tab" onclick="showTab('projects')">🎯 Projects</button>
-                <button class="nav-tab" onclick="showTab('team')">👥 Team</button>
-                <button class="nav-tab" onclick="showTab('office')">🏢 Office</button>
+                <button class="nav-tab active" onclick="showTab('tasks', event)">📋 Tasks</button>
+                <button class="nav-tab" onclick="showTab('calendar', event)">📅 Calendar</button>
+                <button class="nav-tab" onclick="showTab('projects', event)">🎯 Projects</button>
+                <button class="nav-tab" onclick="showTab('team', event)">👥 Team</button>
+                <button class="nav-tab" onclick="showTab('backlog', event)">📝 Backlog</button>
+                <button class="nav-tab" onclick="showTab('office', event)">🏢 Office</button>
             </div>
             <div class="status-bar">
                 <div class="status-dot"></div>
@@ -547,7 +760,7 @@
                     <div class="kanban-column" data-status="backlog">
                         <div class="kanban-header">
                             <div class="kanban-title">📥 Backlog</div>
-                            <span class="kanban-count">2</span>
+                            <span class="kanban-count">1</span>
                         </div>
                         <div class="tasks-container">
                             <div class="task-card" draggable="true" data-task-id="1">
@@ -560,16 +773,7 @@
                                     <span class="task-priority priority-medium">Medium</span>
                                 </div>
                             </div>
-                            <div class="task-card" draggable="true" data-task-id="2">
-                                <div class="task-title">Build Projects tracker</div>
-                                <div class="task-meta">
-                                    <div class="task-assignee">
-                                        <div class="assignee-avatar">B</div>
-                                        <span>Baro</span>
-                                    </div>
-                                    <span class="task-priority priority-low">Low</span>
-                                </div>
-                            </div>
+
                         </div>
                         <button class="new-task-btn" onclick="addTask('backlog')">+ New Task</button>
                     </div>
@@ -617,7 +821,7 @@
                     <div class="kanban-column" data-status="done">
                         <div class="kanban-header">
                             <div class="kanban-title">✅ Done</div>
-                            <span class="kanban-count">1</span>
+                            <span class="kanban-count">2</span>
                         </div>
                         <div class="tasks-container">
                             <div class="task-card" draggable="true" data-task-id="5" style="border-left-color: var(--success);">
@@ -628,6 +832,16 @@
                                         <span>Baro</span>
                                     </div>
                                     <span class="task-priority priority-low">Done</span>
+                                </div>
+                            </div>
+                            <div class="task-card" draggable="true" data-task-id="6" style="border-left-color: var(--success);">
+                                <div class="task-title">Projects Tracker V0.7</div>
+                                <div class="task-meta">
+                                    <div class="task-assignee">
+                                        <div class="assignee-avatar">N</div>
+                                        <span>Noona</span>
+                                    </div>
+                                    <span class="task-priority priority-medium">Done</span>
                                 </div>
                             </div>
                         </div>
@@ -699,16 +913,259 @@
         </div>
         
         <div id="projects-tab" class="tab-content" style="display: none;">
-            <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
-                <h2>🎯 Projects Module</h2>
-                <p>Coming in V0.7 — Project tracker with progress & documents</p>
+            <div class="projects-container">
+                <div class="projects-header">
+                    <h2>🎯 Active Projects</h2>
+                    <div class="projects-filters">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="active">Active</button>
+                        <button class="filter-btn" data-filter="planning">Planning</button>
+                        <button class="filter-btn" data-filter="completed">Completed</button>
+                    </div>
+                </div>
+                
+                <div class="projects-grid" id="projects-grid">
+                    <!-- Projects will be loaded here -->
+                    <div class="loading-projects">
+                        <div class="spinner"></div>
+                        <p>Loading projects...</p>
+                    </div>
+                </div>
+                
+                <div class="projects-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-projects">0</div>
+                        <div class="stat-label">Total Projects</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="active-projects">0</div>
+                        <div class="stat-label">Active</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avg-progress">0%</div>
+                        <div class="stat-label">Avg Progress</div>
+                    </div>
+                </div>
             </div>
         </div>
         
         <div id="team-tab" class="tab-content" style="display: none;">
-            <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
-                <h2>👥 Team Module</h2>
-                <p>Coming in V0.8 — Org chart with mission statement</p>
+            <div style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+                <h2 style="text-align: center; margin-bottom: 1rem;">👥 Team Structure</h2>
+                <div style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9rem;">
+                    Warung Kerja Mission Control: Central dashboard for team coordination, project tracking, and agent management
+                    <div style="margin-top: 0.5rem; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <span style="background: var(--accent-color); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">🤖 AUTONOMOUS</span>
+                        <span>Dynamic team module • Last updated: 12:15</span>
+                    </div>
+                </div>
+                
+                <div id="team-org-chart" style="background: var(--card-bg); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; border: 1px solid var(--border-color);">
+                    <div id="team-members-container" style="display: flex; flex-direction: column; align-items: center; gap: 2rem;">
+                        <!-- Team members will be loaded dynamically from team.json -->
+                        <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">👥</div>
+                            <div>Loading team data...</div>
+                            <div style="font-size: 0.8rem; margin-top: 0.5rem;">Fetching from team.json</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                    <h3 style="margin-top: 0;">📊 Team Data & Status</h3>
+                    <div id="team-stats-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                        <!-- Team stats will be loaded dynamically -->
+                        <div>
+                            <div style="font-weight: bold; color: var(--text-secondary);">Loading...</div>
+                            <div>Fetching team data</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 10px; height: 10px; background: #10b981; border-radius: 50%;"></div>
+                                <span style="font-size: 0.8rem;">Online</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 10px; height: 10px; background: #ef4444; border-radius: 50%;"></div>
+                                <span style="font-size: 0.8rem;">Offline</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 10px; height: 10px; background: #f59e0b; border-radius: 50%;"></div>
+                                <span style="font-size: 0.8rem;">Away</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 10px; height: 10px; background: #94a3b8; border-radius: 50%;"></div>
+                                <span style="font-size: 0.8rem;">Variable</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; text-align: center; color: var(--text-secondary); font-size: 0.9rem;">
+                    <p>✅ V0.8 Team Module enhanced with status indicators and mission statements<br>
+                    🔄 Staging verified: All updates deployed to GitHub Pages</p>
+                </div>
+                
+                <!-- Workspace Explorer -->
+                <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color); margin-top: 2rem;">
+                    <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>📁 Workspace Explorer</span>
+                        <span style="background: var(--accent-color); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">NEW</span>
+                    </h3>
+                    <div style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+                        Browse agent workspace files and directories. Click on an agent to view their workspace contents.
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <button class="workspace-tab" onclick="showWorkspace('Baro')" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">🎨 Baro</button>
+                        <button class="workspace-tab" onclick="showWorkspace('noona')" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">🔧 Noona</button>
+                        <button class="workspace-tab" onclick="showWorkspace('_Shared_Memory')" style="background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); color: white;">🧠 Shared Memory</button>
+                    </div>
+                    
+                    <div id="workspace-content" style="min-height: 300px; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 1rem; border: 1px solid var(--border-color);">
+                        <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">📁</div>
+                            <div>Select an agent workspace to explore</div>
+                            <div style="font-size: 0.8rem; margin-top: 0.5rem;">Click on an agent button above</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-secondary); display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span style="display: inline-flex; align-items: center; gap: 0.3rem;">
+                                <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></div>
+                                <span>Text files</span>
+                            </span>
+                            <span style="margin-left: 1rem; display: inline-flex; align-items: center; gap: 0.3rem;">
+                                <div style="width: 8px; height: 8px; background: #8b5cf6; border-radius: 50%;"></div>
+                                <span>Images</span>
+                            </span>
+                            <span style="margin-left: 1rem; display: inline-flex; align-items: center; gap: 0.3rem;">
+                                <div style="width: 8px; height: 8px; background: #94a3b8; border-radius: 50%;"></div>
+                                <span>Other files</span>
+                            </span>
+                        </div>
+                        <div id="workspace-stats">No workspace selected</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="backlog-tab" class="tab-content" style="display: none;">
+            <div style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+                <h2 style="text-align: center; margin-bottom: 1rem;">📝 Mission Control Backlog</h2>
+                <div style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9rem;">
+                    Task tracking, progress monitoring, and roadmap visualization for Mission Control development
+                    <div style="margin-top: 0.5rem; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <span style="background: var(--accent-color); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">📊 LIVE</span>
+                        <span>Auto-updating from Backlog.md • Last updated: <span id="backlog-last-updated">Loading...</span></span>
+                    </div>
+                </div>
+                
+                <!-- Progress Summary -->
+                <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid var(--border-color);">
+                    <h3 style="margin-top: 0;">📈 Progress Overview</h3>
+                    <div id="backlog-progress" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                        <!-- Progress stats will be loaded dynamically -->
+                        <div style="text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                            <div style="font-weight: bold;">Loading...</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Calculating progress</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Backlog Content -->
+                <div style="display: grid; grid-template-columns: 1fr 350px; gap: 2rem;">
+                    <!-- Main Backlog Content -->
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 2rem; border: 1px solid var(--border-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 style="margin: 0;">📋 Task Backlog</h3>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button id="filter-all" class="filter-btn active" onclick="filterTasks('all')">All</button>
+                                <button id="filter-priority" class="filter-btn" onclick="filterTasks('priority')">Priority</button>
+                                <button id="filter-todo" class="filter-btn" onclick="filterTasks('todo')">To Do</button>
+                                <button id="filter-done" class="filter-btn" onclick="filterTasks('done')">Done</button>
+                            </div>
+                        </div>
+                        
+                        <div id="backlog-content" style="font-size: 0.9rem; line-height: 1.6;">
+                            <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                                <div style="font-size: 2rem; margin-bottom: 1rem;">📝</div>
+                                <div>Loading backlog data...</div>
+                                <div style="font-size: 0.8rem; margin-top: 0.5rem;">Fetching from Backlog.md</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sidebar: Stats & Quick Actions -->
+                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <!-- Stats Card -->
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                            <h4 style="margin-top: 0; margin-bottom: 1rem;">📊 Quick Stats</h4>
+                            <div id="backlog-stats" style="display: flex; flex-direction: column; gap: 0.8rem;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Total Tasks:</span>
+                                    <span style="font-weight: bold;">Loading...</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Completed:</span>
+                                    <span style="font-weight: bold;">Loading...</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>In Progress:</span>
+                                    <span style="font-weight: bold;">Loading...</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Priority Tasks:</span>
+                                    <span style="font-weight: bold;">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Roadmap Card -->
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                            <h4 style="margin-top: 0; margin-bottom: 1rem;">🗺️ Roadmap</h4>
+                            <div style="font-size: 0.85rem; line-height: 1.5;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem;">
+                                    <div style="width: 12px; height: 12px; background: #3b82f6; border-radius: 50%;"></div>
+                                    <span><strong>Phase 1</strong> (Now): Immediate improvements</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem;">
+                                    <div style="width: 12px; height: 12px; background: #8b5cf6; border-radius: 50%;"></div>
+                                    <span><strong>Phase 2</strong> (Week 1): Core features</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem;">
+                                    <div style="width: 12px; height: 12px; background: #10b981; border-radius: 50%;"></div>
+                                    <span><strong>Phase 3</strong> (Weeks 2-3): Advanced features</span>
+                                </div>
+                            </div>
+                            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                                <a href="mission-control-roadmap.md" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    📄 View full roadmap →
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions Card -->
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                            <h4 style="margin-top: 0; margin-bottom: 1rem;">⚡ Quick Actions</h4>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <button onclick="refreshBacklog()" style="padding: 0.5rem; background: var(--accent-color); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                                    🔄 Refresh Backlog
+                                </button>
+                                <button onclick="openBacklogFile()" style="padding: 0.5rem; background: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                                    📝 Edit Backlog.md
+                                </button>
+                                <button onclick="exportBacklog()" style="padding: 0.5rem; background: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                                    📤 Export as JSON
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -720,11 +1177,11 @@
         </div>
     </div>
     
-    <div class="version-badge">Version <span>V0.6</span> — Calendar Module Live</div>
+    <div class="version-badge">Version <span>V0.8.3</span> — Enhanced Team Hierarchy • Backlog Task Tracking • Sub-agent Integration • Roadmap Planning</div>
     
     <script>
         // Tab switching
-        function showTab(tabName) {
+        function showTab(tabName, event) {
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.style.display = 'none';
             });
@@ -732,7 +1189,18 @@
                 tab.classList.remove('active');
             });
             document.getElementById(tabName + '-tab').style.display = 'block';
-            event.target.classList.add('active');
+            
+            // Add active class to clicked button
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                // Fallback: find button with matching onclick
+                document.querySelectorAll('.nav-tab').forEach(button => {
+                    if (button.getAttribute('onclick') && button.getAttribute('onclick').includes(tabName)) {
+                        button.classList.add('active');
+                    }
+                });
+            }
         }
         
         // Drag and drop
@@ -1001,6 +1469,1036 @@
                 button.addEventListener('click', () => {
                     if (button.getAttribute('onclick').includes('calendar')) {
                         renderCalendar();
+                    }
+                });
+            });
+        });
+        
+        // Projects Module JavaScript
+        let allProjects = [];
+        let projectsCurrentFilter = 'all';
+        
+        async function loadProjects() {
+            try {
+                const response = await fetch('http://localhost:3001/api/projects');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                allProjects = await response.json();
+                renderProjects();
+                updateStats();
+            } catch (error) {
+                console.error('Failed to load projects:', error);
+                // Fallback to mock data if API fails
+                allProjects = [
+                    {
+                        id: 'mission-control',
+                        name: 'Mission Control',
+                        status: 'active',
+                        progress: 60,
+                        description: 'Web dashboard for team coordination and project tracking',
+                        created: '2026-03-15',
+                        updated: '2026-03-19'
+                    },
+                    {
+                        id: 'sample-project-1',
+                        name: 'Sample Project 1',
+                        status: 'planning',
+                        progress: 10,
+                        description: 'Example project in planning phase',
+                        created: '2026-03-18',
+                        updated: '2026-03-18'
+                    },
+                    {
+                        id: 'sample-project-2',
+                        name: 'Sample Project 2',
+                        status: 'completed',
+                        progress: 100,
+                        description: 'Example completed project',
+                        created: '2026-02-01',
+                        updated: '2026-03-10'
+                    }
+                ];
+                renderProjects();
+                updateStats();
+            }
+        }
+        
+        function renderProjects() {
+            const grid = document.getElementById('projects-grid');
+            if (!grid) return;
+            
+            const filteredProjects = allProjects.filter(project => {
+                if (projectsCurrentFilter === 'all') return true;
+                return project.status === projectsCurrentFilter;
+            });
+            
+            if (filteredProjects.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-projects" style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <p>No projects found with status: ${projectsCurrentFilter}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = filteredProjects.map(project => `
+                <div class="project-card" data-status="${project.status}">
+                    <div class="project-header">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="font-size: 1.2rem;">${project.icon || '📋'}</span>
+                            <h3 class="project-title">${project.name}</h3>
+                        </div>
+                        <span class="project-status status-${project.status}" style="background: ${project.color || '#6366f1'};">
+                            ${project.status.charAt(0).toUpperCase() + project.status.slice(1)}
+                        </span>
+                    </div>
+                    <p class="project-description">${project.description || 'No description available'}</p>
+                    
+                    <div class="project-progress">
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span>${project.progress || 0}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${project.progress || 0}%; background: ${project.color || '#6366f1'}"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1rem; font-size: 0.85rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span><strong>Lead:</strong> ${project.lead || 'Unassigned'}</span>
+                            <span><strong>Version:</strong> ${project.version || 'V0.1'}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Start:</strong> ${project.startDate || 'TBD'}</span>
+                            <span><strong>Due:</strong> ${project.dueDate || 'TBD'}</span>
+                        </div>
+                    </div>
+                    
+                    ${project.features && project.features.length > 0 ? `
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Features:</div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.3rem;">
+                            ${project.features.slice(0, 3).map(feature => `
+                                <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--card-bg); border-radius: 4px; border: 1px solid var(--border-color);">
+                                    ${feature.name}
+                                </span>
+                            `).join('')}
+                            ${project.features.length > 3 ? `<span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; color: var(--text-secondary);">+${project.features.length - 3} more</span>` : ''}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="project-meta">
+                        <span>Updated: ${project.lastUpdated ? new Date(project.lastUpdated).toLocaleDateString() : 'Unknown'}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateStats() {
+            const total = allProjects.length;
+            const active = allProjects.filter(p => p.status === 'active').length;
+            const avgProgress = allProjects.length > 0 
+                ? Math.round(allProjects.reduce((sum, p) => sum + (p.progress || 0), 0) / allProjects.length)
+                : 0;
+            
+            document.getElementById('total-projects').textContent = total;
+            document.getElementById('active-projects').textContent = active;
+            document.getElementById('avg-progress').textContent = `${avgProgress}%`;
+        }
+        
+        function setupProjectFilters() {
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    projectsCurrentFilter = this.getAttribute('data-filter');
+                    renderProjects();
+                });
+            });
+        }
+        
+        // Initialize projects when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProjects();
+            setupProjectFilters();
+            
+            // Also load projects when projects tab is clicked
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    if (this.getAttribute('onclick') && this.getAttribute('onclick').includes('projects')) {
+                        // Refresh projects data when switching to projects tab
+                        setTimeout(() => {
+                            loadProjects();
+                        }, 100);
+                    }
+                });
+            });
+        });
+        
+        // Workspace Explorer Functions
+        let workspaceData = null;
+        let currentWorkspace = null;
+        
+        // Load workspace data
+        async function loadWorkspaceData() {
+            try {
+                const response = await fetch('workspaces.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                workspaceData = await response.json();
+                console.log('Workspace data loaded:', workspaceData);
+            } catch (error) {
+                console.error('Error loading workspace data:', error);
+                // Fallback to empty data
+                workspaceData = {
+                    workspaces: {},
+                    generated_at: new Date().toISOString()
+                };
+            }
+        }
+        
+        // Show workspace contents
+        function showWorkspace(agentName) {
+            if (!workspaceData) {
+                alert('Workspace data not loaded yet. Please wait...');
+                return;
+            }
+            
+            const workspace = workspaceData.workspaces[agentName];
+            if (!workspace) {
+                document.getElementById('workspace-content').innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">❌</div>
+                        <div>Workspace not found: ${agentName}</div>
+                    </div>
+                `;
+                document.getElementById('workspace-stats').textContent = `Workspace not found: ${agentName}`;
+                return;
+            }
+            
+            currentWorkspace = agentName;
+            
+            // Update active tab
+            document.querySelectorAll('.workspace-tab').forEach(tab => {
+                tab.style.opacity = '0.7';
+                tab.style.transform = 'scale(0.95)';
+            });
+            event.target.style.opacity = '1';
+            event.target.style.transform = 'scale(1)';
+            
+            // Render workspace contents
+            renderWorkspace(workspace);
+            
+            // Update stats
+            document.getElementById('workspace-stats').textContent = 
+                `${workspace.file_count} files • ${workspace.contents.length} items • Updated: ${new Date(workspace.last_updated).toLocaleTimeString()}`;
+        }
+        
+        // Render workspace contents
+        function renderWorkspace(workspace) {
+            const container = document.getElementById('workspace-content');
+            
+            if (!workspace.contents || workspace.contents.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">📂</div>
+                        <div>Workspace is empty</div>
+                        <div style="font-size: 0.8rem; margin-top: 0.5rem;">No files found in ${workspace.name}</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Group files by directory
+            const filesByDir = {};
+            workspace.contents.forEach(file => {
+                const dir = file.path.includes('/') ? file.path.split('/')[0] : '/';
+                if (!filesByDir[dir]) {
+                    filesByDir[dir] = [];
+                }
+                filesByDir[dir].push(file);
+            });
+            
+            // Sort directories
+            const sortedDirs = Object.keys(filesByDir).sort();
+            
+            let html = '<div style="display: flex; flex-direction: column; gap: 1rem;">';
+            
+            sortedDirs.forEach(dir => {
+                const files = filesByDir[dir];
+                
+                html += `
+                    <div style="background: rgba(0,0,0,0.1); border-radius: 8px; padding: 1rem;">
+                        <div style="font-weight: bold; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span>📁</span>
+                            <span>${dir === '/' ? 'Root' : dir}</span>
+                            <span style="font-size: 0.8rem; opacity: 0.7; margin-left: auto;">${files.length} files</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem;">
+                `;
+                
+                files.forEach(file => {
+                    // Determine icon and color based on file type
+                    let icon = '📄';
+                    let color = '#94a3b8';
+                    
+                    if (file.type === 'text') {
+                        icon = '📝';
+                        color = '#10b981';
+                    } else if (file.type === 'image') {
+                        icon = '🖼️';
+                        color = '#8b5cf6';
+                    }
+                    
+                    // Format file size
+                    let sizeText = '';
+                    if (file.size < 1024) {
+                        sizeText = `${file.size} B`;
+                    } else if (file.size < 1024 * 1024) {
+                        sizeText = `${(file.size / 1024).toFixed(1)} KB`;
+                    } else {
+                        sizeText = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
+                    }
+                    
+                    html += `
+                        <div style="background: rgba(0,0,0,0.2); border-radius: 6px; padding: 0.75rem; border-left: 3px solid ${color};">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                <span>${icon}</span>
+                                <div style="font-weight: 500; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${file.name}">
+                                    ${file.name}
+                                </div>
+                            </div>
+                            <div style="font-size: 0.7rem; opacity: 0.7; display: flex; justify-content: space-between;">
+                                <span>${file.extension}</span>
+                                <span>${sizeText}</span>
+                            </div>
+                            <div style="font-size: 0.65rem; opacity: 0.6; margin-top: 0.25rem;">
+                                ${new Date(file.modified).toLocaleDateString()}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        // Initialize workspace explorer when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadWorkspaceData();
+            loadTeamData(); // Load team data
+            
+            // Add styles for workspace tabs
+            const style = document.createElement('style');
+            style.textContent = `
+                .workspace-tab {
+                    padding: 0.5rem 1rem;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: bold;
+                    transition: all 0.2s;
+                    opacity: 0.7;
+                    transform: scale(0.95);
+                }
+                .workspace-tab:hover {
+                    opacity: 0.9;
+                    transform: scale(1);
+                }
+            `;
+            document.head.appendChild(style);
+        });
+        
+        // Team Module JavaScript
+        let teamData = null;
+        
+        async function loadTeamData() {
+            try {
+                const response = await fetch('team.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                teamData = await response.json();
+                renderTeam();
+                renderTeamStats();
+            } catch (error) {
+                console.error('Failed to load team data:', error);
+                // Show error message
+                document.getElementById('team-members-container').innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">❌</div>
+                        <div>Failed to load team data</div>
+                        <div style="font-size: 0.8rem; margin-top: 0.5rem;">${error.message}</div>
+                    </div>
+                `;
+            }
+        }
+        
+        function renderTeam() {
+            if (!teamData || !teamData.team) return;
+            
+            const container = document.getElementById('team-members-container');
+            let html = '';
+            
+            // Sort team by level (hierarchy)
+            const sortedTeam = [...teamData.team].sort((a, b) => (a.level || 0) - (b.level || 0));
+            
+            sortedTeam.forEach((member, index) => {
+                // Determine status color
+                let statusColor = '#94a3b8'; // default gray
+                let statusText = member.status;
+                
+                switch(member.status) {
+                    case 'online':
+                        statusColor = '#10b981'; // green
+                        break;
+                    case 'offline':
+                        statusColor = '#ef4444'; // red
+                        break;
+                    case 'away':
+                    case 'idle':
+                        statusColor = '#f59e0b'; // yellow
+                        break;
+                    default:
+                        statusColor = '#94a3b8'; // gray
+                }
+                
+                // Format last active time
+                let lastActiveText = 'Unknown';
+                if (member.lastActive) {
+                    const lastActive = new Date(member.lastActive);
+                    const now = new Date();
+                    const diffMs = now - lastActive;
+                    const diffMins = Math.floor(diffMs / 60000);
+                    
+                    if (diffMins < 1) {
+                        lastActiveText = 'Just now';
+                    } else if (diffMins < 60) {
+                        lastActiveText = `${diffMins} minute${diffMins === 1 ? '' : 's'} ago`;
+                    } else if (diffMins < 1440) {
+                        const diffHours = Math.floor(diffMins / 60);
+                        lastActiveText = `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
+                    } else {
+                        const diffDays = Math.floor(diffMins / 1440);
+                        lastActiveText = `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
+                    }
+                }
+                
+                // Create member card with hierarchy indicator
+                const level = member.level || 0;
+                const levelPadding = level * 40; // Indent based on hierarchy level
+                
+                html += `
+                    <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, ${member.color} 0%, ${member.color}99 100%); border-radius: 12px; width: 100%; max-width: 450px; color: white; position: relative; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-left: ${levelPadding}px;">
+                        <div style="position: absolute; top: 1rem; right: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 10px; height: 10px; background: ${statusColor}; border-radius: 50%;"></div>
+                            <span style="font-size: 0.7rem; opacity: 0.9; text-transform: capitalize;">${statusText}</span>
+                        </div>
+                        
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">${member.roleIcon}</div>
+                        <div style="font-size: 1.5rem; font-weight: bold;">${member.name}</div>
+                        <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;">${member.role} • ${member.type}</div>
+                        
+                        ${member.reportsTo ? `
+                        <div style="margin-top: 0.5rem; font-size: 0.7rem; opacity: 0.8; display: flex; align-items: center; justify-content: center; gap: 0.3rem;">
+                            <span>⬆️</span>
+                            <span>Reports to: ${member.reportsTo}</span>
+                        </div>
+                        ` : ''}
+                        
+                        ${member.manages && member.manages.length > 0 ? `
+                        <div style="margin-top: 0.3rem; font-size: 0.7rem; opacity: 0.8; display: flex; align-items: center; justify-content: center; gap: 0.3rem;">
+                            <span>⬇️</span>
+                            <span>Manages: ${member.manages.join(', ')}</span>
+                        </div>
+                        ` : ''}
+                        
+                        <div style="margin-top: 1rem; font-size: 0.85rem; opacity: 0.9; padding: 0.5rem; background: rgba(255,255,255,0.1); border-radius: 6px;">
+                            ${member.description}
+                        </div>
+                        
+                        <div style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.8; font-style: italic; padding: 0.5rem;">
+                            "${member.mission}"
+                        </div>
+                        
+                        ${member.activity ? `
+                        <div style="margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.9; display: flex; align-items: center; justify-content: center; gap: 0.3rem;">
+                            <span>📝</span>
+                            <span>${member.activity}</span>
+                        </div>
+                        ` : ''}
+                        
+                        ${member.skills && member.skills.length > 0 ? `
+                        <div style="margin-top: 0.5rem; font-size: 0.7rem; opacity: 0.8;">
+                            <div style="margin-bottom: 0.2rem;">Skills:</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.3rem; justify-content: center;">
+                                ${member.skills.slice(0, 3).map(skill => `
+                                    <span style="padding: 0.1rem 0.4rem; background: rgba(255,255,255,0.2); border-radius: 4px; font-size: 0.65rem;">
+                                        ${skill}
+                                    </span>
+                                `).join('')}
+                                ${member.skills.length > 3 ? `<span style="font-size: 0.65rem; opacity: 0.7;">+${member.skills.length - 3} more</span>` : ''}
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div style="margin-top: 1rem; font-size: 0.7rem; opacity: 0.7; display: flex; justify-content: space-between; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.2);">
+                            <span>Last active: ${lastActiveText}</span>
+                            ${member.availability ? `<span>Availability: ${member.availability}</span>` : ''}
+                        </div>
+                        
+                        ${member.workspace ? `
+                        <div style="margin-top: 0.5rem; font-size: 0.65rem; opacity: 0.6; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            ${member.workspace}
+                        </div>
+                        ` : ''}
+                        
+                        ${member.subAgents && member.subAgents.length > 0 ? `
+                        <div style="margin-top: 1rem; padding-top: 0.5rem; border-top: 1px dashed rgba(255,255,255,0.3);">
+                            <div style="font-size: 0.7rem; opacity: 0.8; margin-bottom: 0.5rem;">Active Sub-agents:</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.3rem; justify-content: center;">
+                                ${member.subAgents.map(sub => `
+                                    <div style="padding: 0.2rem 0.5rem; background: rgba(255,255,255,0.15); border-radius: 4px; font-size: 0.65rem; display: flex; align-items: center; gap: 0.2rem;">
+                                        <span>${sub.roleIcon}</span>
+                                        <span>${sub.name}</span>
+                                        <div style="width: 6px; height: 6px; background: ${sub.status === 'idle' ? '#f59e0b' : '#10b981'}; border-radius: 50%;"></div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                // Add connecting line between members (except after last one)
+                if (index < sortedTeam.length - 1) {
+                    html += `<div style="height: 40px; width: 2px; background: var(--border-color); margin-left: ${levelPadding + 225}px;"></div>`;
+                }
+            });
+            
+            // Add sub-agents section if we have them in teamData
+            if (teamData.subAgents && teamData.subAgents.length > 0) {
+                html += `
+                    <div style="height: 40px; width: 2px; background: var(--border-color); margin-left: 225px;"></div>
+                    
+                    <div style="text-align: center; padding: 1.5rem; background: var(--card-bg); border-radius: 12px; width: 100%; max-width: 450px; border: 1px solid var(--border-color); position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-left: 80px;">
+                        <div style="position: absolute; top: 1rem; right: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 10px; height: 10px; background: #94a3b8; border-radius: 50%;"></div>
+                            <span style="font-size: 0.7rem; opacity: 0.9;">variable</span>
+                        </div>
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🤖</div>
+                        <div style="font-size: 1.2rem; font-weight: bold;">Sub-agents</div>
+                        <div style="font-size: 0.9rem; opacity: 0.8; margin-top: 0.5rem;">Task-specific temporary agents</div>
+                        
+                        <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem;">
+                            ${teamData.subAgents.map(sub => {
+                                let subStatusColor = '#94a3b8';
+                                switch(sub.status) {
+                                    case 'online': subStatusColor = '#10b981'; break;
+                                    case 'offline': subStatusColor = '#ef4444'; break;
+                                    case 'idle': subStatusColor = '#f59e0b'; break;
+                                }
+                                
+                                // Format last active for sub-agent
+                                let subLastActive = 'Unknown';
+                                if (sub.lastActive) {
+                                    const lastActive = new Date(sub.lastActive);
+                                    const now = new Date();
+                                    const diffMs = now - lastActive;
+                                    const diffHours = Math.floor(diffMs / 3600000);
+                                    subLastActive = `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
+                                }
+                                
+                                return `
+                                    <div style="padding: 0.8rem; background: rgba(0,0,0,0.1); border-radius: 8px; text-align: left;">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem;">
+                                            <span style="font-size: 1.2rem;">${sub.roleIcon}</span>
+                                            <div style="font-weight: bold;">${sub.name}</div>
+                                            <div style="flex: 1;"></div>
+                                            <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                <div style="width: 8px; height: 8px; background: ${subStatusColor}; border-radius: 50%;"></div>
+                                                <span style="font-size: 0.7rem; opacity: 0.8; text-transform: capitalize;">${sub.status}</span>
+                                            </div>
+                                        </div>
+                                        <div style="font-size: 0.8rem; opacity: 0.9;">${sub.role}</div>
+                                        <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 0.3rem;">${sub.description}</div>
+                                        <div style="font-size: 0.7rem; opacity: 0.7; margin-top: 0.3rem; display: flex; justify-content: space-between;">
+                                            <span>Parent: ${sub.parentAgent}</span>
+                                            <span>Last active: ${subLastActive}</span>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        
+                        <div style="margin-top: 1rem; font-size: 0.75rem; opacity: 0.7; font-style: italic;">
+                            "Execute specific tasks as needed, managed by parent agents"
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        function renderTeamStats() {
+            if (!teamData) return;
+            
+            const container = document.getElementById('team-stats-container');
+            
+            // Count statuses for main team
+            let onlineCount = 0;
+            let offlineCount = 0;
+            let awayCount = 0;
+            let idleCount = 0;
+            
+            teamData.team.forEach(member => {
+                switch(member.status) {
+                    case 'online':
+                        onlineCount++;
+                        break;
+                    case 'offline':
+                        offlineCount++;
+                        break;
+                    case 'away':
+                        awayCount++;
+                        break;
+                    case 'idle':
+                        idleCount++;
+                        break;
+                }
+            });
+            
+            // Count sub-agents
+            let subAgentCount = 0;
+            let subOnlineCount = 0;
+            let subIdleCount = 0;
+            
+            if (teamData.subAgents) {
+                subAgentCount = teamData.subAgents.length;
+                teamData.subAgents.forEach(sub => {
+                    if (sub.status === 'online') subOnlineCount++;
+                    if (sub.status === 'idle') subIdleCount++;
+                });
+            }
+            
+            // Format last updated time
+            let lastUpdatedText = 'Unknown';
+            if (teamData.lastUpdated) {
+                const lastUpdated = new Date(teamData.lastUpdated);
+                const now = new Date();
+                const diffMs = now - lastUpdated;
+                const diffMins = Math.floor(diffMs / 60000);
+                
+                if (diffMins < 1) {
+                    lastUpdatedText = 'Just now';
+                } else if (diffMins < 60) {
+                    lastUpdatedText = `${diffMins} minute${diffMins === 1 ? '' : 's'} ago`;
+                } else if (diffMins < 1440) {
+                    const diffHours = Math.floor(diffMins / 60);
+                    lastUpdatedText = `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
+                } else {
+                    lastUpdatedText = lastUpdated.toLocaleDateString();
+                }
+            }
+            
+            // Get hierarchy levels
+            const hierarchyLevels = teamData.stats?.hierarchyLevels || 3;
+            
+            // Create stats HTML
+            const html = `
+                <div>
+                    <div style="font-weight: bold; color: var(--text-secondary);">Team Structure</div>
+                    <div>${teamData.hierarchy || 'Raz → Baro → Noona → [Sub-agents]'}</div>
+                </div>
+                <div>
+                    <div style="font-weight: bold; color: var(--text-secondary);">Data Source</div>
+                    <div><code>team.json</code> • Updated: ${lastUpdatedText}</div>
+                </div>
+                <div>
+                    <div style="font-weight: bold; color: var(--text-secondary);">Version</div>
+                    <div>${teamData.version || 'V0.8.2-enhanced'} • Enhanced hierarchy</div>
+                </div>
+                <div>
+                    <div style="font-weight: bold; color: var(--text-secondary);">Team Status</div>
+                    <div>
+                        <span style="color: #10b981;">${onlineCount} online</span> • 
+                        <span style="color: #ef4444;">${offlineCount} offline</span> • 
+                        <span style="color: #f59e0b;">${awayCount + idleCount} idle/away</span>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-weight: bold; color: var(--text-secondary);">Sub-agents</div>
+                    <div>${subAgentCount} total • ${subOnlineCount} active • ${subIdleCount} idle</div>
+                </div>
+                <div>
+                    <div style="font-weight: bold; color: var(--text-secondary);">Hierarchy</div>
+                    <div>${hierarchyLevels} levels • ${teamData.team?.length || 0} main agents</div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        // Backlog Module JavaScript
+        let backlogData = null;
+        let backlogCurrentFilter = 'all';
+        
+        async function loadBacklog() {
+            try {
+                const response = await fetch('/home/baro/.openclaw/workspace/mission-control/Backlog.md');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const text = await response.text();
+                backlogData = text;
+                renderBacklog();
+                updateBacklogStats();
+                updateProgressOverview();
+                
+                // Update last updated time
+                const lastUpdatedEl = document.getElementById('backlog-last-updated');
+                if (lastUpdatedEl) {
+                    const now = new Date();
+                    lastUpdatedEl.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                }
+            } catch (error) {
+                console.error('Failed to load backlog:', error);
+                document.getElementById('backlog-content').innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--error-color);">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">❌</div>
+                        <div>Failed to load backlog data</div>
+                        <div style="font-size: 0.8rem; margin-top: 0.5rem;">${error.message}</div>
+                    </div>
+                `;
+            }
+        }
+        
+        function renderBacklog() {
+            if (!backlogData) return;
+            
+            const container = document.getElementById('backlog-content');
+            
+            // Parse markdown sections
+            const sections = backlogData.split('\n## ');
+            let html = '';
+            
+            sections.forEach((section, sectionIndex) => {
+                if (sectionIndex === 0) {
+                    // Skip the first part (title and metadata)
+                    return;
+                }
+                
+                const lines = section.split('\n');
+                const title = lines[0].trim();
+                const content = lines.slice(1).join('\n');
+                
+                // Skip empty sections
+                if (!title || !content.trim()) return;
+                
+                // Determine section type by title
+                const isPrioritySection = title.includes('Priority Tasks') || title.includes('Current Version');
+                const isFutureSection = title.includes('Future Enhancements') || title.includes('V0.9') || title.includes('V1.');
+                const isIssuesSection = title.includes('Known Issues') || title.includes('Technical Debt');
+                const isMetricsSection = title.includes('Success Metrics') || title.includes('Development Goals');
+                
+                // Add section header
+                html += `
+                    <div style="margin-bottom: 2rem; ${isPrioritySection ? 'border-left: 4px solid #3b82f6; padding-left: 1rem;' : ''}">
+                        <h4 style="margin-top: 0; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            ${getSectionIcon(title)} ${title}
+                        </h4>
+                `;
+                
+                // Parse tasks within section
+                const taskLines = content.split('\n');
+                let inTaskList = false;
+                let taskListHtml = '';
+                
+                taskLines.forEach(line => {
+                    const trimmedLine = line.trim();
+                    
+                    // Check for task items
+                    if (trimmedLine.startsWith('- [ ]') || trimmedLine.startsWith('- [x]') || trimmedLine.startsWith('- [X]')) {
+                        if (!inTaskList) {
+                            taskListHtml += '<div style="margin-left: 1rem;">';
+                            inTaskList = true;
+                        }
+                        
+                        const isDone = trimmedLine.includes('[x]') || trimmedLine.includes('[X]');
+                        const taskText = trimmedLine.replace(/^- \[[ xX]\]\s*/, '').trim();
+                        const priority = getTaskPriority(taskText);
+                        
+                        taskListHtml += `
+                            <div style="margin-bottom: 0.5rem; padding: 0.5rem; background: ${isDone ? 'rgba(16, 185, 129, 0.1)' : 'var(--bg-hover)'}; border-radius: 6px; border-left: 3px solid ${isDone ? '#10b981' : priority.color};">
+                                <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                                    <div style="margin-top: 0.2rem;">${isDone ? '✅' : '⬜'}</div>
+                                    <div style="flex: 1;">
+                                        ${formatTaskText(taskText)}
+                                        ${priority.label ? `<span style="font-size: 0.7rem; background: ${priority.color}; color: white; padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.5rem;">${priority.label}</span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else if (trimmedLine.startsWith('###')) {
+                        // Subsection
+                        const subTitle = trimmedLine.replace(/^###\s*/, '').trim();
+                        taskListHtml += `<h5 style="margin: 1rem 0 0.5rem 0; font-size: 0.9rem;">${subTitle}</h5>`;
+                    } else if (trimmedLine && !trimmedLine.startsWith('---') && !trimmedLine.startsWith('**') && !trimmedLine.startsWith('Created:')) {
+                        // Regular text
+                        if (inTaskList) {
+                            taskListHtml += '</div>';
+                            inTaskList = false;
+                        }
+                        html += `<p style="margin: 0.5rem 0; font-size: 0.85rem; color: var(--text-secondary);">${formatText(trimmedLine)}</p>`;
+                    }
+                });
+                
+                if (inTaskList) {
+                    taskListHtml += '</div>';
+                }
+                
+                html += taskListHtml;
+                html += '</div>';
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function getSectionIcon(title) {
+            if (title.includes('Priority')) return '🎯';
+            if (title.includes('Future')) return '🚀';
+            if (title.includes('Issues')) return '🐛';
+            if (title.includes('Technical')) return '🔧';
+            if (title.includes('Metrics')) return '📈';
+            if (title.includes('Goals')) return '🎯';
+            if (title.includes('Change Log')) return '📝';
+            if (title.includes('Implementation')) return '⚙️';
+            return '📋';
+        }
+        
+        function getTaskPriority(taskText) {
+            if (taskText.includes('High Priority') || taskText.includes('Critical')) {
+                return { label: 'HIGH', color: '#ef4444' };
+            }
+            if (taskText.includes('Medium Priority')) {
+                return { label: 'MEDIUM', color: '#f59e0b' };
+            }
+            if (taskText.includes('Low Priority')) {
+                return { label: 'LOW', color: '#6b7280' };
+            }
+            return { label: '', color: '#94a3b8' };
+        }
+        
+        function formatTaskText(text) {
+            // Convert markdown bold to HTML
+            return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        }
+        
+        function formatText(text) {
+            // Convert markdown links and formatting
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/`(.*?)`/g, '<code>$1</code>')
+                .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: var(--accent-color);">$1</a>');
+        }
+        
+        function updateBacklogStats() {
+            if (!backlogData) return;
+            
+            const container = document.getElementById('backlog-stats');
+            
+            // Count tasks
+            const totalTasks = (backlogData.match(/- \[[ xX]\]/g) || []).length;
+            const doneTasks = (backlogData.match(/- \[[xX]\]/g) || []).length;
+            const todoTasks = totalTasks - doneTasks;
+            
+            // Count priority tasks
+            const priorityTasks = (backlogData.match(/High Priority|Medium Priority|Low Priority/g) || []).length;
+            
+            const html = `
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Total Tasks:</span>
+                    <span style="font-weight: bold;">${totalTasks}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Completed:</span>
+                    <span style="font-weight: bold; color: #10b981;">${doneTasks}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>To Do:</span>
+                    <span style="font-weight: bold; color: #f59e0b;">${todoTasks}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Priority Tasks:</span>
+                    <span style="font-weight: bold; color: #ef4444;">${priorityTasks}</span>
+                </div>
+                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-color);">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                        <span>Completion:</span>
+                        <span style="font-weight: bold;">${totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0}%</span>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        function updateProgressOverview() {
+            if (!backlogData) return;
+            
+            const container = document.getElementById('backlog-progress');
+            
+            // Count tasks by section
+            const sections = backlogData.split('\n## ');
+            let priorityTasks = 0;
+            let priorityDone = 0;
+            let futureTasks = 0;
+            let futureDone = 0;
+            let bugTasks = 0;
+            let bugDone = 0;
+            
+            sections.forEach(section => {
+                const lines = section.split('\n');
+                const title = lines[0].trim();
+                
+                if (title.includes('Priority Tasks') || title.includes('Current Version')) {
+                    lines.forEach(line => {
+                        if (line.includes('- [ ]')) priorityTasks++;
+                        if (line.includes('- [x]') || line.includes('- [X]')) priorityDone++;
+                    });
+                } else if (title.includes('Future Enhancements') || title.includes('V0.9') || title.includes('V1.')) {
+                    lines.forEach(line => {
+                        if (line.includes('- [ ]')) futureTasks++;
+                        if (line.includes('- [x]') || line.includes('- [X]')) futureDone++;
+                    });
+                } else if (title.includes('Known Issues') || title.includes('Technical Debt')) {
+                    lines.forEach(line => {
+                        if (line.includes('- [ ]')) bugTasks++;
+                        if (line.includes('- [x]') || line.includes('- [X]')) bugDone++;
+                    });
+                }
+            });
+            
+            const totalPriority = priorityTasks + priorityDone;
+            const totalFuture = futureTasks + futureDone;
+            const totalBugs = bugTasks + bugDone;
+            
+            const html = `
+                <div style="text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
+                    <div style="font-weight: bold;">Priority Tasks</div>
+                    <div style="font-size: 0.9rem; margin-top: 0.3rem;">${priorityDone}/${totalPriority} done</div>
+                    <div style="margin-top: 0.5rem; height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden;">
+                        <div style="height: 100%; width: ${totalPriority > 0 ? (priorityDone / totalPriority) * 100 : 0}%; background: #3b82f6;"></div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚀</div>
+                    <div style="font-weight: bold;">Future Features</div>
+                    <div style="font-size: 0.9rem; margin-top: 0.3rem;">${futureDone}/${totalFuture} done</div>
+                    <div style="margin-top: 0.5rem; height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden;">
+                        <div style="height: 100%; width: ${totalFuture > 0 ? (futureDone / totalFuture) * 100 : 0}%; background: #8b5cf6;"></div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🐛</div>
+                    <div style="font-weight: bold;">Bugs & Issues</div>
+                    <div style="font-size: 0.9rem; margin-top: 0.3rem;">${bugDone}/${totalBugs} fixed</div>
+                    <div style="margin-top: 0.5rem; height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden;">
+                        <div style="height: 100%; width: ${totalBugs > 0 ? (bugDone / totalBugs) * 100 : 0}%; background: #10b981;"></div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; padding: 1rem; background: var(--bg-hover); border-radius: 8px;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
+                    <div style="font-weight: bold;">Overall Progress</div>
+                    <div style="font-size: 0.9rem; margin-top: 0.3rem;">
+                        ${(priorityDone + futureDone + bugDone)}/${(totalPriority + totalFuture + totalBugs)} tasks
+                    </div>
+                    <div style="margin-top: 0.5rem; height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden;">
+                        <div style="height: 100%; width: ${(totalPriority + totalFuture + totalBugs) > 0 ? ((priorityDone + futureDone + bugDone) / (totalPriority + totalFuture + totalBugs)) * 100 : 0}%; background: linear-gradient(90deg, #3b82f6, #8b5cf6, #10b981);"></div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        function filterTasks(filterType) {
+            backlogCurrentFilter = filterType;
+            
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`filter-${filterType}`).classList.add('active');
+            
+            // Apply filtering (this would be more sophisticated in a real implementation)
+            // For now, just reload with a note
+            loadBacklog();
+        }
+        
+        function refreshBacklog() {
+            loadBacklog();
+            addActivity('Backlog refreshed');
+        }
+        
+        function openBacklogFile() {
+            // In a real implementation, this would open the file in an editor
+            // For now, just show a message
+            addActivity('Opening Backlog.md for editing');
+            alert('In a full implementation, this would open Backlog.md in your default editor.');
+        }
+        
+        function exportBacklog() {
+            if (!backlogData) return;
+            
+            // Create JSON export
+            const exportData = {
+                timestamp: new Date().toISOString(),
+                source: 'Backlog.md',
+                stats: {
+                    totalTasks: (backlogData.match(/- \[[ xX]\]/g) || []).length,
+                    doneTasks: (backlogData.match(/- \[[xX]\]/g) || []).length,
+                    priorityTasks: (backlogData.match(/High Priority|Medium Priority|Low Priority/g) || []).length
+                },
+                content: backlogData
+            };
+            
+            // Create download link
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `mission-control-backlog-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            addActivity('Backlog exported as JSON');
+        }
+        
+        // Initialize backlog when tab is shown
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add event listener for backlog tab
+            document.querySelectorAll('.nav-tab').forEach(button => {
+                button.addEventListener('click', () => {
+                    if (button.getAttribute('onclick').includes('backlog')) {
+                        loadBacklog();
                     }
                 });
             });

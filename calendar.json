@@ -127,171 +127,6 @@
       "source": "obsidian"
     },
     {
-      "title": "Dev Morning Update (6:30 AM)",
-      "start": "2026-03-21T17:40:08.202518",
-      "end": "2026-03-21T17:45:08.204109",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 30 6 * * * (next run unknown)",
-      "id": "event-ba6d3253",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "Regenerate Mission Control Calendar",
-      "start": "2026-03-21T18:40:00",
-      "end": "2026-03-21T18:45:00",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Runs every 1.0 hours",
-      "id": "event-a25ef215",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "Daily Check-in",
-      "start": "2026-03-21T17:40:08.204572",
-      "end": "2026-03-21T17:45:08.204573",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 30 22 * * * (next run unknown)",
-      "id": "event-e4a47c55",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "Nightly Visual Diary Scan",
-      "start": "2026-03-21T17:40:08.204576",
-      "end": "2026-03-21T17:45:08.204578",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 0 0 * * * (next run unknown)",
-      "id": "event-073be0d3",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "Bob Market Research - Passive Income Insights",
-      "start": "2026-03-21T17:40:08.204581",
-      "end": "2026-03-21T17:45:08.204582",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 0 4 * * 6 (next run unknown)",
-      "id": "event-4f6fdf2f",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "LIN - Daily Social Trend Report",
-      "start": "2026-03-21T17:40:08.204585",
-      "end": "2026-03-21T17:45:08.204586",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 0 7 * * * (next run unknown)",
-      "id": "event-4ed81ab6",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "LIN Report Summary - Discord Delivery",
-      "start": "2026-03-21T17:40:08.204593",
-      "end": "2026-03-21T17:45:08.204594",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 10 7 * * * (next run unknown)",
-      "id": "event-b1e42776",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "LIN Twitter Options - Discord Delivery",
-      "start": "2026-03-21T17:40:08.204597",
-      "end": "2026-03-21T17:45:08.204598",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 15 5 * * * (next run unknown)",
-      "id": "event-9fa57056",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "Project Vote - Morning Poll (7:30 AM)",
-      "start": "2026-03-21T17:40:08.204601",
-      "end": "2026-03-21T17:45:08.204602",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 30 7 * * * (next run unknown)",
-      "id": "event-b7df71d8",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "Project Vote - Check and Set Priority (8:30 AM)",
-      "start": "2026-03-21T17:40:08.204604",
-      "end": "2026-03-21T17:45:08.204605",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 30 8 * * * (next run unknown)",
-      "id": "event-78ae5298",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "Continuous Work - Check Progress (Every 2hrs)",
-      "start": "2026-03-21T19:20:00",
-      "end": "2026-03-21T19:25:00",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Runs every 2.0 hours",
-      "id": "event-defc7d52",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "Dev Evening Update (9:00 PM)",
-      "start": "2026-03-21T17:40:08.204618",
-      "end": "2026-03-21T17:45:08.204619",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 0 21 * * * (next run unknown)",
-      "id": "event-067a292c",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "Continuous Work - Check Progress & Advance (Every 2hrs)",
-      "start": "2026-03-21T18:00:00",
-      "end": "2026-03-21T18:05:00",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Runs every 2.0 hours",
-      "id": "event-8ed67628",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "Dev Afternoon Update (3:00 PM)",
-      "start": "2026-03-21T17:40:08.204633",
-      "end": "2026-03-21T17:45:08.204634",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 0 15 * * * (next run unknown)",
-      "id": "event-1fe331e4",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
-      "title": "Afternoon Check-in - Passive Income (3:00 PM)",
-      "start": "2026-03-21T17:40:08.204649",
-      "end": "2026-03-21T17:45:08.204652",
-      "type": "cron",
-      "color": "#3b82f6",
-      "description": "Cron: 0 15 * * * (next run unknown)",
-      "id": "event-bf247f28",
-      "date": "2026-03-21",
-      "source": "openclaw"
-    },
-    {
       "title": "Bob_Research_2026-03-21",
       "start": "2026-03-21T00:00:00",
       "end": "2026-03-21T01:00:00",
@@ -359,13 +194,191 @@
       "color": "#8b5cf6",
       "description": "Launch calendar module for Mission Control",
       "source": "manual"
+    },
+    {
+      "title": "Regenerate Mission Control Calendar",
+      "start": "2026-03-22T08:40:00",
+      "end": "2026-03-22T08:45:00",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Runs every 1.0 hours",
+      "id": "event-062b93cf",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "Bob Market Research - Passive Income Insights",
+      "start": "2026-03-22T07:40:08.288635",
+      "end": "2026-03-22T07:45:08.288637",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 0 4 * * 6 (next run unknown)",
+      "id": "event-c47c13ee",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "LIN - Daily Social Trend Report",
+      "start": "2026-03-22T07:40:08.288641",
+      "end": "2026-03-22T07:45:08.288643",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 0 7 * * * (next run unknown)",
+      "id": "event-3b05d7a9",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "LIN Report Summary - Discord Delivery",
+      "start": "2026-03-22T07:40:08.288646",
+      "end": "2026-03-22T07:45:08.288647",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 10 7 * * * (next run unknown)",
+      "id": "event-45164638",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "Project Vote - Morning Poll (7:30 AM)",
+      "start": "2026-03-22T07:40:08.288650",
+      "end": "2026-03-22T07:45:08.288651",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 30 7 * * * (next run unknown)",
+      "id": "event-07935045",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "Project Vote - Check and Set Priority (8:30 AM)",
+      "start": "2026-03-22T07:40:08.288653",
+      "end": "2026-03-22T07:45:08.288654",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 30 8 * * * (next run unknown)",
+      "id": "event-26632ff2",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "Continuous Work - Check Progress (Every 2hrs)",
+      "start": "2026-03-22T09:20:00",
+      "end": "2026-03-22T09:25:00",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Runs every 4.0 hours",
+      "id": "event-65ced9a0",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "Continuous Work - Check Progress & Advance (Every 2hrs)",
+      "start": "2026-03-22T08:00:00",
+      "end": "2026-03-22T08:05:00",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Runs every 2.0 hours",
+      "id": "event-221ae031",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "Dev Afternoon Update (3:00 PM)",
+      "start": "2026-03-22T07:40:08.288689",
+      "end": "2026-03-22T07:45:08.288690",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 15 15 * * * (next run unknown)",
+      "id": "event-061e3514",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "Afternoon Check-in - Passive Income (3:00 PM)",
+      "start": "2026-03-22T07:40:08.288693",
+      "end": "2026-03-22T07:45:08.288694",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 0 15 * * * (next run unknown)",
+      "id": "event-469f8470",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "Morning Brief - Passive Income (6:30 AM)",
+      "start": "2026-03-22T07:40:08.288696",
+      "end": "2026-03-22T07:45:08.288697",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 30 6 * * * (next run unknown)",
+      "id": "event-d2d74c52",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "Evening Check-in - Passive Income (9:00 PM)",
+      "start": "2026-03-22T07:40:08.288699",
+      "end": "2026-03-22T07:45:08.288700",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 0 21 * * * (next run unknown)",
+      "id": "event-e2452a32",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "Dev Evening Update (9:00 PM)",
+      "start": "2026-03-22T07:40:08.288703",
+      "end": "2026-03-22T07:45:08.288704",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 15 21 * * * (next run unknown)",
+      "id": "event-9116e0d4",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "Dev Morning Update (6:15 AM)",
+      "start": "2026-03-22T07:40:08.288706",
+      "end": "2026-03-22T07:45:08.288707",
+      "type": "cron",
+      "color": "#3b82f6",
+      "description": "Cron: 15 6 * * * (next run unknown)",
+      "id": "event-d5c4dcb0",
+      "date": "2026-03-22",
+      "source": "openclaw"
+    },
+    {
+      "title": "LIN_Report_2026-03-22",
+      "start": "2026-03-22T00:00:00",
+      "end": "2026-03-22T01:00:00",
+      "type": "task",
+      "color": "#10b981",
+      "description": "Daily brief: LIN_Report_2026-03-22.md",
+      "file": "LIN_Report_2026-03-22.md",
+      "id": "event-bf038ee6",
+      "date": "2026-03-22",
+      "source": "obsidian"
+    },
+    {
+      "title": "Morning_Brief_2026-03-22",
+      "start": "2026-03-22T00:00:00",
+      "end": "2026-03-22T01:00:00",
+      "type": "task",
+      "color": "#10b981",
+      "description": "Daily brief: Morning_Brief_2026-03-22.md",
+      "file": "Morning_Brief_2026-03-22.md",
+      "id": "event-eb40857c",
+      "date": "2026-03-22",
+      "source": "obsidian"
     }
   ],
-  "generated_at": "2026-03-21T17:40:08.257597",
+  "generated_at": "2026-03-22T07:40:08.346199",
   "counts": {
     "manual": 3,
-    "cron": 15,
-    "obsidian": 14,
-    "total": 32
+    "cron": 14,
+    "obsidian": 16,
+    "total": 33
   }
 }
