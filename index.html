@@ -709,6 +709,278 @@
             font-size: 0.9rem;
         }
         
+        /* V1.1: Project Timeline Styles */
+        .timeline-container {
+            overflow-x: auto;
+            padding: 1rem 0;
+        }
+        
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .timeline-legend {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .timeline-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .timeline-legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        
+        .gantt-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            min-width: 600px;
+        }
+        
+        .gantt-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .gantt-label {
+            width: 150px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .gantt-bar-container {
+            flex: 1;
+            height: 32px;
+            background: var(--bg-hover);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gantt-bar {
+            height: 100%;
+            border-radius: 6px;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            padding: 0 0.75rem;
+            font-size: 0.75rem;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .gantt-bar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .gantt-bar-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            border-radius: 6px 0 0 6px;
+        }
+        
+        .gantt-milestone {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 14px solid var(--warning);
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        
+        .timeline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .timeline-list-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-hover);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .timeline-list-icon {
+            font-size: 1.5rem;
+        }
+        
+        .timeline-list-content {
+            flex: 1;
+        }
+        
+        .timeline-list-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .timeline-list-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .timeline-list-progress {
+            width: 100px;
+        }
+        
+        .timeline-list-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .timeline-list-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        /* V1.1: Resource Allocation Styles */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        
+        .resource-card {
+            background: var(--bg-hover);
+            border-radius: 10px;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+        
+        .resource-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .resource-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .resource-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+        }
+        
+        .resource-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .resource-role {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .resource-workload {
+            margin-bottom: 1rem;
+        }
+        
+        .workload-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .workload-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .workload-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .workload-fill.low { background: linear-gradient(90deg, #10b981, #34d399); }
+        .workload-fill.medium { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .workload-fill.high { background: linear-gradient(90deg, #ef4444, #f87171); }
+        
+        .resource-projects {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        
+        .resource-project-tag {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        
+        .resource-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .resource-stat {
+            text-align: center;
+        }
+        
+        .resource-stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .resource-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
         /* Office Visualization Styles */
         .office-container {
             padding: 1.5rem;
@@ -1644,6 +1916,49 @@
                         <div class="stat-label">Avg Progress</div>
                     </div>
                 </div>
+                
+                <!-- V1.1: Project Timeline Visualization -->
+                <div class="project-timeline-section" style="margin-top: 2rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>📅</span>
+                            <span>Project Timeline</span>
+                            <span style="background: var(--accent); color: white; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.7rem;">V1.1</span>
+                        </h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button onclick="toggleTimelineView('gantt')" class="timeline-view-btn active" data-view="gantt" style="padding: 0.4rem 0.8rem; border: 1px solid var(--border); background: var(--accent); color: white; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">Gantt</button>
+                            <button onclick="toggleTimelineView('list')" class="timeline-view-btn" data-view="list" style="padding: 0.4rem 0.8rem; border: 1px solid var(--border); background: var(--bg-hover); color: var(--text-secondary); border-radius: 6px; cursor: pointer; font-size: 0.8rem;">List</button>
+                        </div>
+                    </div>
+                    <div id="project-timeline-container" style="min-height: 200px;">
+                        <div class="timeline-loading" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📊</div>
+                            <div>Loading timeline...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- V1.1: Resource Allocation Dashboard -->
+                <div class="resource-allocation-section" style="margin-top: 2rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>👥</span>
+                            <span>Resource Allocation</span>
+                            <span style="background: var(--accent); color: white; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.7rem;">V1.1</span>
+                        </h3>
+                        <select id="resource-timeframe" onchange="updateResourceAllocation()" style="padding: 0.4rem 0.8rem; border: 1px solid var(--border); background: var(--bg-hover); color: var(--text-primary); border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
+                            <option value="current">Current Sprint</option>
+                            <option value="month">This Month</option>
+                            <option value="quarter">This Quarter</option>
+                        </select>
+                    </div>
+                    <div id="resource-allocation-container" style="min-height: 150px;">
+                        <div class="resource-loading" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⚡</div>
+                            <div>Loading resource data...</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -2262,7 +2577,7 @@
         </div>
     </div>
     
-    <div class="version-badge">Version <span>V1.0</span> — Office Visualization • Memories Browser • Timeline • Insights Dashboard</div>
+    <div class="version-badge">Version <span>V1.1</span> — Project Timeline • Resource Allocation • Office Visualization • Memories Browser</div>
     
     <script>
         // Tab switching
@@ -2393,6 +2708,255 @@
                 addActivity(messages[Math.floor(Math.random() * messages.length)]);
             }
         }, 30000);
+        
+        // V1.1: Project Timeline Functions
+        let currentTimelineView = 'gantt';
+        
+        function toggleTimelineView(view) {
+            currentTimelineView = view;
+            document.querySelectorAll('.timeline-view-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.view === view) {
+                    btn.classList.add('active');
+                    btn.style.background = 'var(--accent)';
+                    btn.style.color = 'white';
+                } else {
+                    btn.style.background = 'var(--bg-hover)';
+                    btn.style.color = 'var(--text-secondary)';
+                }
+            });
+            renderProjectTimeline();
+        }
+        
+        function renderProjectTimeline() {
+            const container = document.getElementById('project-timeline-container');
+            if (!container || allProjects.length === 0) return;
+            
+            if (currentTimelineView === 'gantt') {
+                renderGanttChart(container);
+            } else {
+                renderTimelineList(container);
+            }
+        }
+        
+        function renderGanttChart(container) {
+            // Calculate date range
+            const today = new Date();
+            const startDate = new Date(today);
+            startDate.setDate(startDate.getDate() - 14); // 2 weeks ago
+            const endDate = new Date(today);
+            endDate.setDate(endDate.getDate() + 30); // 30 days ahead
+            const totalDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
+            
+            let html = `
+                <div class="timeline-legend">
+                    <div class="timeline-legend-item">
+                        <div class="timeline-legend-dot" style="background: #6366f1;"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="timeline-legend-item">
+                        <div class="timeline-legend-dot" style="background: #f59e0b;"></div>
+                        <span>Planning</span>
+                    </div>
+                    <div class="timeline-legend-item">
+                        <div class="timeline-legend-dot" style="background: #10b981;"></div>
+                        <span>Completed</span>
+                    </div>
+                    <div class="timeline-legend-item">
+                        <div class="timeline-legend-dot" style="background: #8b5cf6;"></div>
+                        <span>On Hold</span>
+                    </div>
+                </div>
+                <div class="timeline-container">
+                    <div class="gantt-chart">
+            `;
+            
+            allProjects.forEach(project => {
+                const projectStart = new Date(project.startDate || startDate);
+                const projectEnd = new Date(project.dueDate || endDate);
+                
+                // Calculate position and width
+                const daysFromStart = Math.max(0, (projectStart - startDate) / (1000 * 60 * 60 * 24));
+                const duration = Math.max(1, (projectEnd - projectStart) / (1000 * 60 * 60 * 24));
+                
+                const leftPercent = (daysFromStart / totalDays) * 100;
+                const widthPercent = Math.min((duration / totalDays) * 100, 100 - leftPercent);
+                
+                const color = project.color || '#6366f1';
+                const statusColor = project.status === 'active' ? '#6366f1' : 
+                                   project.status === 'planning' ? '#f59e0b' : 
+                                   project.status === 'completed' ? '#10b981' : '#8b5cf6';
+                
+                html += `
+                    <div class="gantt-row">
+                        <div class="gantt-label" title="${project.name}">${project.icon || '📋'} ${project.name}</div>
+                        <div class="gantt-bar-container">
+                            <div class="gantt-bar" style="left: ${leftPercent}%; width: ${widthPercent}%; background: ${statusColor};" 
+                                 onclick="showProjectDetails('${project.id}')" title="${project.name}: ${project.progress}% complete">
+                                <div class="gantt-bar-progress" style="width: ${project.progress || 0}%;"></div>
+                                <span>${project.progress || 0}%</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        function renderTimelineList(container) {
+            const sortedProjects = [...allProjects].sort((a, b) => {
+                return new Date(a.startDate || 0) - new Date(b.startDate || 0);
+            });
+            
+            let html = '<div class="timeline-list">';
+            
+            sortedProjects.forEach(project => {
+                const color = project.color || '#6366f1';
+                const statusText = project.status.charAt(0).toUpperCase() + project.status.slice(1);
+                const startDate = project.startDate ? new Date(project.startDate).toLocaleDateString() : 'TBD';
+                const dueDate = project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'TBD';
+                
+                html += `
+                    <div class="timeline-list-item" style="border-left-color: ${color};" onclick="showProjectDetails('${project.id}')">
+                        <div class="timeline-list-icon">${project.icon || '📋'}</div>
+                        <div class="timeline-list-content">
+                            <div class="timeline-list-title">${project.name}</div>
+                            <div class="timeline-list-meta">
+                                ${statusText} • ${startDate} - ${dueDate} • Lead: ${project.lead || 'Unassigned'}
+                            </div>
+                        </div>
+                        <div class="timeline-list-progress">
+                            <div class="timeline-list-bar">
+                                <div class="timeline-list-fill" style="width: ${project.progress || 0}%; background: ${color};"></div>
+                            </div>
+                            <div style="text-align: center; font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-secondary);">${project.progress || 0}%</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        function showProjectDetails(projectId) {
+            const project = allProjects.find(p => p.id === projectId);
+            if (!project) return;
+            
+            const features = project.features ? project.features.map(f => 
+                `<li style="margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>${f.status === 'done' ? '✅' : f.status === 'in-progress' ? '🔄' : '⏳'}</span>
+                    <span>${f.name}${f.version ? ` <span style="color: var(--text-secondary); font-size: 0.8rem;">(${f.version})</span>` : ''}</span>
+                </li>`
+            ).join('') : '<li style="color: var(--text-secondary);">No features listed</li>';
+            
+            alert(`📋 ${project.name}\n\n${project.description}\n\nStatus: ${project.status.toUpperCase()}\nProgress: ${project.progress}%\nLead: ${project.lead || 'Unassigned'}\nTeam: ${project.team ? project.team.join(', ') : 'None'}\n\nFeatures:\n${features.replace(/<[^>]*>/g, '')}`);
+        }
+        
+        // V1.1: Resource Allocation Functions
+        const resourceData = {
+            'Baro': {
+                avatar: '🎨',
+                role: 'Creative Director',
+                projects: ['Mission Control Dashboard', 'Amazon Short Stories', 'Figma Template Blueprint'],
+                workload: 85,
+                tasks: 12,
+                memories: 45,
+                efficiency: 92
+            },
+            'Noona': {
+                avatar: '🔧',
+                role: 'Junior Engineer',
+                projects: ['Mission Control Dashboard', 'Amazon Short Stories', 'Agent Workspace Migration'],
+                workload: 90,
+                tasks: 18,
+                memories: 128,
+                efficiency: 88
+            },
+            'Raz': {
+                avatar: '👑',
+                role: 'Boss',
+                projects: ['Mission Control Dashboard', 'Strategic Planning'],
+                workload: 60,
+                tasks: 8,
+                memories: 23,
+                efficiency: 95
+            }
+        };
+        
+        function updateResourceAllocation() {
+            const container = document.getElementById('resource-allocation-container');
+            if (!container) return;
+            
+            const timeframe = document.getElementById('resource-timeframe')?.value || 'current';
+            
+            // Adjust workload based on timeframe
+            const workloadMultiplier = timeframe === 'current' ? 1 : timeframe === 'month' ? 1.2 : 1.5;
+            
+            let html = '<div class="resource-grid">';
+            
+            Object.entries(resourceData).forEach(([name, data]) => {
+                const adjustedWorkload = Math.min(100, Math.round(data.workload * workloadMultiplier));
+                const workloadClass = adjustedWorkload < 50 ? 'low' : adjustedWorkload < 80 ? 'medium' : 'high';
+                
+                html += `
+                    <div class="resource-card">
+                        <div class="resource-header">
+                            <div class="resource-avatar">${data.avatar}</div>
+                            <div class="resource-info">
+                                <h4>${name}</h4>
+                                <div class="resource-role">${data.role}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="resource-workload">
+                            <div class="workload-header">
+                                <span>Workload</span>
+                                <span style="color: var(--text-secondary);">${adjustedWorkload}%</span>
+                            </div>
+                            <div class="workload-bar">
+                                <div class="workload-fill ${workloadClass}" style="width: ${adjustedWorkload}%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="resource-projects">
+                            ${data.projects.slice(0, 3).map(p => `<span class="resource-project-tag">${p}</span>`).join('')}
+                            ${data.projects.length > 3 ? `<span class="resource-project-tag">+${data.projects.length - 3}</span>` : ''}
+                        </div>
+                        
+                        <div class="resource-stats">
+                            <div class="resource-stat">
+                                <div class="resource-stat-value">${data.tasks}</div>
+                                <div class="resource-stat-label">Tasks</div>
+                            </div>
+                            <div class="resource-stat">
+                                <div class="resource-stat-value">${data.memories}</div>
+                                <div class="resource-stat-label">Memories</div>
+                            </div>
+                            <div class="resource-stat">
+                                <div class="resource-stat-value">${data.efficiency}%</div>
+                                <div class="resource-stat-label">Efficiency</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        // Initialize V1.1 features when projects are loaded
+        function initV11Features() {
+            renderProjectTimeline();
+            updateResourceAllocation();
+        }
         
         // Calendar Module
         let currentDate = new Date();
@@ -2692,6 +3256,9 @@
             document.getElementById('total-projects').textContent = total;
             document.getElementById('active-projects').textContent = active;
             document.getElementById('avg-progress').textContent = `${avgProgress}%`;
+            
+            // Initialize V1.1 features after stats are updated
+            initV11Features();
         }
         
         function setupProjectFilters() {

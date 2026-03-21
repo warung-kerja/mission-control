@@ -5,8 +5,8 @@
       "name": "Mission Control Dashboard",
       "description": "Central dashboard for team coordination, project tracking, and agent management",
       "status": "active",
-      "progress": 75,
-      "version": "V0.8",
+      "progress": 92,
+      "version": "V1.1",
       "lead": "Noona",
       "team": ["Baro", "Noona"],
       "startDate": "2026-03-17",
@@ -17,15 +17,17 @@
       "icon": "🚀",
       "features": [
         {"name": "Task Board", "status": "done", "version": "V0.5"},
-        {"name": "Calendar Module", "status": "in-progress", "version": "V0.6"},
-        {"name": "Projects Tracker", "status": "in-progress", "version": "V0.7"},
+        {"name": "Calendar Module", "status": "done", "version": "V0.6"},
+        {"name": "Projects Tracker", "status": "done", "version": "V0.7"},
         {"name": "Team Org Chart", "status": "done", "version": "V0.8"},
-        {"name": "Memories Browser", "status": "planned", "version": "V0.9"},
-        {"name": "Office Visualization", "status": "planned", "version": "V1.0"}
+        {"name": "Memories Browser", "status": "done", "version": "V0.9"},
+        {"name": "Office Visualization", "status": "done", "version": "V1.0"},
+        {"name": "Project Timeline", "status": "done", "version": "V1.1"},
+        {"name": "Resource Allocation", "status": "done", "version": "V1.1"}
       ],
       "repository": "https://github.com/warung-kerja/mission-control",
       "liveUrl": "https://warung-kerja.github.io/mission-control/",
-      "lastUpdated": "2026-03-19T22:17:00+11:00"
+      "lastUpdated": "2026-03-22T02:00:00+11:00"
     },
     {
       "id": "project-2",
@@ -106,8 +108,8 @@
     "planned": 1,
     "onHold": 1,
     "completed": 0,
-    "averageProgress": 37.5
+    "averageProgress": 41.75
   },
-  "lastUpdated": "2026-03-20T00:15:00+11:00",
-  "version": "V0.7-mvp"
+  "lastUpdated": "2026-03-22T02:00:00+11:00",
+  "version": "V1.1"
 }
