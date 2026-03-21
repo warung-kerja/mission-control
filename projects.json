@@ -5,8 +5,8 @@
       "name": "Mission Control Dashboard",
       "description": "Central dashboard for team coordination, project tracking, and agent management",
       "status": "active",
-      "progress": 98,
-      "version": "V1.3",
+      "progress": 99,
+      "version": "V1.4",
       "lead": "Noona",
       "team": ["Baro", "Noona"],
       "startDate": "2026-03-17",
@@ -33,11 +33,14 @@
         {"name": "Time Tracking & Heatmaps", "status": "done", "version": "V1.3"},
         {"name": "Performance Leaderboard", "status": "done", "version": "V1.3"},
         {"name": "AI-Powered Insights", "status": "done", "version": "V1.3"},
-        {"name": "Exportable Reports", "status": "done", "version": "V1.3"}
+        {"name": "Exportable Reports", "status": "done", "version": "V1.3"},
+        {"name": "Documentation Updates", "status": "done", "version": "V1.4"},
+        {"name": "Code Cleanup & Optimization", "status": "in-progress", "version": "V1.4"},
+        {"name": "Final Bug Fixes", "status": "planned", "version": "V1.4"}
       ],
       "repository": "https://github.com/warung-kerja/mission-control",
       "liveUrl": "https://warung-kerja.github.io/mission-control/",
-      "lastUpdated": "2026-03-22T06:00:00+11:00"
+      "lastUpdated": "2026-03-22T08:30:00+11:00"
     },
     {
       "id": "project-2",
@@ -120,6 +123,6 @@
     "completed": 0,
     "averageProgress": 41.75
   },
-  "lastUpdated": "2026-03-22T06:00:00+11:00",
-  "version": "V1.3"
+  "lastUpdated": "2026-03-22T08:30:00+11:00",
+  "version": "V1.4"
 }
