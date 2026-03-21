@@ -1060,7 +1060,7 @@
                     Browse, search, and visualize memory files from Noona's workspace
                     <div style="margin-top: 0.5rem; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                         <span style="background: var(--accent-color); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">V0.9</span>
-                        <span>Phase 1: Basic Memory Browser • Last updated: <span id="memories-last-updated">Loading...</span></span>
+                        <span>Phase 3: Timeline Visualization • Last updated: <span id="memories-last-updated">Loading...</span></span>
                     </div>
                 </div>
                 
@@ -1095,11 +1095,20 @@
                         <button onclick="clearFilters()" style="padding: 0.5rem 1rem; background: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
                             Clear Filters
                         </button>
+                        
+                        <div style="margin-left: auto; display: flex; gap: 0.5rem; background: var(--bg-hover); padding: 0.25rem; border-radius: 6px; border: 1px solid var(--border-color);">
+                            <button id="view-browser-btn" onclick="switchMemoryView('browser')" style="padding: 0.4rem 0.8rem; background: var(--accent-color); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 0.3rem;">
+                                📁 Browser
+                            </button>
+                            <button id="view-timeline-btn" onclick="switchMemoryView('timeline')" style="padding: 0.4rem 0.8rem; background: transparent; color: var(--text-primary); border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 0.3rem;">
+                                📅 Timeline
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Main Content Area -->
-                <div style="display: grid; grid-template-columns: 300px 1fr; gap: 2rem;">
+                <!-- Browser View -->
+                <div id="memory-browser-view" style="display: grid; grid-template-columns: 300px 1fr; gap: 2rem;">
                     <!-- Left Sidebar: Memory Navigation -->
                     <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                         <!-- Memory Stats -->
@@ -1191,6 +1200,63 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Timeline View (Hidden by default) -->
+                <div id="memory-timeline-view" style="display: none;">
+                    <!-- Timeline Controls -->
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid var(--border-color);">
+                        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 0.9rem; font-weight: bold;">📅 Timeline View</span>
+                            </div>
+                            <div style="margin-left: auto; display: flex; gap: 0.5rem;">
+                                <select id="timeline-grouping" onchange="renderTimeline()" style="padding: 0.5rem; background: var(--bg-hover); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 0.85rem;">
+                                    <option value="day">Group by Day</option>
+                                    <option value="week">Group by Week</option>
+                                    <option value="month">Group by Month</option>
+                                </select>
+                                <button onclick="expandAllTimeline()" style="padding: 0.5rem 1rem; background: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                                    Expand All
+                                </button>
+                                <button onclick="collapseAllTimeline()" style="padding: 0.5rem 1rem; background: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                                    Collapse All
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Timeline Stats -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color); text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                            <div style="font-size: 1.5rem; font-weight: bold;" id="timeline-total-entries">-</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary);">Total Entries</div>
+                        </div>
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color); text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📅</div>
+                            <div style="font-size: 1.5rem; font-weight: bold;" id="timeline-date-range">-</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary);">Date Range</div>
+                        </div>
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color); text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📝</div>
+                            <div style="font-size: 1.5rem; font-weight: bold;" id="timeline-avg-entries">-</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary);">Avg Entries/Day</div>
+                        </div>
+                        <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color); text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔥</div>
+                            <div style="font-size: 1.5rem; font-weight: bold;" id="timeline-most-active">-</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary);">Most Active Day</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Timeline Container -->
+                    <div id="timeline-container" style="background: var(--card-bg); border-radius: 12px; padding: 2rem; border: 1px solid var(--border-color);">
+                        <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">📅</div>
+                            <div>Loading timeline...</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -1202,7 +1268,7 @@
         </div>
     </div>
     
-    <div class="version-badge">Version <span>V0.8.3</span> — Enhanced Team Hierarchy • Backlog Task Tracking • Sub-agent Integration • Roadmap Planning</div>
+    <div class="version-badge">Version <span>V0.9 Phase 3</span> — Memories Browser • Timeline Visualization • Real Data Integration</div>
     
     <script>
         // Tab switching
@@ -3156,6 +3222,254 @@ Use the memory tree on the left to browse other files, or use the search functio
             document.getElementById('memory-metadata').textContent = 'No file selected';
             
             addActivity('Memory filters cleared');
+        }
+        
+        // ==========================================
+        // TIMELINE VISUALIZATION (Phase 3)
+        // ==========================================
+        
+        let currentMemoryView = 'browser';
+        let timelineData = null;
+        
+        function switchMemoryView(view) {
+            currentMemoryView = view;
+            
+            // Update button styles
+            const browserBtn = document.getElementById('view-browser-btn');
+            const timelineBtn = document.getElementById('view-timeline-btn');
+            
+            if (view === 'browser') {
+                browserBtn.style.background = 'var(--accent-color)';
+                browserBtn.style.color = 'white';
+                timelineBtn.style.background = 'transparent';
+                timelineBtn.style.color = 'var(--text-primary)';
+                
+                document.getElementById('memory-browser-view').style.display = 'grid';
+                document.getElementById('memory-timeline-view').style.display = 'none';
+            } else {
+                timelineBtn.style.background = 'var(--accent-color)';
+                timelineBtn.style.color = 'white';
+                browserBtn.style.background = 'transparent';
+                browserBtn.style.color = 'var(--text-primary)';
+                
+                document.getElementById('memory-browser-view').style.display = 'none';
+                document.getElementById('memory-timeline-view').style.display = 'block';
+                
+                // Load timeline data if not already loaded
+                if (!timelineData) {
+                    renderTimeline();
+                }
+            }
+            
+            addActivity(`Switched to ${view} view`);
+        }
+        
+        async function renderTimeline() {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = '<div style="text-align: center; padding: 3rem; color: var(--text-secondary);"><div style="font-size: 2rem; margin-bottom: 1rem;">📅</div><div>Loading timeline...</div></div>';
+            
+            try {
+                // Fetch memory data
+                if (!window.memoryData) {
+                    const response = await fetch('memories.json');
+                    window.memoryData = await response.json();
+                }
+                
+                const data = window.memoryData;
+                const grouping = document.getElementById('timeline-grouping').value;
+                
+                // Process daily memory files for timeline
+                const dailyFiles = data.memory_files.filter(f => f.type === 'daily' && f.date);
+                
+                // Sort by date (newest first)
+                dailyFiles.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                // Group files based on selected grouping
+                const groupedData = groupTimelineData(dailyFiles, grouping);
+                
+                // Update stats
+                updateTimelineStats(dailyFiles, groupedData);
+                
+                // Render timeline HTML
+                let timelineHtml = '';
+                
+                Object.keys(groupedData).forEach((groupKey, index) => {
+                    const files = groupedData[groupKey];
+                    const isExpanded = index === 0; // Expand first group by default
+                    
+                    timelineHtml += `
+                        <div class="timeline-group" style="margin-bottom: 1.5rem;">
+                            <div class="timeline-header" onclick="toggleTimelineGroup(this)" style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: var(--bg-hover); border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color);">
+                                <span class="timeline-toggle" style="transition: transform 0.2s; ${isExpanded ? 'transform: rotate(90deg);' : ''}">▶</span>
+                                <span style="font-size: 1.2rem;">📅</span>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: bold;">${formatGroupLabel(groupKey, grouping)}</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-secondary);">${files.length} memory entries</div>
+                                </div>
+                                <span style="background: var(--accent-color); color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem;">${files.length}</span>
+                            </div>
+                            <div class="timeline-content" style="${isExpanded ? '' : 'display: none;'} margin-top: 0.5rem; margin-left: 2rem;">
+                                ${files.map(file => `
+                                    <div class="timeline-item" onclick="loadMemory('daily', '${file.name}'); switchMemoryView('browser');" style="display: flex; align-items: start; gap: 1rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; border: 1px solid var(--border-color); transition: all 0.2s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='var(--card-bg)'">
+                                        <div style="font-size: 1.5rem;">📝</div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: bold; margin-bottom: 0.3rem;">${file.name.replace('.md', '')}</div>
+                                            <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4;">${file.preview.substring(0, 120)}${file.preview.length > 120 ? '...' : ''}</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem; display: flex; gap: 1rem;">
+                                                <span>📊 ${formatFileSize(file.size)}</span>
+                                                <span>🕒 ${new Date(file.modified * 1000).toLocaleString()}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                if (timelineHtml === '') {
+                    timelineHtml = `
+                        <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">📭</div>
+                            <div>No timeline entries found</div>
+                            <div style="font-size: 0.8rem; margin-top: 0.5rem;">Daily memory logs will appear here</div>
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = timelineHtml;
+                timelineData = groupedData;
+                
+            } catch (error) {
+                console.error('Error rendering timeline:', error);
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">⚠️</div>
+                        <div>Error loading timeline</div>
+                        <div style="font-size: 0.8rem; margin-top: 0.5rem;">${error.message}</div>
+                    </div>
+                `;
+            }
+        }
+        
+        function groupTimelineData(files, grouping) {
+            const grouped = {};
+            
+            files.forEach(file => {
+                const date = new Date(file.date);
+                let key;
+                
+                if (grouping === 'day') {
+                    key = file.date;
+                } else if (grouping === 'week') {
+                    const weekStart = new Date(date);
+                    weekStart.setDate(date.getDate() - date.getDay());
+                    key = weekStart.toISOString().split('T')[0];
+                } else if (grouping === 'month') {
+                    key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                }
+                
+                if (!grouped[key]) {
+                    grouped[key] = [];
+                }
+                grouped[key].push(file);
+            });
+            
+            return grouped;
+        }
+        
+        function formatGroupLabel(key, grouping) {
+            if (grouping === 'day') {
+                const date = new Date(key);
+                const today = new Date().toISOString().split('T')[0];
+                const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+                
+                if (key === today) return 'Today';
+                if (key === yesterday) return 'Yesterday';
+                return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            } else if (grouping === 'week') {
+                const weekStart = new Date(key);
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 6);
+                return `Week of ${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+            } else if (grouping === 'month') {
+                const [year, month] = key.split('-');
+                return new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            }
+            return key;
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+        
+        function updateTimelineStats(files, groupedData) {
+            // Total entries
+            document.getElementById('timeline-total-entries').textContent = files.length;
+            
+            // Date range
+            if (files.length > 0) {
+                const oldest = new Date(files[files.length - 1].date);
+                const newest = new Date(files[0].date);
+                const daysDiff = Math.ceil((newest - oldest) / (1000 * 60 * 60 * 24)) + 1;
+                document.getElementById('timeline-date-range').textContent = `${daysDiff} days`;
+            } else {
+                document.getElementById('timeline-date-range').textContent = '-';
+            }
+            
+            // Average entries per day
+            const groupCount = Object.keys(groupedData).length;
+            const avg = groupCount > 0 ? (files.length / groupCount).toFixed(1) : '0';
+            document.getElementById('timeline-avg-entries').textContent = avg;
+            
+            // Most active day
+            let maxCount = 0;
+            let mostActiveDay = '-';
+            Object.keys(groupedData).forEach(key => {
+                if (groupedData[key].length > maxCount) {
+                    maxCount = groupedData[key].length;
+                    mostActiveDay = key;
+                }
+            });
+            if (mostActiveDay !== '-') {
+                const date = new Date(mostActiveDay);
+                document.getElementById('timeline-most-active').textContent = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            } else {
+                document.getElementById('timeline-most-active').textContent = '-';
+            }
+        }
+        
+        function toggleTimelineGroup(header) {
+            const content = header.nextElementSibling;
+            const toggle = header.querySelector('.timeline-toggle');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.style.transform = 'rotate(90deg)';
+            } else {
+                content.style.display = 'none';
+                toggle.style.transform = 'rotate(0deg)';
+            }
+        }
+        
+        function expandAllTimeline() {
+            document.querySelectorAll('.timeline-content').forEach(content => {
+                content.style.display = 'block';
+            });
+            document.querySelectorAll('.timeline-toggle').forEach(toggle => {
+                toggle.style.transform = 'rotate(90deg)';
+            });
+        }
+        
+        function collapseAllTimeline() {
+            document.querySelectorAll('.timeline-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            document.querySelectorAll('.timeline-toggle').forEach(toggle => {
+                toggle.style.transform = 'rotate(0deg)';
+            });
         }
         
         function copyMemoryContent() {
