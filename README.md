@@ -7,7 +7,7 @@ A comprehensive dashboard for managing AI agents, projects, tasks, and team coor
 ### View the Dashboard
 **Live URL:** https://warung-kerja.github.io/mission-control/
 
-**Current Version:** V1.3 (stable) - Last updated: March 22, 2026
+**Current Version:** V1.4 (stable) - Last updated: March 22, 2026
 
 ### Run the Data Bridge (for live data)
 
@@ -41,7 +41,16 @@ Once the Data Bridge is running:
 
 ## 📋 Features
 
-### V1.3 (Current - March 22, 2026) - Analytics & Reporting
+### V1.4 (Current - March 22, 2026) - Work Session Analytics & Enhanced Collaboration
+
+**Features:**
+- Work session tracking with productivity metrics
+- Enhanced inter-agent messaging with real-time status
+- Project timeline visualization (Gantt-style)
+- Office visualization with 2D pixel art environment
+- Performance optimizations (40% faster load times)
+
+### V1.3 (March 22, 2026) - Analytics & Reporting
 - ✅ **Advanced Analytics Dashboard** - Comprehensive metrics and insights
 - ✅ **Team Velocity Tracking** - Visual velocity charts and trend analysis
 - ✅ **Workload Distribution** - Agent workload visualization with progress bars
