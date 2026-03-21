@@ -708,6 +708,704 @@
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
+        
+        /* Office Visualization Styles */
+        .office-container {
+            padding: 1.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .office-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .office-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .office-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .office-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        
+        .office-btn:hover, .office-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        
+        .office-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 1.5rem;
+            height: calc(100vh - 220px);
+        }
+        
+        .office-room {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .room-label {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 10;
+        }
+        
+        .office-floor {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(90deg, var(--border) 1px, transparent 1px),
+                linear-gradient(var(--border) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.3;
+        }
+        
+        .office-floor.show-grid {
+            opacity: 0.6;
+        }
+        
+        .furniture-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+        }
+        
+        /* Desk Styles */
+        .desk {
+            position: absolute;
+            width: 120px;
+            height: 80px;
+        }
+        
+        .desk-surface {
+            position: absolute;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(135deg, #3d3d5c 0%, #2a2a40 100%);
+            border-radius: 8px;
+            border: 2px solid #4a4a6a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .desk-chair {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            border-radius: 50%;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 2px solid #818cf8;
+            box-shadow: 0 2px 8px rgba(99,102,241,0.4);
+        }
+        
+        .computer-monitor {
+            position: absolute;
+            width: 50px;
+            height: 35px;
+            background: #1a1a2e;
+            border-radius: 4px;
+            border: 2px solid #2d2d44;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px rgba(99,102,241,0.3);
+        }
+        
+        .computer-monitor::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: linear-gradient(135deg, rgba(99,102,241,0.3) 0%, rgba(139,92,246,0.2) 100%);
+            border-radius: 2px;
+            animation: screenGlow 3s ease-in-out infinite;
+        }
+        
+        .computer-monitor.dual {
+            width: 70px;
+        }
+        
+        .computer-monitor.dual::before {
+            content: '';
+            position: absolute;
+            width: 28px;
+            height: 29px;
+            background: linear-gradient(135deg, rgba(99,102,241,0.3) 0%, rgba(139,92,246,0.2) 100%);
+            border-radius: 2px;
+            left: 3px;
+            top: 3px;
+        }
+        
+        @keyframes screenGlow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        .desk-items {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .coffee-cup {
+            animation: steam 2s ease-in-out infinite;
+        }
+        
+        @keyframes steam {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+        
+        /* Meeting Table */
+        .meeting-table {
+            position: absolute;
+            width: 180px;
+            height: 100px;
+        }
+        
+        .table-surface {
+            position: absolute;
+            width: 100%;
+            height: 70px;
+            background: linear-gradient(135deg, #4a4a6a 0%, #3d3d5c 100%);
+            border-radius: 12px;
+            border: 2px solid #5a5a7a;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+        }
+        
+        .meeting-chairs {
+            position: absolute;
+            inset: 0;
+        }
+        
+        .m-chair {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 50%;
+            border: 2px solid #34d399;
+        }
+        
+        .m-chair:nth-child(1) { top: -15px; left: 20%; }
+        .m-chair:nth-child(2) { top: -15px; right: 20%; }
+        .m-chair:nth-child(3) { bottom: -5px; left: 20%; }
+        .m-chair:nth-child(4) { bottom: -5px; right: 20%; }
+        
+        .table-items {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+        
+        /* Whiteboard */
+        .whiteboard {
+            position: absolute;
+            width: 100px;
+            height: 120px;
+        }
+        
+        .board-surface {
+            position: absolute;
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 4px;
+            border: 3px solid #cbd5e1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .board-content {
+            padding: 8px;
+        }
+        
+        .board-line {
+            height: 3px;
+            background: #94a3b8;
+            border-radius: 2px;
+            margin-bottom: 6px;
+        }
+        
+        .board-line.short {
+            width: 60%;
+        }
+        
+        .board-diagram {
+            font-size: 1.2rem;
+            text-align: center;
+            margin-top: 4px;
+        }
+        
+        .board-stand {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 35px;
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            border-radius: 4px;
+        }
+        
+        /* Office Plants */
+        .office-plant {
+            position: absolute;
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            animation: plantSway 4s ease-in-out infinite;
+        }
+        
+        @keyframes plantSway {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+        
+        /* Agents Layer */
+        .agents-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 15;
+        }
+        
+        .office-agent {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .office-agent:hover {
+            transform: scale(1.1);
+            z-index: 100;
+        }
+        
+        .agent-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 3px solid var(--bg-card);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            position: relative;
+        }
+        
+        .agent-label {
+            margin-top: 4px;
+            padding: 2px 8px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        
+        .agent-status {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid var(--bg-card);
+        }
+        
+        .agent-status.online {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        
+        .agent-status.busy {
+            background: var(--danger);
+        }
+        
+        .agent-status.away {
+            background: var(--warning);
+        }
+        
+        .agent-activity {
+            margin-top: 2px;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            background: rgba(0,0,0,0.5);
+            padding: 2px 6px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .office-agent:hover .agent-activity {
+            opacity: 1;
+        }
+        
+        /* Activity Bubbles */
+        .activity-bubbles-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            pointer-events: none;
+        }
+        
+        .activity-bubble {
+            position: absolute;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: bubbleFloat 3s ease-in-out infinite;
+            white-space: nowrap;
+        }
+        
+        @keyframes bubbleFloat {
+            0%, 100% { transform: translateY(0); opacity: 0.9; }
+            50% { transform: translateY(-10px); opacity: 1; }
+        }
+        
+        /* Office Sidebar */
+        .office-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            overflow-y: auto;
+        }
+        
+        .sidebar-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+        
+        .sidebar-section h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .status-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 0.75rem;
+            background: var(--bg-hover);
+            border-radius: 8px;
+        }
+        
+        .stat-item .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-item .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        
+        .presence-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .presence-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            background: var(--bg-hover);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .presence-item:hover {
+            background: var(--accent);
+        }
+        
+        .presence-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        
+        .presence-info {
+            flex: 1;
+        }
+        
+        .presence-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .presence-role {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        
+        .presence-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .presence-status.online { background: var(--success); }
+        .presence-status.busy { background: var(--danger); }
+        .presence-status.away { background: var(--warning); }
+        
+        .live-activity {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .activity-item-office {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: var(--bg-hover);
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+        
+        .activity-icon {
+            font-size: 1rem;
+        }
+        
+        .activity-text {
+            flex: 1;
+            color: var(--text-primary);
+        }
+        
+        .activity-time {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        
+        .quick-actions-office {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .quick-action-office {
+            padding: 0.75rem;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-align: left;
+            transition: all 0.2s;
+        }
+        
+        .quick-action-office:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+        
+        /* Agent Detail Modal */
+        .agent-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .agent-modal.active {
+            display: flex;
+        }
+        
+        .agent-modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .agent-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .agent-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .agent-modal-avatar {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .agent-modal-info h3 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+        
+        .agent-modal-info p {
+            margin: 0.25rem 0 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .agent-modal-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .agent-modal-stat {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-hover);
+            border-radius: 8px;
+        }
+        
+        .agent-modal-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .agent-modal-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+        
+        .agent-modal-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .agent-modal-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: var(--accent);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .agent-modal-btn:hover {
+            background: #5558e0;
+        }
+        
+        .agent-modal-btn.secondary {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        
+        .agent-modal-btn.secondary:hover {
+            background: var(--border);
+        }
+        
+        @media (max-width: 1200px) {
+            .office-layout {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .office-sidebar {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .office-sidebar {
+                grid-template-columns: 1fr;
+            }
+            
+            .office-room {
+                min-height: 500px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1393,14 +2091,178 @@
         </div>
         
         <div id="office-tab" class="tab-content" style="display: none;">
-            <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
-                <h2>🏢 Office Visualization</h2>
-                <p>Coming in V1.0 — 2D pixel art office with agents at work</p>
+            <div class="office-container">
+                <div class="office-header">
+                    <h2>🏢 Warung Kerja Office</h2>
+                    <div class="office-controls">
+                        <button class="office-btn" onclick="toggleOfficeGrid()" title="Toggle Grid">
+                            ⊞ Grid
+                        </button>
+                        <button class="office-btn" onclick="resetOfficeView()" title="Reset View">
+                            ⟲ Reset
+                        </button>
+                        <button class="office-btn active" onclick="toggleAgentLabels()" title="Toggle Labels">
+                            🏷️ Labels
+                        </button>
+                    </div>
+                </div>
+                <div class="office-layout">
+                    <div class="office-room" id="main-office">
+                        <div class="room-label">Main Office</div>
+                        <div class="office-floor">
+                            <!-- Floor tiles will be generated by JS -->
+                        </div>
+                        <div class="furniture-layer">
+                            <!-- Desks -->
+                            <div class="desk" id="desk-raz" style="left: 10%; top: 15%;">
+                                <div class="desk-surface"></div>
+                                <div class="desk-chair"></div>
+                                <div class="computer-monitor"></div>
+                                <div class="desk-items">
+                                    <div class="coffee-cup">☕</div>
+                                    <div class="notebook">📓</div>
+                                </div>
+                            </div>
+                            <div class="desk" id="desk-baro" style="left: 40%; top: 15%;">
+                                <div class="desk-surface"></div>
+                                <div class="desk-chair"></div>
+                                <div class="computer-monitor"></div>
+                                <div class="desk-items">
+                                    <div class="coffee-cup">☕</div>
+                                    <div class="plant">🌱</div>
+                                </div>
+                            </div>
+                            <div class="desk" id="desk-noona" style="left: 70%; top: 15%;">
+                                <div class="desk-surface"></div>
+                                <div class="desk-chair"></div>
+                                <div class="computer-monitor dual"></div>
+                                <div class="desk-items">
+                                    <div class="coffee-cup">☕</div>
+                                    <div class="keyboard">⌨️</div>
+                                    <div class="headphones">🎧</div>
+                                </div>
+                            </div>
+                            <!-- Meeting area -->
+                            <div class="meeting-table" style="left: 25%; top: 55%;">
+                                <div class="table-surface"></div>
+                                <div class="meeting-chairs">
+                                    <div class="m-chair"></div>
+                                    <div class="m-chair"></div>
+                                    <div class="m-chair"></div>
+                                    <div class="m-chair"></div>
+                                </div>
+                                <div class="table-items">
+                                    <div class="laptop">💻</div>
+                                    <div class="docs">📄</div>
+                                </div>
+                            </div>
+                            <!-- Whiteboard -->
+                            <div class="whiteboard" style="left: 5%; top: 55%;">
+                                <div class="board-surface">
+                                    <div class="board-content">
+                                        <div class="board-line"></div>
+                                        <div class="board-line short"></div>
+                                        <div class="board-diagram">📊</div>
+                                    </div>
+                                </div>
+                                <div class="board-stand"></div>
+                            </div>
+                            <!-- Plants -->
+                            <div class="office-plant" style="left: 2%; top: 5%;">🪴</div>
+                            <div class="office-plant" style="left: 92%; top: 5%;">🌵</div>
+                            <div class="office-plant" style="left: 2%; top: 85%;">🌿</div>
+                            <div class="office-plant" style="left: 92%; top: 85%;">🪴</div>
+                        </div>
+                        <div class="agents-layer">
+                            <!-- Agent avatars will be positioned here -->
+                            <div class="office-agent" id="agent-raz" data-agent="Raz" style="left: 14%; top: 20%;">
+                                <div class="agent-avatar">👑</div>
+                                <div class="agent-label">Raz</div>
+                                <div class="agent-status online"></div>
+                                <div class="agent-activity">Reviewing</div>
+                            </div>
+                            <div class="office-agent" id="agent-baro" data-agent="Baro" style="left: 44%; top: 20%;">
+                                <div class="agent-avatar">🎨</div>
+                                <div class="agent-label">Baro</div>
+                                <div class="agent-status online"></div>
+                                <div class="agent-activity">Creating</div>
+                            </div>
+                            <div class="office-agent" id="agent-noona" data-agent="Noona" style="left: 74%; top: 20%;">
+                                <div class="agent-avatar">🔧</div>
+                                <div class="agent-label">Noona</div>
+                                <div class="agent-status online"></div>
+                                <div class="agent-activity">Building</div>
+                            </div>
+                        </div>
+                        <div class="activity-bubbles-layer">
+                            <!-- Activity bubbles will be generated by JS -->
+                        </div>
+                    </div>
+                    <div class="office-sidebar">
+                        <div class="sidebar-section">
+                            <h3>📊 Office Status</h3>
+                            <div class="status-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value" id="online-count">3</span>
+                                    <span class="stat-label">Online</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="active-tasks">12</span>
+                                    <span class="stat-label">Active Tasks</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="office-temp">22°C</span>
+                                    <span class="stat-label">Office Temp</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sidebar-section">
+                            <h3>👥 Team Presence</h3>
+                            <div class="presence-list" id="presence-list">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                        <div class="sidebar-section">
+                            <h3>⚡ Live Activity</h3>
+                            <div class="live-activity" id="live-activity">
+                                <div class="activity-item-office">
+                                    <span class="activity-icon">💻</span>
+                                    <span class="activity-text">Noona pushed code</span>
+                                    <span class="activity-time">2m ago</span>
+                                </div>
+                                <div class="activity-item-office">
+                                    <span class="activity-icon">🎨</span>
+                                    <span class="activity-text">Baro updated designs</span>
+                                    <span class="activity-time">5m ago</span>
+                                </div>
+                                <div class="activity-item-office">
+                                    <span class="activity-icon">👑</span>
+                                    <span class="activity-text">Raz approved roadmap</span>
+                                    <span class="activity-time">15m ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sidebar-section">
+                            <h3>🎯 Quick Actions</h3>
+                            <div class="quick-actions-office">
+                                <button class="quick-action-office" onclick="pingAllAgents()">
+                                    📢 Ping All
+                                </button>
+                                <button class="quick-action-office" onclick="scheduleMeeting()">
+                                    📅 Schedule Meeting
+                                </button>
+                                <button class="quick-action-office" onclick="toggleFocusMode()">
+                                    🎯 Focus Mode
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     
-    <div class="version-badge">Version <span>V0.9 Phase 4</span> — Memories Browser • Timeline Visualization • Insights Dashboard • Real Data Integration</div>
+    <div class="version-badge">Version <span>V1.0</span> — Office Visualization • Memories Browser • Timeline • Insights Dashboard</div>
     
     <script>
         // Tab switching
@@ -4064,6 +4926,312 @@ Use the memory tree on the left to browse other files, or use the search functio
             html += '</div>';
             container.innerHTML = html;
         }
+        
+        // Office Visualization Functions
+        let officeGridVisible = false;
+        let agentLabelsVisible = true;
+        let activityBubbleInterval = null;
+        
+        // Initialize office when tab is shown
+        function initOffice() {
+            generateActivityBubbles();
+            updatePresenceList();
+            startActivitySimulation();
+        }
+        
+        // Toggle office grid visibility
+        function toggleOfficeGrid() {
+            officeGridVisible = !officeGridVisible;
+            const floor = document.querySelector('.office-floor');
+            const btn = event.target;
+            
+            if (officeGridVisible) {
+                floor.classList.add('show-grid');
+                btn.classList.add('active');
+            } else {
+                floor.classList.remove('show-grid');
+                btn.classList.remove('active');
+            }
+        }
+        
+        // Reset office view
+        function resetOfficeView() {
+            officeGridVisible = false;
+            agentLabelsVisible = true;
+            
+            document.querySelector('.office-floor').classList.remove('show-grid');
+            document.querySelectorAll('.agent-label').forEach(label => {
+                label.style.display = 'block';
+            });
+            
+            // Reset buttons
+            document.querySelectorAll('.office-btn').forEach(btn => {
+                if (btn.textContent.includes('Grid')) {
+                    btn.classList.remove('active');
+                } else if (btn.textContent.includes('Labels')) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+        
+        // Toggle agent labels
+        function toggleAgentLabels() {
+            agentLabelsVisible = !agentLabelsVisible;
+            const btn = event.target;
+            
+            document.querySelectorAll('.agent-label').forEach(label => {
+                label.style.display = agentLabelsVisible ? 'block' : 'none';
+            });
+            
+            if (agentLabelsVisible) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        }
+        
+        // Generate random activity bubbles
+        function generateActivityBubbles() {
+            const container = document.querySelector('.activity-bubbles-layer');
+            if (!container) return;
+            
+            const activities = [
+                { icon: '💻', text: 'Coding...' },
+                { icon: '🎨', text: 'Designing...' },
+                { icon: '🔍', text: 'Researching...' },
+                { icon: '✍️', text: 'Writing...' },
+                { icon: '📊', text: 'Analyzing...' },
+                { icon: '☕', text: 'Coffee break' },
+                { icon: '🤔', text: 'Thinking...' },
+                { icon: '✅', text: 'Completed!' }
+            ];
+            
+            const agents = ['agent-raz', 'agent-baro', 'agent-noona'];
+            
+            // Clear existing bubbles
+            container.innerHTML = '';
+            
+            // Add 2-3 random bubbles
+            const numBubbles = Math.floor(Math.random() * 2) + 2;
+            
+            for (let i = 0; i < numBubbles; i++) {
+                const agent = agents[Math.floor(Math.random() * agents.length)];
+                const activity = activities[Math.floor(Math.random() * activities.length)];
+                const agentEl = document.getElementById(agent);
+                
+                if (agentEl) {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'activity-bubble';
+                    bubble.innerHTML = `${activity.icon} ${activity.text}`;
+                    
+                    // Position near agent
+                    const rect = agentEl.getBoundingClientRect();
+                    const roomRect = document.querySelector('.office-room').getBoundingClientRect();
+                    
+                    const left = ((rect.left - roomRect.left) / roomRect.width * 100) + 5;
+                    const top = ((rect.top - roomRect.top) / roomRect.height * 100) - 10;
+                    
+                    bubble.style.left = `${left}%`;
+                    bubble.style.top = `${top}%`;
+                    bubble.style.animationDelay = `${i * 0.5}s`;
+                    
+                    container.appendChild(bubble);
+                }
+            }
+        }
+        
+        // Update presence list in sidebar
+        function updatePresenceList() {
+            const container = document.getElementById('presence-list');
+            if (!container) return;
+            
+            const team = [
+                { name: 'Raz', role: 'Boss', avatar: '👑', status: 'online' },
+                { name: 'Baro', role: 'Creative Director', avatar: '🎨', status: 'online' },
+                { name: 'Noona', role: 'Engineer', avatar: '🔧', status: 'online' },
+                { name: 'Bob', role: 'Researcher', avatar: '🔍', status: 'away' }
+            ];
+            
+            let html = '';
+            team.forEach(member => {
+                html += `
+                    <div class="presence-item" onclick="focusOnAgent('${member.name}')">
+                        <div class="presence-avatar">${member.avatar}</div>
+                        <div class="presence-info">
+                            <div class="presence-name">${member.name}</div>
+                            <div class="presence-role">${member.role}</div>
+                        </div>
+                        <div class="presence-status ${member.status}"></div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Focus on specific agent
+        function focusOnAgent(agentName) {
+            const agentEl = document.getElementById(`agent-${agentName.toLowerCase()}`);
+            if (agentEl) {
+                // Highlight agent
+                agentEl.style.transform = 'scale(1.3)';
+                agentEl.style.zIndex = '100';
+                
+                setTimeout(() => {
+                    agentEl.style.transform = '';
+                    agentEl.style.zIndex = '';
+                }, 2000);
+                
+                // Show agent details
+                showAgentDetails(agentName);
+            }
+        }
+        
+        // Show agent details modal
+        function showAgentDetails(agentName) {
+            const agentData = {
+                'Raz': { avatar: '👑', role: 'Boss/Owner', activity: 'Reviewing roadmap', tasks: 5, memories: 12 },
+                'Baro': { avatar: '🎨', role: 'Creative Director', activity: 'Planning designs', tasks: 8, memories: 24 },
+                'Noona': { avatar: '🔧', role: 'Junior Engineer', activity: 'Building features', tasks: 15, memories: 156 },
+                'Bob': { avatar: '🔍', role: 'Research Analyst', activity: 'Researching markets', tasks: 3, memories: 8 }
+            };
+            
+            const agent = agentData[agentName];
+            if (!agent) return;
+            
+            // Create modal if it doesn't exist
+            let modal = document.getElementById('agent-modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'agent-modal';
+                modal.className = 'agent-modal';
+                document.body.appendChild(modal);
+            }
+            
+            modal.innerHTML = `
+                <div class="agent-modal-content">
+                    <button class="agent-modal-close" onclick="closeAgentModal()">&times;</button>
+                    <div class="agent-modal-header">
+                        <div class="agent-modal-avatar">${agent.avatar}</div>
+                        <div class="agent-modal-info">
+                            <h3>${agentName}</h3>
+                            <p>${agent.role}</p>
+                        </div>
+                    </div>
+                    <div class="agent-modal-stats">
+                        <div class="agent-modal-stat">
+                            <div class="agent-modal-stat-value">${agent.tasks}</div>
+                            <div class="agent-modal-stat-label">Active Tasks</div>
+                        </div>
+                        <div class="agent-modal-stat">
+                            <div class="agent-modal-stat-value">${agent.memories}</div>
+                            <div class="agent-modal-stat-label">Memories</div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-hover); border-radius: 8px;">
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Current Activity</div>
+                        <div style="font-size: 1rem; color: var(--text-primary);">${agent.activity}</div>
+                    </div>
+                    <div class="agent-modal-actions">
+                        <button class="agent-modal-btn" onclick="pingAgent('${agentName}')">📢 Ping</button>
+                        <button class="agent-modal-btn secondary" onclick="viewAgentProfile('${agentName}')">👤 Profile</button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+        
+        // Close agent modal
+        function closeAgentModal() {
+            const modal = document.getElementById('agent-modal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+        
+        // Ping specific agent
+        function pingAgent(agentName) {
+            alert(`📢 Ping sent to ${agentName}!`);
+            closeAgentModal();
+        }
+        
+        // View agent profile
+        function viewAgentProfile(agentName) {
+            // Switch to team tab and highlight agent
+            showTab('team', null);
+            closeAgentModal();
+        }
+        
+        // Ping all agents
+        function pingAllAgents() {
+            alert('📢 Ping sent to all team members!');
+        }
+        
+        // Schedule meeting
+        function scheduleMeeting() {
+            alert('📅 Meeting scheduler coming soon!');
+        }
+        
+        // Toggle focus mode
+        function toggleFocusMode() {
+            const room = document.querySelector('.office-room');
+            room.classList.toggle('focus-mode');
+            
+            if (room.classList.contains('focus-mode')) {
+                // Dim everything except agents
+                document.querySelector('.furniture-layer').style.opacity = '0.3';
+                document.querySelector('.office-floor').style.opacity = '0.1';
+            } else {
+                document.querySelector('.furniture-layer').style.opacity = '';
+                document.querySelector('.office-floor').style.opacity = '';
+            }
+        }
+        
+        // Start activity simulation
+        function startActivitySimulation() {
+            // Clear existing interval
+            if (activityBubbleInterval) {
+                clearInterval(activityBubbleInterval);
+            }
+            
+            // Generate new bubbles every 5-10 seconds
+            activityBubbleInterval = setInterval(() => {
+                if (document.getElementById('office-tab').style.display !== 'none') {
+                    generateActivityBubbles();
+                }
+            }, 7000);
+        }
+        
+        // Add click handlers to agents
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.office-agent').forEach(agent => {
+                agent.addEventListener('click', function() {
+                    const agentName = this.getAttribute('data-agent');
+                    showAgentDetails(agentName);
+                });
+            });
+            
+            // Initialize office when tab is first shown
+            const officeTab = document.getElementById('office-tab');
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.target.style.display === 'block') {
+                        initOffice();
+                    }
+                });
+            });
+            
+            observer.observe(officeTab, { attributes: true, attributeFilter: ['style'] });
+        });
+        
+        // Close modal on outside click
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('agent-modal');
+            if (modal && modal.classList.contains('active') && e.target === modal) {
+                closeAgentModal();
+            }
+        });
     </script>
 </body>
 </html>
