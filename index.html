@@ -354,7 +354,682 @@
         .version-badge span {
             color: var(--accent);
         }
-        
+
+        /* V1.3 Analytics & Reporting Styles */
+        .analytics-container {
+            padding: 1rem 0;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .analytics-header h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .analytics-timeframe {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .timeframe-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .timeframe-btn:hover, .timeframe-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .export-btn {
+            background: var(--success);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            margin-left: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            background: #059669;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s;
+        }
+
+        .metric-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-hover);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .metric-content {
+            flex: 1;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-change {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .metric-change.positive {
+            color: var(--success);
+        }
+
+        .metric-change.negative {
+            color: var(--danger);
+        }
+
+        /* Analytics Charts */
+        .analytics-charts {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chart-header h3 {
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .chart-container {
+            height: 200px;
+            background: var(--bg-hover);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-container canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-stats {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .chart-stat {
+            text-align: center;
+        }
+
+        .chart-stat .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .chart-stat .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Workload Distribution */
+        .workload-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .workload-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .workload-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+        }
+
+        .workload-name {
+            font-weight: 600;
+        }
+
+        .workload-count {
+            color: var(--text-secondary);
+        }
+
+        .workload-bar-container {
+            height: 8px;
+            background: var(--bg-hover);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .workload-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease-out;
+        }
+
+        /* Analytics Sections */
+        .analytics-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .analytics-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Project Analytics */
+        .project-analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .project-analytics-card {
+            background: var(--bg-hover);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .project-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .project-icon {
+            font-size: 1.5rem;
+        }
+
+        .project-info {
+            flex: 1;
+        }
+
+        .project-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .project-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .project-progress-bar {
+            height: 6px;
+            background: var(--bg-card);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease-out;
+        }
+
+        .project-stats-row {
+            display: flex;
+            justify-content: space-around;
+            padding: 0.75rem 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0.75rem;
+        }
+
+        .project-stat {
+            text-align: center;
+        }
+
+        .project-stat .stat-number {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .project-stat .stat-desc {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .project-velocity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .velocity-label {
+            color: var(--text-secondary);
+        }
+
+        .velocity-value {
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .velocity-eta {
+            margin-left: auto;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* Time Tracking */
+        .time-tracking-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+        }
+
+        .time-card {
+            background: var(--bg-hover);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .time-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .time-header h4 {
+            font-size: 0.95rem;
+        }
+
+        .time-total {
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Heatmap */
+        .heatmap-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(14, 1fr);
+            gap: 3px;
+        }
+
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: 2px;
+            background: var(--bg-card);
+            transition: all 0.2s;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.2);
+        }
+
+        .heatmap-legend {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .heatmap-scale {
+            display: flex;
+            gap: 2px;
+        }
+
+        .scale-cell {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        /* Category Breakdown */
+        .category-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: var(--bg-card);
+            border-radius: 6px;
+        }
+
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .category-name {
+            font-size: 0.875rem;
+        }
+
+        .category-value {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Leaderboard */
+        .leaderboard-table {
+            background: var(--bg-hover);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .leaderboard-header {
+            display: grid;
+            grid-template-columns: 50px 2fr 80px 80px 100px 100px;
+            padding: 0.75rem 1rem;
+            background: var(--bg-card);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .leaderboard-body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .leaderboard-row {
+            display: grid;
+            grid-template-columns: 50px 2fr 80px 80px 100px 100px;
+            padding: 0.75rem 1rem;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .leaderboard-row:hover {
+            background: var(--bg-card);
+        }
+
+        .leaderboard-row.top-performer {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .leaderboard-rank {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .leaderboard-member {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .member-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .member-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .member-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .member-role {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .leaderboard-metric {
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        .efficiency-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .efficiency-badge.high {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .efficiency-badge.medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .streak-badge {
+            font-size: 0.75rem;
+            color: var(--accent);
+        }
+
+        /* Insights */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .insight-card {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-hover);
+            border-radius: 10px;
+            border-left: 4px solid;
+        }
+
+        .insight-card.positive {
+            border-left-color: var(--success);
+        }
+
+        .insight-card.warning {
+            border-left-color: var(--warning);
+        }
+
+        .insight-card.info {
+            border-left-color: var(--accent);
+        }
+
+        .insight-icon {
+            font-size: 1.5rem;
+        }
+
+        .insight-content h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .insight-content p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .insight-action {
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .insight-action:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .analytics-charts {
+                grid-template-columns: 1fr;
+            }
+            .project-analytics-grid {
+                grid-template-columns: 1fr;
+            }
+            .time-tracking-grid {
+                grid-template-columns: 1fr;
+            }
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            .analytics-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            .leaderboard-header, .leaderboard-row {
+                grid-template-columns: 40px 1fr 60px;
+            }
+            .leaderboard-metric:nth-child(4),
+            .leaderboard-metric:nth-child(5),
+            .leaderboard-metric:nth-child(6) {
+                display: none;
+            }
+        }
+
         /* V1.2 Collaboration Tools Styles */
         .collaboration-container {
             display: grid;
@@ -2127,6 +2802,7 @@
                 <button class="nav-tab" onclick="showTab('memories', event)">🧠 Memories</button>
                 <button class="nav-tab" onclick="showTab('office', event)">🏢 Office</button>
                 <button class="nav-tab" onclick="showTab('collaboration', event)">💬 Collab</button>
+                <button class="nav-tab" onclick="showTab('analytics', event)">📊 Analytics</button>
             </div>
             <div class="status-bar">
                 <div class="status-dot"></div>
@@ -3220,7 +3896,397 @@
         </div>
     </div>
     
-    <div class="version-badge">Version <span>V1.2</span> — Collaboration Tools • Inter-Agent Messaging • Task Delegation • Real-time Updates</div>
+    <!-- Analytics Tab - V1.3 -->
+    <div id="analytics-tab" class="tab-content" style="display: none;">
+        <div class="analytics-container">
+            <!-- Analytics Header -->
+            <div class="analytics-header">
+                <h2>📊 Advanced Analytics & Reporting</h2>
+                <div class="analytics-timeframe">
+                    <button class="timeframe-btn active" onclick="setTimeframe('7d')">7 Days</button>
+                    <button class="timeframe-btn" onclick="setTimeframe('30d')">30 Days</button>
+                    <button class="timeframe-btn" onclick="setTimeframe('90d')">90 Days</button>
+                    <button class="export-btn" onclick="exportAnalyticsReport()">📥 Export Report</button>
+                </div>
+            </div>
+            
+            <!-- Key Metrics Grid -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">🎯</div>
+                    <div class="metric-content">
+                        <div class="metric-value" id="tasks-completed">47</div>
+                        <div class="metric-label">Tasks Completed</div>
+                        <div class="metric-change positive">+12% vs last period</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">⚡</div>
+                    <div class="metric-content">
+                        <div class="metric-value" id="avg-velocity">8.5</div>
+                        <div class="metric-label">Avg Velocity</div>
+                        <div class="metric-change positive">+5% vs last period</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">⏱️</div>
+                    <div class="metric-content">
+                        <div class="metric-value" id="hours-logged">156</div>
+                        <div class="metric-label">Hours Logged</div>
+                        <div class="metric-change positive">+8% vs last period</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">✅</div>
+                    <div class="metric-content">
+                        <div class="metric-value" id="completion-rate">94%</div>
+                        <div class="metric-label">Completion Rate</div>
+                        <div class="metric-change positive">+3% vs last period</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts Section -->
+            <div class="analytics-charts">
+                <!-- Velocity Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>📈 Team Velocity</h3>
+                        <div class="chart-legend">
+                            <span class="legend-item"><span class="legend-dot" style="background: var(--accent)"></span>Completed</span>
+                            <span class="legend-item"><span class="legend-dot" style="background: var(--warning)"></span>In Progress</span>
+                        </div>
+                    </div>
+                    <div class="chart-container" id="velocity-chart">
+                        <canvas id="velocityCanvas" width="500" height="200"></canvas>
+                    </div>
+                    <div class="chart-stats">
+                        <div class="chart-stat">
+                            <span class="stat-value">8.5</span>
+                            <span class="stat-label">Avg Tasks/Day</span>
+                        </div>
+                        <div class="chart-stat">
+                            <span class="stat-value">12</span>
+                            <span class="stat-label">Peak Day</span>
+                        </div>
+                        <div class="chart-stat">
+                            <span class="stat-value">5</span>
+                            <span class="stat-label">Lowest Day</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Workload Distribution -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>👥 Workload Distribution</h3>
+                    </div>
+                    <div class="workload-bars">
+                        <div class="workload-item">
+                            <div class="workload-info">
+                                <span class="workload-name">👑 Raz</span>
+                                <span class="workload-count">12 tasks</span>
+                            </div>
+                            <div class="workload-bar-container">
+                                <div class="workload-bar" style="width: 25%; background: linear-gradient(90deg, #f59e0b, #fbbf24)"></div>
+                            </div>
+                        </div>
+                        <div class="workload-item">
+                            <div class="workload-info">
+                                <span class="workload-name">🎨 Baro</span>
+                                <span class="workload-count">28 tasks</span>
+                            </div>
+                            <div class="workload-bar-container">
+                                <div class="workload-bar" style="width: 60%; background: linear-gradient(90deg, #8b5cf6, #a78bfa)"></div>
+                            </div>
+                        </div>
+                        <div class="workload-item">
+                            <div class="workload-info">
+                                <span class="workload-name">🔧 Noona</span>
+                                <span class="workload-count">47 tasks</span>
+                            </div>
+                            <div class="workload-bar-container">
+                                <div class="workload-bar" style="width: 95%; background: linear-gradient(90deg, #6366f1, #818cf8)"></div>
+                            </div>
+                        </div>
+                        <div class="workload-item">
+                            <div class="workload-info">
+                                <span class="workload-name">🔍 Bob</span>
+                                <span class="workload-count">8 tasks</span>
+                            </div>
+                            <div class="workload-bar-container">
+                                <div class="workload-bar" style="width: 15%; background: linear-gradient(90deg, #10b981, #34d399)"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project Progress Section -->
+            <div class="analytics-section">
+                <h3>🎯 Project Progress Analytics</h3>
+                <div class="project-analytics-grid">
+                    <div class="project-analytics-card">
+                        <div class="project-header">
+                            <span class="project-icon">🚀</span>
+                            <div class="project-info">
+                                <div class="project-name">Mission Control Dashboard</div>
+                                <div class="project-meta">V1.2 • 95% Complete</div>
+                            </div>
+                        </div>
+                        <div class="project-progress-bar">
+                            <div class="progress-fill" style="width: 95%; background: linear-gradient(90deg, #6366f1, #8b5cf6)"></div>
+                        </div>
+                        <div class="project-stats-row">
+                            <div class="project-stat">
+                                <span class="stat-number">47</span>
+                                <span class="stat-desc">Tasks Done</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="stat-number">3</span>
+                                <span class="stat-desc">In Progress</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="stat-number">5</span>
+                                <span class="stat-desc">Remaining</span>
+                            </div>
+                        </div>
+                        <div class="project-velocity">
+                            <span class="velocity-label">Velocity:</span>
+                            <span class="velocity-value">2.4 tasks/day</span>
+                            <span class="velocity-eta">ETA: 2 days</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-analytics-card">
+                        <div class="project-header">
+                            <span class="project-icon">📚</span>
+                            <div class="project-info">
+                                <div class="project-name">Amazon Short Stories</div>
+                                <div class="project-meta">V0.3 • 40% Complete</div>
+                            </div>
+                        </div>
+                        <div class="project-progress-bar">
+                            <div class="progress-fill" style="width: 40%; background: linear-gradient(90deg, #10b981, #34d399)"></div>
+                        </div>
+                        <div class="project-stats-row">
+                            <div class="project-stat">
+                                <span class="stat-number">8</span>
+                                <span class="stat-desc">Tasks Done</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="stat-number">5</span>
+                                <span class="stat-desc">In Progress</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="stat-number">12</span>
+                                <span class="stat-desc">Remaining</span>
+                            </div>
+                        </div>
+                        <div class="project-velocity">
+                            <span class="velocity-label">Velocity:</span>
+                            <span class="velocity-value">0.8 tasks/day</span>
+                            <span class="velocity-eta">ETA: 15 days</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Time Tracking Section -->
+            <div class="analytics-section">
+                <h3>⏱️ Time Tracking & Efficiency</h3>
+                <div class="time-tracking-grid">
+                    <div class="time-card">
+                        <div class="time-header">
+                            <h4>Daily Activity Heatmap</h4>
+                            <span class="time-total">156 hours total</span>
+                        </div>
+                        <div class="heatmap-container">
+                            <div class="heatmap-grid" id="activity-heatmap">
+                                <!-- Generated by JS -->
+                            </div>
+                            <div class="heatmap-legend">
+                                <span>Less</span>
+                                <div class="heatmap-scale">
+                                    <div class="scale-cell" style="background: var(--bg-hover)"></div>
+                                    <div class="scale-cell" style="background: rgba(99, 102, 241, 0.3)"></div>
+                                    <div class="scale-cell" style="background: rgba(99, 102, 241, 0.6)"></div>
+                                    <div class="scale-cell" style="background: rgba(99, 102, 241, 0.9)"></div>
+                                </div>
+                                <span>More</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-card">
+                        <div class="time-header">
+                            <h4>Time by Category</h4>
+                        </div>
+                        <div class="category-breakdown">
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-color" style="background: #6366f1"></span>
+                                    <span class="category-name">Development</span>
+                                </div>
+                                <div class="category-value">68 hrs (44%)</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-color" style="background: #8b5cf6"></span>
+                                    <span class="category-name">Design</span>
+                                </div>
+                                <div class="category-value">42 hrs (27%)</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-color" style="background: #10b981"></span>
+                                    <span class="category-name">Research</span>
+                                </div>
+                                <div class="category-value">28 hrs (18%)</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-color" style="background: #f59e0b"></span>
+                                    <span class="category-name">Planning</span>
+                                </div>
+                                <div class="category-value">18 hrs (11%)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Team Performance Section -->
+            <div class="analytics-section">
+                <h3>🏆 Team Performance Leaderboard</h3>
+                <div class="leaderboard-table">
+                    <div class="leaderboard-header">
+                        <span class="leaderboard-rank">#</span>
+                        <span class="leaderboard-member">Team Member</span>
+                        <span class="leaderboard-metric">Tasks</span>
+                        <span class="leaderboard-metric">Hours</span>
+                        <span class="leaderboard-metric">Efficiency</span>
+                        <span class="leaderboard-metric">Streak</span>
+                    </div>
+                    <div class="leaderboard-body">
+                        <div class="leaderboard-row top-performer">
+                            <span class="leaderboard-rank">🥇</span>
+                            <div class="leaderboard-member">
+                                <span class="member-avatar" style="background: linear-gradient(135deg, #6366f1, #8b5cf6)">🔧</span>
+                                <div class="member-info">
+                                    <span class="member-name">Noona</span>
+                                    <span class="member-role">Junior Engineer</span>
+                                </div>
+                            </div>
+                            <span class="leaderboard-metric">47</span>
+                            <span class="leaderboard-metric">78 hrs</span>
+                            <span class="leaderboard-metric">
+                                <span class="efficiency-badge high">98%</span>
+                            </span>
+                            <span class="leaderboard-metric">
+                                <span class="streak-badge">🔥 12 days</span>
+                            </span>
+                        </div>
+                        <div class="leaderboard-row">
+                            <span class="leaderboard-rank">🥈</span>
+                            <div class="leaderboard-member">
+                                <span class="member-avatar" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa)">🎨</span>
+                                <div class="member-info">
+                                    <span class="member-name">Baro</span>
+                                    <span class="member-role">Creative Director</span>
+                                </div>
+                            </div>
+                            <span class="leaderboard-metric">28</span>
+                            <span class="leaderboard-metric">52 hrs</span>
+                            <span class="leaderboard-metric">
+                                <span class="efficiency-badge high">95%</span>
+                            </span>
+                            <span class="leaderboard-metric">
+                                <span class="streak-badge">🔥 8 days</span>
+                            </span>
+                        </div>
+                        <div class="leaderboard-row">
+                            <span class="leaderboard-rank">🥉</span>
+                            <div class="leaderboard-member">
+                                <span class="member-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24)">👑</span>
+                                <div class="member-info">
+                                    <span class="member-name">Raz</span>
+                                    <span class="member-role">Project Lead</span>
+                                </div>
+                            </div>
+                            <span class="leaderboard-metric">12</span>
+                            <span class="leaderboard-metric">18 hrs</span>
+                            <span class="leaderboard-metric">
+                                <span class="efficiency-badge medium">88%</span>
+                            </span>
+                            <span class="leaderboard-metric">
+                                <span class="streak-badge">🔥 5 days</span>
+                            </span>
+                        </div>
+                        <div class="leaderboard-row">
+                            <span class="leaderboard-rank">4</span>
+                            <div class="leaderboard-member">
+                                <span class="member-avatar" style="background: linear-gradient(135deg, #10b981, #34d399)">🔍</span>
+                                <div class="member-info">
+                                    <span class="member-name">Bob</span>
+                                    <span class="member-role">Research Analyst</span>
+                                </div>
+                            </div>
+                            <span class="leaderboard-metric">8</span>
+                            <span class="leaderboard-metric">8 hrs</span>
+                            <span class="leaderboard-metric">
+                                <span class="efficiency-badge medium">85%</span>
+                            </span>
+                            <span class="leaderboard-metric">
+                                <span class="streak-badge">🔥 3 days</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Insights & Recommendations -->
+            <div class="analytics-section">
+                <h3>💡 AI-Powered Insights</h3>
+                <div class="insights-grid">
+                    <div class="insight-card positive">
+                        <div class="insight-icon">🚀</div>
+                        <div class="insight-content">
+                            <h4>Velocity Increasing</h4>
+                            <p>Team velocity has increased by 12% over the last 7 days. Noona's automation efforts are paying off!</p>
+                            <span class="insight-action">Keep momentum going</span>
+                        </div>
+                    </div>
+                    <div class="insight-card warning">
+                        <div class="insight-icon">⚠️</div>
+                        <div class="insight-content">
+                            <h4>Workload Imbalance</h4>
+                            <p>Noona is handling 47 tasks while Bob only has 8. Consider redistributing some research tasks.</p>
+                            <span class="insight-action">Review task allocation</span>
+                        </div>
+                    </div>
+                    <div class="insight-card positive">
+                        <div class="insight-icon">🎯</div>
+                        <div class="insight-content">
+                            <h4>Project On Track</h4>
+                            <p>Mission Control V1.3 is 95% complete and will finish 2 days ahead of schedule.</p>
+                            <span class="insight-action">Plan V1.4 features</span>
+                        </div>
+                    </div>
+                    <div class="insight-card info">
+                        <div class="insight-icon">💡</div>
+                        <div class="insight-content">
+                            <h4>Peak Productivity</h4>
+                            <p>Team is most productive between 2-6 PM. Schedule important meetings outside these hours.</p>
+                            <span class="insight-action">Optimize schedule</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="version-badge">Version <span>V1.3</span> — Advanced Analytics & Reporting • Performance Metrics • Team Insights</div>
     
     <script>
         // Tab switching
@@ -6803,6 +7869,180 @@ Use the memory tree on the left to browse other files, or use the search functio
                 });
                 
                 observer.observe(collabTab, { attributes: true, attributeFilter: ['style'] });
+            }
+            
+            // Initialize analytics features
+            initAnalytics();
+        });
+        
+        // V1.3 Analytics & Reporting Functions
+        let currentTimeframe = '7d';
+        
+        function initAnalytics() {
+            generateHeatmap();
+            drawVelocityChart();
+        }
+        
+        function setTimeframe(timeframe) {
+            currentTimeframe = timeframe;
+            
+            // Update button states
+            document.querySelectorAll('.timeframe-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update metrics based on timeframe
+            updateMetricsForTimeframe(timeframe);
+            
+            // Redraw charts
+            drawVelocityChart();
+            generateHeatmap();
+        }
+        
+        function updateMetricsForTimeframe(timeframe) {
+            const metrics = {
+                '7d': { tasks: 47, velocity: 8.5, hours: 156, completion: '94%' },
+                '30d': { tasks: 186, velocity: 7.2, hours: 624, completion: '91%' },
+                '90d': { tasks: 542, velocity: 6.8, hours: 1872, completion: '89%' }
+            };
+            
+            const data = metrics[timeframe];
+            document.getElementById('tasks-completed').textContent = data.tasks;
+            document.getElementById('avg-velocity').textContent = data.velocity;
+            document.getElementById('hours-logged').textContent = data.hours;
+            document.getElementById('completion-rate').textContent = data.completion;
+        }
+        
+        function drawVelocityChart() {
+            const canvas = document.getElementById('velocityCanvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Sample velocity data
+            const days = currentTimeframe === '7d' ? 7 : currentTimeframe === '30d' ? 30 : 90;
+            const data = [];
+            for (let i = 0; i < days; i++) {
+                data.push(Math.floor(Math.random() * 8) + 3); // Random between 3-10
+            }
+            
+            const maxValue = Math.max(...data);
+            const barWidth = (width - 40) / data.length;
+            const scale = (height - 60) / maxValue;
+            
+            // Draw bars
+            data.forEach((value, index) => {
+                const barHeight = value * scale;
+                const x = 20 + index * barWidth;
+                const y = height - 40 - barHeight;
+                
+                // Create gradient
+                const gradient = ctx.createLinearGradient(0, y, 0, height - 40);
+                gradient.addColorStop(0, '#6366f1');
+                gradient.addColorStop(1, 'rgba(99, 102, 241, 0.3)');
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x + 2, y, barWidth - 4, barHeight);
+                
+                // Draw bar top highlight
+                ctx.fillStyle = '#818cf8';
+                ctx.fillRect(x + 2, y, barWidth - 4, 3);
+            });
+            
+            // Draw baseline
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(20, height - 40);
+            ctx.lineTo(width - 20, height - 40);
+            ctx.stroke();
+        }
+        
+        function generateHeatmap() {
+            const container = document.getElementById('activity-heatmap');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            // Generate 14x4 grid (2 weeks)
+            for (let i = 0; i < 56; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'heatmap-cell';
+                
+                // Random activity level
+                const activity = Math.random();
+                if (activity > 0.8) {
+                    cell.style.background = 'rgba(99, 102, 241, 0.9)';
+                } else if (activity > 0.6) {
+                    cell.style.background = 'rgba(99, 102, 241, 0.6)';
+                } else if (activity > 0.4) {
+                    cell.style.background = 'rgba(99, 102, 241, 0.3)';
+                } else {
+                    cell.style.background = 'var(--bg-card)';
+                }
+                
+                // Add tooltip
+                const hours = Math.floor(activity * 8);
+                cell.title = `${hours} hours of activity`;
+                
+                container.appendChild(cell);
+            }
+        }
+        
+        function exportAnalyticsReport() {
+            const report = {
+                generatedAt: new Date().toISOString(),
+                timeframe: currentTimeframe,
+                metrics: {
+                    tasksCompleted: document.getElementById('tasks-completed').textContent,
+                    avgVelocity: document.getElementById('avg-velocity').textContent,
+                    hoursLogged: document.getElementById('hours-logged').textContent,
+                    completionRate: document.getElementById('completion-rate').textContent
+                },
+                teamPerformance: [
+                    { name: 'Noona', tasks: 47, hours: 78, efficiency: '98%' },
+                    { name: 'Baro', tasks: 28, hours: 52, efficiency: '95%' },
+                    { name: 'Raz', tasks: 12, hours: 18, efficiency: '88%' },
+                    { name: 'Bob', tasks: 8, hours: 8, efficiency: '85%' }
+                ]
+            };
+            
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `analytics-report-${currentTimeframe}-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            addActivity('Analytics report exported');
+        }
+        
+        // Initialize analytics when tab is shown
+        document.addEventListener('DOMContentLoaded', function() {
+            const analyticsTab = document.getElementById('analytics-tab');
+            if (analyticsTab) {
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.target.style.display === 'block') {
+                            // Redraw charts when tab becomes visible
+                            setTimeout(() => {
+                                drawVelocityChart();
+                                generateHeatmap();
+                            }, 100);
+                        }
+                    });
+                });
+                
+                observer.observe(analyticsTab, { attributes: true, attributeFilter: ['style'] });
             }
         });
     </script>

@@ -5,8 +5,8 @@
       "name": "Mission Control Dashboard",
       "description": "Central dashboard for team coordination, project tracking, and agent management",
       "status": "active",
-      "progress": 95,
-      "version": "V1.2",
+      "progress": 98,
+      "version": "V1.3",
       "lead": "Noona",
       "team": ["Baro", "Noona"],
       "startDate": "2026-03-17",
@@ -26,11 +26,18 @@
         {"name": "Resource Allocation", "status": "done", "version": "V1.1"},
         {"name": "Inter-Agent Messaging", "status": "done", "version": "V1.2"},
         {"name": "Task Delegation", "status": "done", "version": "V1.2"},
-        {"name": "Real-time Notifications", "status": "done", "version": "V1.2"}
+        {"name": "Real-time Notifications", "status": "done", "version": "V1.2"},
+        {"name": "Advanced Analytics Dashboard", "status": "done", "version": "V1.3"},
+        {"name": "Team Velocity Tracking", "status": "done", "version": "V1.3"},
+        {"name": "Workload Distribution", "status": "done", "version": "V1.3"},
+        {"name": "Time Tracking & Heatmaps", "status": "done", "version": "V1.3"},
+        {"name": "Performance Leaderboard", "status": "done", "version": "V1.3"},
+        {"name": "AI-Powered Insights", "status": "done", "version": "V1.3"},
+        {"name": "Exportable Reports", "status": "done", "version": "V1.3"}
       ],
       "repository": "https://github.com/warung-kerja/mission-control",
       "liveUrl": "https://warung-kerja.github.io/mission-control/",
-      "lastUpdated": "2026-03-22T02:00:00+11:00"
+      "lastUpdated": "2026-03-22T06:00:00+11:00"
     },
     {
       "id": "project-2",
@@ -113,6 +120,6 @@
     "completed": 0,
     "averageProgress": 41.75
   },
-  "lastUpdated": "2026-03-22T04:00:00+11:00",
-  "version": "V1.2"
+  "lastUpdated": "2026-03-22T06:00:00+11:00",
+  "version": "V1.3"
 }
