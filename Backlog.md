@@ -6,9 +6,10 @@
 
 ---
 
-## 🎯 Current Version: V0.8-enhanced
-**Status**: Team Module with status indicators, Workspace Explorer, Calendar Module
+## 🎯 Current Version: V0.8.5
+**Status**: Quick Actions Dashboard, Workspace Explorer (file preview + search), Team hierarchy, Backlog tab, Calendar
 **Live URL**: https://warung-kerja.github.io/mission-control/
+**Last audited**: April 7, 2026
 
 ---
 
@@ -22,19 +23,24 @@
 - [ ] **Sub-agent Management**: Add ability to view active sub-agents
 
 ### 2. Workspace Explorer Module
-- [ ] **File Preview**: Add ability to preview file contents
-- [ ] **File Search**: Add search functionality within workspaces
-- [ ] **File Filtering**: Filter by file type (md, json, py, etc.)
+- [x] **File Preview**: Clickable files open modal with content + metadata ✅ (f7e0af8)
+- [x] **File Search**: Search bar filters by name/type/extension ✅ (f7e0af8)
+- [ ] **File Type Filter**: Filter by file type (md, json, py, etc.) — dropdown exists, wire up fully
 - [ ] **Directory Navigation**: Better folder navigation
 - [ ] **File Statistics**: Show file size, last modified, line count
 
 ### 3. Backlog System
-- [ ] **Create this backlog file** ✅ DONE
-- [ ] **Integrate with dashboard**: Add backlog tab or section
-- [ ] **Progress tracking**: Visual indicators for task completion
-- [ ] **Priority system**: High/Medium/Low priority labels
+- [x] **Create this backlog file** ✅
+- [x] **Integrate with dashboard**: Backlog tab live ✅ (4fa9d7a)
+- [x] **Progress tracking**: Progress bars and completion stats ✅
+- [x] **Priority system**: Filter buttons for priority/status ✅
 
-### 4. Bug Fixes & Improvements
+### 4. Quick Actions Dashboard
+- [x] **Quick Actions Tab**: Team status + one-click workflows ✅ (5e1919e)
+- [ ] **Wire up actions**: Make template buttons actually send/copy content
+- [ ] **Live team status**: Pull real status from team.json instead of static display
+
+### 5. Bug Fixes & Improvements
 - [ ] **Check data freshness**: Ensure calendar.json, team.json, workspaces.json are up-to-date
 - [ ] **Mobile responsiveness**: Improve mobile experience
 - [ ] **Performance**: Optimize loading of large JSON files

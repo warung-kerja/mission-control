@@ -11,9 +11,32 @@
 
 ### Live System
 - **URL**: https://warung-kerja.github.io/mission-control/
-- **Version**: V0.8.4 (stable)
+- **Version**: V0.8.5 (stable, as of March 21, 2026)
 - **Status**: ✅ **FULLY OPERATIONAL**
 - **GitHub**: https://github.com/warung-kerja/mission-control
+
+---
+
+## 📅 April 7, 2026
+
+### Codebase Audit & Housekeeping (Raz + Claude Opus 4.6)
+
+#### State confirmed
+- Docs were 3 weeks stale; two unlogged feature commits identified:
+  - `f7e0af8` — Workspace Explorer file preview + search (March 21)
+  - `5e1919e` — Quick Actions Dashboard tab (March 21)
+- Phase 1 of roadmap now **complete**: Team enhancements, Backlog integration, Workspace Explorer preview/search, Quick Actions all shipped
+
+#### Actions taken
+1. **Committed `data-bridge.py`** (`bda7f0d`) — `/api/file/<agent>/<path>` endpoint was sitting unstaged since March 21; now in version control, frontend preview feature fully backed
+2. **Deleted 4 stale backup files** (`1dafafe`) — `index.html.before-workspace-explorer` (tracked), `.before-workspace-improvements`, `.before-quick-actions`, `test-quick-actions.html` — all content confirmed present in HEAD
+3. **Docs refreshed** — CHANGELOG, Backlog, PROJECT_LOG all brought up to date
+
+#### Next priorities (Phase 2 candidates)
+- Workspace Explorer file type filtering (small, low-risk)
+- Mobile responsiveness pass
+- Begin `index.html` modularization (extract tabs to separate CSS/JS files)
+- Memories Browser (V0.9)
 
 ---
 

@@ -1,5 +1,40 @@
 # Mission Control - Changelog
 
+## V0.8.6 - April 7, 2026
+**Status**: ✅ **STABLE** - Clean working tree, all features operational
+
+### Maintenance
+- **Committed file content API**: `data-bridge.py` now includes `GET /api/file/<agent_name>/<path>` endpoint (path-traversal guarded) — backend half of Workspace Explorer file preview feature, now committed and in sync with frontend
+- **Removed stale backups**: Deleted `index.html.before-workspace-explorer`, `.before-workspace-improvements`, `.before-quick-actions`, and `test-quick-actions.html` — no unmerged work lost, all content confirmed in HEAD
+- **Audit**: Confirmed Workspace Explorer file preview/search and Quick Actions Dashboard are fully shipped; docs brought up to date
+
+---
+
+## V0.8.5 - March 21, 2026
+**Status**: ✅ **DEPLOYED** - Quick Actions Dashboard
+
+### New Features
+1. **⚡ Quick Actions Tab** — New tab for team efficiency
+   - Team status monitoring panel
+   - One-click tools for common team workflows
+   - Quick message templates for status updates
+   - Resource links to frequently used tools
+   - Team activity feed
+   - JavaScript functions for all quick actions
+2. **🔍 Workspace Explorer: File Preview & Search** — Phase 1 finisher
+   - Clickable files open a preview modal with content and metadata
+   - Search bar filters by name, type, or extension
+   - File type filter dropdown
+   - Clear filters button
+   - Improved file stats display with filter status
+
+### Technical
+- `index.html`: +813 lines (Quick Actions tab), +241 lines (Workspace Explorer search/preview)
+- `data-bridge.py`: New `/api/file/<agent_name>/<path>` endpoint for file content serving
+- Commits: `5e1919e` (Quick Actions), `f7e0af8` (Workspace Explorer preview/search), `bda7f0d` (data-bridge endpoint)
+
+---
+
 ## V0.8.4 - March 20, 2026
 **Status**: ✅ **STABLE** - All features operational
 
@@ -226,11 +261,12 @@
 
 ## Next Development Phase
 
-### Phase 1 (48 hours - Immediate)
+### Phase 1 (Complete as of April 7, 2026)
 - ✅ **Team Tab Enhancements**: Complete
 - ✅ **Backlog Integration**: Complete
-- 🔄 **Workspace Explorer**: File preview, search, navigation
-- 🔄 **Bug Fixes**: Mobile responsiveness, performance optimization
+- ✅ **Workspace Explorer**: File preview + search shipped (f7e0af8)
+- ✅ **Quick Actions Dashboard**: Shipped (5e1919e)
+- 🔄 **Bug Fixes / Polish**: Mobile responsiveness, file type filtering, index.html modularization
 
 ### Phase 2 (Week 1 - Core Features)
 - **Memories Browser (V0.9)**: Memory file navigation and search
