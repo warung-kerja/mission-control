@@ -1,0 +1,96 @@
+{
+  "generated_at": "2026-03-21T20:01:39.008790",
+  "memory_directory": "/mnt/d/Warung Kerja 1.0/06_Agents/noona/memory",
+  "projects_directory": "/mnt/d/Warung Kerja 1.0/06_Agents/noona/projects",
+  "stats": {
+    "total_daily_files": 5,
+    "total_project_files": 3,
+    "total_general_files": 1,
+    "total_other_files": 0,
+    "total_files": 9
+  },
+  "memory_files": [
+    {
+      "name": "2026-03-18.md",
+      "path": "/mnt/d/Warung Kerja 1.0/06_Agents/noona/memory/2026-03-18.md",
+      "type": "daily",
+      "size": 18437,
+      "modified": 1773832958.4174578,
+      "preview": "2026-03-18 - Mission Control V0.6 Calendar Module Complete  ## 🎯 Major Achievement **Successfully completed V0.6 Calendar Module for Mission Control dashboard**, delivering all core features as specif...",
+      "date": "2026-03-18"
+    },
+    {
+      "name": "2026-03-19.md",
+      "path": "/mnt/d/Warung Kerja 1.0/06_Agents/noona/memory/2026-03-19.md",
+      "type": "daily",
+      "size": 104500,
+      "modified": 1773918873.2731285,
+      "preview": "2026-03-19 - Mission Control Overnight Development  ## 🌙 Overnight Work Session  **Time**: 11:00 PM March 18 - 6:40 AM March 19, 2026 (Australia/Sydney)",
+      "date": "2026-03-19"
+    },
+    {
+      "name": "2026-03-20.md",
+      "path": "/mnt/d/Warung Kerja 1.0/06_Agents/noona/memory/2026-03-20.md",
+      "type": "daily",
+      "size": 37481,
+      "modified": 1774003607.0925267,
+      "preview": "March 20, 2026  ## 🕒 23:33-23:56 - Autonomous Development System Setup  ### Cron Jobs Created & Configured",
+      "date": "2026-03-20"
+    },
+    {
+      "name": "2026-03-21-morning-session.md",
+      "path": "/mnt/d/Warung Kerja 1.0/06_Agents/noona/memory/2026-03-21-morning-session.md",
+      "type": "daily",
+      "size": 5131,
+      "modified": 1774044393.451515,
+      "preview": "Morning Autonomous Development Session **Date**: March 21, 2026 **Time**: 9:00 AM - 10:30 AM (Australia/Sydney) **Agent**: Noona **Session Type**: Autonomous Development (cron-triggered)",
+      "date": "2026-03-21-morning-session"
+    },
+    {
+      "name": "2026-03-21.md",
+      "path": "/mnt/d/Warung Kerja 1.0/06_Agents/noona/memory/2026-03-21.md",
+      "type": "daily",
+      "size": 77110,
+      "modified": 1774072331.2023635,
+      "preview": "2026-03-21 - Morning Tech Report  ## 🌅 Morning Report Time: 6:35 AM  ### Overnight Autonomous Work (12am-4:30am)",
+      "date": "2026-03-21"
+    },
+    {
+      "name": "MEMORY.md",
+      "path": "/mnt/d/Warung Kerja 1.0/06_Agents/noona/MEMORY.md",
+      "type": "general",
+      "size": 6367,
+      "modified": 1774042787.4224982,
+      "preview": "MEMORY.md - Noona's Long-Term Memory  ## 🎯 Who I Am - **Name**: Noona - **Role**: Junior Engineer / Main Builder"
+    }
+  ],
+  "project_files": [
+    {
+      "name": "memories-browser/MEMORY.md",
+      "path": "/mnt/d/Warung Kerja 1.0/06_Agents/noona/projects/memories-browser/MEMORY.md",
+      "type": "project",
+      "project": "memories-browser",
+      "size": 8387,
+      "modified": 1774046855.2178204,
+      "preview": "Memories Browser Project Memory  ## 🎯 Project Overview **Name**: Memories Browser **Status**: Planned (V0.9 of Mission Control)"
+    },
+    {
+      "name": "mission-control/MEMORY.md",
+      "path": "/mnt/d/Warung Kerja 1.0/06_Agents/noona/projects/mission-control/MEMORY.md",
+      "type": "project",
+      "project": "mission-control",
+      "size": 7003,
+      "modified": 1774076991.0862536,
+      "preview": "Mission Control Project Memory  ## 🎯 Project Overview **Name**: Mission Control Dashboard **Version**: V0.8.4 (stable)"
+    },
+    {
+      "name": "workspace-explorer/MEMORY.md",
+      "path": "/mnt/d/Warung Kerja 1.0/06_Agents/noona/projects/workspace-explorer/MEMORY.md",
+      "type": "project",
+      "project": "workspace-explorer",
+      "size": 4363,
+      "modified": 1774042723.5036573,
+      "preview": "Workspace Explorer Project Memory  ## 🎯 Project Overview **Name**: Workspace Explorer **Status**: Component of Mission Control dashboard"
+    }
+  ]
+}

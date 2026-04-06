@@ -5,8 +5,8 @@
       "name": "Mission Control Dashboard",
       "description": "Central dashboard for team coordination, project tracking, and agent management",
       "status": "active",
-      "progress": 92,
-      "version": "V1.0",
+      "progress": 99,
+      "version": "V1.4",
       "lead": "Noona",
       "team": ["Baro", "Noona"],
       "startDate": "2026-03-17",
@@ -21,13 +21,20 @@
         {"name": "Projects Tracker", "status": "done", "version": "V0.7"},
         {"name": "Team Org Chart + Hierarchy", "status": "done", "version": "V0.8"},
         {"name": "Backlog Tab", "status": "done", "version": "V0.8.3"},
-        {"name": "Workspace Explorer (file preview + search)", "status": "done", "version": "V0.8.5"},
+        {"name": "Workspace Explorer (preview + search)", "status": "done", "version": "V0.8.5"},
         {"name": "Quick Actions Dashboard", "status": "done", "version": "V0.8.5"},
         {"name": "Memories Browser", "status": "done", "version": "V0.9"},
         {"name": "Virtual Office Visualization", "status": "done", "version": "V1.0"},
         {"name": "Codebase Modularization (CSS/JS split)", "status": "done", "version": "V1.0"},
-        {"name": "Project Management (V1.1)", "status": "planned", "version": "V1.1"},
-        {"name": "Agent Communication (V1.2)", "status": "planned", "version": "V1.2"}
+        {"name": "Overview Home Tab", "status": "done", "version": "V1.0"},
+        {"name": "Project Timeline + Resource Allocation", "status": "done", "version": "V1.1"},
+        {"name": "Inter-Agent Messaging + Task Delegation", "status": "done", "version": "V1.2"},
+        {"name": "Real-time Notifications", "status": "done", "version": "V1.2"},
+        {"name": "Advanced Analytics Dashboard", "status": "done", "version": "V1.3"},
+        {"name": "Team Velocity + Workload + Heatmaps", "status": "done", "version": "V1.3"},
+        {"name": "Performance Leaderboard + AI Insights", "status": "done", "version": "V1.3"},
+        {"name": "Documentation + Code Cleanup", "status": "done", "version": "V1.4"},
+        {"name": "Final Bug Fixes", "status": "in-progress", "version": "V1.4"}
       ],
       "repository": "https://github.com/warung-kerja/mission-control",
       "liveUrl": "https://warung-kerja.github.io/mission-control/",
@@ -112,8 +119,8 @@
     "planned": 1,
     "onHold": 1,
     "completed": 0,
-    "averageProgress": 49
+    "averageProgress": 62
   },
   "lastUpdated": "2026-04-07T00:00:00+11:00",
-  "version": "V1.0"
+  "version": "V1.4"
 }

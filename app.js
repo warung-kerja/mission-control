@@ -2237,3 +2237,541 @@ function copyMessageTemplate(type) {
         alert('Failed to copy template');
     });
 }
+
+// ====================
+// ====================
+// V1.2: COLLABORATION TOOLS
+// ====================
+
+let currentChatAgent = 'Baro';
+let chatHistory = {
+    'Baro': [],
+    'Noona': [],
+    'Raz': [],
+    'Team': []
+};
+
+const agentInfo = {
+    'Baro': {
+        name: 'Baro',
+        avatar: '🎨',
+        color: 'linear-gradient(135deg, #f093fb, #f5576c)',
+        status: 'Online',
+        subtitle: 'Creative Director • Usually responds in 5 min',
+        responses: [
+            "Great work on the implementation!",
+            "Can you also update the documentation?",
+            "The design looks solid, let's ship it!",
+            "I\'ll review the changes in a moment.",
+            "Raz wants to see this by EOD."
+        ]
+    },
+    'Noona': {
+        name: 'Noona',
+        avatar: '🔧',
+        color: 'linear-gradient(135deg, #4facfe, #00f2fe)',
+        status: 'Online',
+        subtitle: 'Engineer • Building things that work',
+        responses: [
+            "On it! Will have this done soon.",
+            "Just pushed the changes to GitHub.",
+            "Found a bug, fixing it now.",
+            "The feature is ready for testing.",
+            "Need any help with the deployment?"
+        ]
+    },
+    'Raz': {
+        name: 'Raz',
+        avatar: '👑',
+        color: 'linear-gradient(135deg, #fa709a, #fee140)',
+        status: 'Busy',
+        subtitle: 'Vision Keeper • Limited availability',
+        responses: [
+            "Looks good, approved for deployment.",
+            "Can we simplify this?",
+            "Focus on the core features first.",
+            "Schedule a review for tomorrow.",
+            "This aligns with our goals."
+        ]
+    },
+    'Team': {
+        name: 'Team Channel',
+        avatar: '👥',
+        color: 'linear-gradient(135deg, #667eea, #764ba2)',
+        status: 'Online',
+        subtitle: '3 members • Team-wide announcements',
+        responses: []
+    }
+};
+
+// Select agent for chat
+function selectAgentChat(agentName) {
+    currentChatAgent = agentName;
+    const agent = agentInfo[agentName];
+    
+    // Update active state in list
+    document.querySelectorAll('.agent-list-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.agent === agentName) {
+            item.classList.remove('unread');
+            item.classList.add('active');
+        }
+    });
+    
+    // Update chat header
+    document.getElementById('chat-name').textContent = agent.name;
+    document.getElementById('chat-status').textContent = agent.subtitle;
+    document.getElementById('chat-avatar').textContent = agent.avatar;
+    document.getElementById('chat-avatar').style.background = agent.color;
+    
+    // Load chat history
+    renderChatMessages(agentName);
+}
+
+// Render chat messages
+function renderChatMessages(agentName) {
+    const container = document.getElementById('chat-messages');
+    const messages = chatHistory[agentName] || [];
+    
+    if (messages.length === 0) {
+        // Show default welcome message
+        container.innerHTML = `
+            <div class="chat-date-divider">
+                <span>Today</span>
+            </div>
+            <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">💬</div>
+                <div>Start a conversation with ${agentName}</div>
+            </div>
+        `;
+    } else {
+        container.innerHTML = `
+            <div class="chat-date-divider">
+                <span>Today</span>
+            </div>
+        `;
+        messages.forEach(msg => {
+            appendMessageToContainer(container, msg);
+        });
+    }
+    
+    // Scroll to bottom
+    container.scrollTop = container.scrollHeight;
+}
+
+// Append message to container
+function appendMessageToContainer(container, msg) {
+    const agent = agentInfo[msg.sender];
+    const isOwn = msg.sender === 'Noona';
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${isOwn ? 'own' : ''}`;
+    messageDiv.innerHTML = `
+        <div class="chat-message-avatar" style="background: ${agent.color};">${agent.avatar}</div>
+        <div class="chat-message-content">
+            <div class="chat-message-text">${msg.text}</div>
+            <div class="chat-message-meta">
+                ${msg.sender} • ${msg.time} ${isOwn ? '✓✓' : ''}
+            </div>
+        </div>
+    `;
+    
+    container.appendChild(messageDiv);
+}
+
+// Handle chat keypress
+function handleChatKeypress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+// Send message
+function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    
+    if (!text) return;
+    
+    const message = {
+        sender: 'Noona',
+        text: text,
+        time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+    };
+    
+    // Add to history
+    if (!chatHistory[currentChatAgent]) {
+        chatHistory[currentChatAgent] = [];
+    }
+    chatHistory[currentChatAgent].push(message);
+    
+    // Clear input
+    input.value = '';
+    
+    // Render message
+    const container = document.getElementById('chat-messages');
+    
+    // Remove empty state if present
+    if (container.querySelector('.chat-message') === null && container.children.length <= 1) {
+        container.innerHTML = '<div class="chat-date-divider"><span>Today</span></div>';
+    }
+    
+    appendMessageToContainer(container, message);
+    container.scrollTop = container.scrollHeight;
+    
+    // Simulate typing indicator and response
+    if (currentChatAgent !== 'Team') {
+        showTypingIndicator();
+        
+        setTimeout(() => {
+            hideTypingIndicator();
+            simulateResponse();
+        }, 2000 + Math.random() * 2000);
+    }
+    
+    // Add to activity feed
+    addActivity(`Message sent to ${currentChatAgent}`);
+}
+
+// Show typing indicator
+function showTypingIndicator() {
+    const indicator = document.getElementById('typing-indicator');
+    const agent = agentInfo[currentChatAgent];
+    indicator.querySelector('span').textContent = `${agent.name} is typing`;
+    indicator.style.display = 'flex';
+}
+
+// Hide typing indicator
+function hideTypingIndicator() {
+    document.getElementById('typing-indicator').style.display = 'none';
+}
+
+// Simulate response
+function simulateResponse() {
+    const agent = agentInfo[currentChatAgent];
+    if (!agent || !agent.responses || agent.responses.length === 0) return;
+    
+    const responseText = agent.responses[Math.floor(Math.random() * agent.responses.length)];
+    
+    const message = {
+        sender: currentChatAgent,
+        text: responseText,
+        time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+    };
+    
+    chatHistory[currentChatAgent].push(message);
+    
+    const container = document.getElementById('chat-messages');
+    appendMessageToContainer(container, message);
+    container.scrollTop = container.scrollHeight;
+    
+    // Add notification if not active
+    if (currentChatAgent !== 'Noona') {
+        addNotification(`New message from ${agent.name}`, responseText.substring(0, 50) + '...');
+    }
+}
+
+// Delegate task
+function delegateTask() {
+    showDelegateTaskModal();
+}
+
+// Show delegate task modal
+function showDelegateTaskModal() {
+    const taskTitle = prompt('Task title:');
+    if (!taskTitle) return;
+    
+    const assignee = prompt('Assign to (Baro/Noona/Raz):', currentChatAgent);
+    if (!assignee) return;
+    
+    // Add to delegated tasks
+    const container = document.getElementById('delegated-tasks-list');
+    const taskDiv = document.createElement('div');
+    taskDiv.className = 'task-delegation-item';
+    taskDiv.innerHTML = `
+        <div class="task-delegation-title">${taskTitle}</div>
+        <div class="task-delegation-assignee">
+            <span>Assigned to: ${assignee}</span>
+        </div>
+        <span class="task-delegation-status status-pending">Pending</span>
+    `;
+    
+    container.insertBefore(taskDiv, container.firstChild);
+    
+    // Add notification
+    addNotification('📋 Task Delegated', `You assigned "${taskTitle}" to ${assignee}`);
+    
+    // Add to activity
+    addActivity(`Task delegated: ${taskTitle} → ${assignee}`);
+    
+    // Simulate confirmation message
+    setTimeout(() => {
+        if (chatHistory[assignee]) {
+            const message = {
+                sender: assignee,
+                text: `Got it! I'll work on "${taskTitle}"`,
+                time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+            };
+            chatHistory[assignee].push(message);
+            
+            if (currentChatAgent === assignee) {
+                const chatContainer = document.getElementById('chat-messages');
+                appendMessageToContainer(chatContainer, message);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }
+    }, 1500);
+}
+
+// Add notification
+function addNotification(title, message) {
+    const container = document.getElementById('notifications-list');
+    const notifDiv = document.createElement('div');
+    notifDiv.className = 'notification-item unread';
+    notifDiv.onclick = function() { markNotificationRead(this); };
+    notifDiv.innerHTML = `
+        <strong>${title}</strong>
+        <div>${message}</div>
+        <div class="notification-time">Just now</div>
+    `;
+    
+    container.insertBefore(notifDiv, container.firstChild);
+    
+    // Update unread badge
+    updateUnreadCount();
+}
+
+// Mark notification as read
+function markNotificationRead(element) {
+    element.classList.remove('unread');
+    updateUnreadCount();
+}
+
+// Update unread notification count
+function updateUnreadCount() {
+    const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+    // Could update a badge here
+}
+
+// Start call (placeholder)
+function startCall() {
+    alert(`📹 Starting video call with ${currentChatAgent}...\n\n(Feature coming in V1.3)`);
+}
+
+// Show agent info (placeholder)
+function showAgentInfo() {
+    const agent = agentInfo[currentChatAgent];
+    alert(`👤 ${agent.name}\nRole: ${agent.subtitle.split('•')[0].trim()}\nStatus: ${agent.status}\n\nLast seen: Just now`);
+}
+
+// Simulate incoming messages periodically
+setInterval(() => {
+    if (Math.random() > 0.8) {
+        const agents = ['Baro', 'Raz'];
+        const randomAgent = agents[Math.floor(Math.random() * agents.length)];
+        
+        if (randomAgent !== currentChatAgent) {
+            // Mark as unread
+            const listItem = document.querySelector(`.agent-list-item[data-agent="${randomAgent}"]`);
+            if (listItem) {
+                listItem.classList.add('unread');
+            }
+            
+            // Add notification
+            const agent = agentInfo[randomAgent];
+            const randomMsg = agent.responses[Math.floor(Math.random() * agent.responses.length)];
+            addNotification(`💬 ${agent.name}`, randomMsg.substring(0, 40) + '...');
+        }
+    }
+}, 60000); // Every minute
+
+// Initialize collaboration features when tab is shown
+document.addEventListener('DOMContentLoaded', function() {
+    const collabTab = document.getElementById('collaboration-tab');
+    if (collabTab) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.target.style.display === 'block') {
+                    // Initialize chat
+                    selectAgentChat(currentChatAgent);
+                }
+            });
+        });
+        
+        observer.observe(collabTab, { attributes: true, attributeFilter: ['style'] });
+    }
+    
+    // Initialize analytics features
+    initAnalytics();
+});
+
+// V1.3 Analytics & Reporting Functions
+let currentTimeframe = '7d';
+
+
+function initAnalytics() {
+    generateHeatmap();
+    drawVelocityChart();
+}
+
+function setTimeframe(timeframe) {
+    currentTimeframe = timeframe;
+    
+    // Update button states
+    document.querySelectorAll('.timeframe-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Update metrics based on timeframe
+    updateMetricsForTimeframe(timeframe);
+    
+    // Redraw charts
+    drawVelocityChart();
+    generateHeatmap();
+}
+
+function updateMetricsForTimeframe(timeframe) {
+    const metrics = {
+        '7d': { tasks: 47, velocity: 8.5, hours: 156, completion: '94%' },
+        '30d': { tasks: 186, velocity: 7.2, hours: 624, completion: '91%' },
+        '90d': { tasks: 542, velocity: 6.8, hours: 1872, completion: '89%' }
+    };
+    
+    const data = metrics[timeframe];
+    document.getElementById('tasks-completed').textContent = data.tasks;
+    document.getElementById('avg-velocity').textContent = data.velocity;
+    document.getElementById('hours-logged').textContent = data.hours;
+    document.getElementById('completion-rate').textContent = data.completion;
+}
+
+function drawVelocityChart() {
+    const canvas = document.getElementById('velocityCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, width, height);
+    
+    // Sample velocity data
+    const days = currentTimeframe === '7d' ? 7 : currentTimeframe === '30d' ? 30 : 90;
+    const data = [];
+    for (let i = 0; i < days; i++) {
+        data.push(Math.floor(Math.random() * 8) + 3); // Random between 3-10
+    }
+    
+    const maxValue = Math.max(...data);
+    const barWidth = (width - 40) / data.length;
+    const scale = (height - 60) / maxValue;
+    
+    // Draw bars
+    data.forEach((value, index) => {
+        const barHeight = value * scale;
+        const x = 20 + index * barWidth;
+        const y = height - 40 - barHeight;
+        
+        // Create gradient
+        const gradient = ctx.createLinearGradient(0, y, 0, height - 40);
+        gradient.addColorStop(0, '#6366f1');
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0.3)');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x + 2, y, barWidth - 4, barHeight);
+        
+        // Draw bar top highlight
+        ctx.fillStyle = '#818cf8';
+        ctx.fillRect(x + 2, y, barWidth - 4, 3);
+    });
+    
+    // Draw baseline
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(20, height - 40);
+    ctx.lineTo(width - 20, height - 40);
+    ctx.stroke();
+}
+
+function generateHeatmap() {
+    const container = document.getElementById('activity-heatmap');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    // Generate 14x4 grid (2 weeks)
+    for (let i = 0; i < 56; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'heatmap-cell';
+        
+        // Random activity level
+        const activity = Math.random();
+        if (activity > 0.8) {
+            cell.style.background = 'rgba(99, 102, 241, 0.9)';
+        } else if (activity > 0.6) {
+            cell.style.background = 'rgba(99, 102, 241, 0.6)';
+        } else if (activity > 0.4) {
+            cell.style.background = 'rgba(99, 102, 241, 0.3)';
+        } else {
+            cell.style.background = 'var(--bg-card)';
+        }
+        
+        // Add tooltip
+        const hours = Math.floor(activity * 8);
+        cell.title = `${hours} hours of activity`;
+        
+        container.appendChild(cell);
+    }
+}
+
+function exportAnalyticsReport() {
+    const report = {
+        generatedAt: new Date().toISOString(),
+        timeframe: currentTimeframe,
+        metrics: {
+            tasksCompleted: document.getElementById('tasks-completed').textContent,
+            avgVelocity: document.getElementById('avg-velocity').textContent,
+            hoursLogged: document.getElementById('hours-logged').textContent,
+            completionRate: document.getElementById('completion-rate').textContent
+        },
+        teamPerformance: [
+            { name: 'Noona', tasks: 47, hours: 78, efficiency: '98%' },
+            { name: 'Baro', tasks: 28, hours: 52, efficiency: '95%' },
+            { name: 'Raz', tasks: 12, hours: 18, efficiency: '88%' },
+            { name: 'Bob', tasks: 8, hours: 8, efficiency: '85%' }
+        ]
+    };
+    
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `analytics-report-${currentTimeframe}-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    addActivity('Analytics report exported');
+}
+
+// Initialize analytics when tab is shown
+document.addEventListener('DOMContentLoaded', function() {
+    const analyticsTab = document.getElementById('analytics-tab');
+    if (analyticsTab) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.target.style.display === 'block') {
+                    // Redraw charts when tab becomes visible
+                    setTimeout(() => {
+                        drawVelocityChart();
+                        generateHeatmap();
+                    }, 100);
+                }
+            });
+        });
+        
+        observer.observe(analyticsTab, { attributes: true, attributeFilter: ['style'] });
+    }

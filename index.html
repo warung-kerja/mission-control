@@ -25,6 +25,8 @@
                 <button class="nav-tab" onclick="showTab('quickactions', event)">⚡ Quick Actions</button>
                 <button class="nav-tab" onclick="showTab('memories', event)">🧠 Memories</button>
                 <button class="nav-tab" onclick="showTab('office', event)">🏢 Office</button>
+                <button class="nav-tab" onclick="showTab('collaboration', event)">💬 Collab</button>
+                <button class="nav-tab" onclick="showTab('analytics', event)">📊 Analytics</button>
             </div>
             <div class="status-bar">
                 <div class="status-dot"></div>
@@ -792,6 +794,613 @@
                 </div>
             </div>
         </div>
+
+        <!-- Collaboration Tab (V1.2) -->
+        <!-- Content rendered by app.js collaborationInit() -->
+        <div id="collaboration-tab" class="tab-content" style="display: none;">
+            <div class="collaboration-container">
+                <!-- Agent List Panel -->
+                <div class="agent-list-panel">
+                    <div class="agent-list-header">
+                        👥 Team Members
+                    </div>
+                    <div id="agent-list-container">
+                        <div class="agent-list-item active" data-agent="Baro" onclick="selectAgentChat('Baro')">
+                            <div class="agent-avatar" style="background: linear-gradient(135deg, #f093fb, #f5576c);">🎨</div>
+                            <div class="agent-list-info">
+                                <div class="agent-list-name">Baro</div>
+                                <div class="agent-list-status">
+                                    <span class="status-indicator status-online"></span>
+                                    Online • Creative Director
+                                </div>
+                            </div>
+                        </div>
+                        <div class="agent-list-item" data-agent="Noona" onclick="selectAgentChat('Noona')">
+                            <div class="agent-avatar" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">🔧</div>
+                            <div class="agent-list-info">
+                                <div class="agent-list-name">Noona</div>
+                                <div class="agent-list-status">
+                                    <span class="status-indicator status-online"></span>
+                                    Online • Engineer
+                                </div>
+                            </div>
+                        </div>
+                        <div class="agent-list-item" data-agent="Raz" onclick="selectAgentChat('Raz')">
+                            <div class="agent-avatar" style="background: linear-gradient(135deg, #fa709a, #fee140);">👑</div>
+                            <div class="agent-list-info">
+                                <div class="agent-list-name">Raz</div>
+                                <div class="agent-list-status">
+                                    <span class="status-indicator status-busy"></span>
+                                    Busy • Vision Keeper
+                                </div>
+                            </div>
+                        </div>
+                        <div class="agent-list-item unread" data-agent="Team" onclick="selectAgentChat('Team')">
+                            <div class="agent-avatar" style="background: linear-gradient(135deg, #667eea, #764ba2);">👥</div>
+                            <div class="agent-list-info">
+                                <div class="agent-list-name">Team Channel</div>
+                                <div class="agent-list-status">
+                                    <span class="status-indicator status-online"></span>
+                                    3 members • 2 new
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Panel -->
+                <div class="chat-panel">
+                    <div class="chat-header">
+                        <div class="chat-header-info">
+                            <div class="chat-header-avatar" id="chat-avatar" style="background: linear-gradient(135deg, #f093fb, #f5576c);">🎨</div>
+                            <div class="chat-header-details">
+                                <h4 id="chat-name">Baro</h4>
+                                <span id="chat-status">Online • Usually responds in 5 min</span>
+                            </div>
+                        </div>
+                        <div class="chat-actions">
+                            <button class="chat-action-btn" onclick="delegateTask()" title="Delegate Task">📋</button>
+                            <button class="chat-action-btn" onclick="startCall()" title="Start Call">📹</button>
+                            <button class="chat-action-btn" onclick="showAgentInfo()" title="Agent Info">ℹ️</button>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="chat-date-divider">
+                            <span>Today</span>
+                        </div>
+                        
+                        <div class="chat-message">
+                            <div class="chat-message-avatar" style="background: linear-gradient(135deg, #f093fb, #f5576c);">🎨</div>
+                            <div class="chat-message-content">
+                                <div class="chat-message-text">Hey Noona! How's the V1.2 collaboration feature coming along?</div>
+                                <div class="chat-message-meta">
+                                    Baro • 10:30 AM
+                                    <span class="message-reaction">👍 2</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-message own">
+                            <div class="chat-message-avatar" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">🔧</div>
+                            <div class="chat-message-content">
+                                <div class="chat-message-text">Going great! Just implementing the messaging interface now. The inter-agent chat is almost ready.</div>
+                                <div class="chat-message-meta">
+                                    Noona • 10:32 AM ✓✓
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-message">
+                            <div class="chat-message-avatar" style="background: linear-gradient(135deg, #f093fb, #f5576c);">🎨</div>
+                            <div class="chat-message-content">
+                                <div class="chat-message-text">Awesome! Can you also add the task delegation feature? Raz wants to be able to assign tasks directly from the chat.</div>
+                                <div class="chat-message-meta">
+                                    Baro • 10:35 AM
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-message own">
+                            <div class="chat-message-avatar" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">🔧</div>
+                            <div class="chat-message-content">
+                                <div class="chat-message-text">Already on it! You'll see the "Delegate Task" button in the chat header. Click it to assign tasks instantly.</div>
+                                <div class="chat-message-meta">
+                                    Noona • 10:36 AM ✓
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="typing-indicator" class="typing-indicator" style="display: none;">
+                        <span>Baro is typing</span>
+                        <div class="typing-dots">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <input type="text" class="chat-input" id="chat-input" placeholder="Type a message..." onkeypress="handleChatKeypress(event)">
+                        <button class="chat-send-btn" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+                
+                <!-- Collaboration Sidebar -->
+                <div class="collaboration-sidebar">
+                    <div class="sidebar-section">
+                        <h4>🔔 Notifications</h4>
+                        <div id="notifications-list">
+                            <div class="notification-item unread" onclick="markNotificationRead(this)">
+                                <strong>📋 Task Assigned</strong>
+                                <div>Baro delegated "Review V1.2 designs" to you</div>
+                                <div class="notification-time">5 minutes ago</div>
+                            </div>
+                            <div class="notification-item" onclick="markNotificationRead(this)">
+                                <strong>💬 New Message</strong>
+                                <div>Raz commented on Mission Control project</div>
+                                <div class="notification-time">1 hour ago</div>
+                            </div>
+                            <div class="notification-item" onclick="markNotificationRead(this)">
+                                <strong>✅ Task Completed</strong>
+                                <div>Baro completed "Update color palette"</div>
+                                <div class="notification-time">2 hours ago</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-section">
+                        <h4>📋 Delegated Tasks</h4>
+                        <div id="delegated-tasks-list">
+                            <div class="task-delegation-item">
+                                <div class="task-delegation-title">Review V1.2 designs</div>
+                                <div class="task-delegation-assignee">
+                                    <span>Assigned to: You</span>
+                                </div>
+                                <span class="task-delegation-status status-pending">Pending</span>
+                            </div>
+                            <div class="task-delegation-item">
+                                <div class="task-delegation-title">Update documentation</div>
+                                <div class="task-delegation-assignee">
+                                    <span>Assigned to: Baro</span>
+                                </div>
+                                <span class="task-delegation-status status-in-progress">In Progress</span>
+                            </div>
+                            <div class="task-delegation-item">
+                                <div class="task-delegation-title">Fix navigation bug</div>
+                                <div class="task-delegation-assignee">
+                                    <span>Assigned by: Raz</span>
+                                </div>
+                                <span class="task-delegation-status status-completed">Completed</span>
+                            </div>
+                        </div>
+                        <button class="delegate-task-btn" onclick="showDelegateTaskModal()">+ Delegate New Task</button>
+                    </div>
+                    
+                    <div class="sidebar-section">
+                        <h4>📊 Team Activity</h4>
+                        <div style="font-size: 0.8125rem;">
+                            <div style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>🎨</span>
+                                    <span>Baro pushed 3 commits</span>
+                                </div>
+                                <div class="notification-time">10 min ago</div>
+                            </div>
+                            <div style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>🔧</span>
+                                    <span>Noona deployed V1.2</span>
+                                </div>
+                                <div class="notification-time">1 hour ago</div>
+                            </div>
+                            <div style="padding: 0.5rem 0;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>👑</span>
+                                    <span>Raz approved roadmap</span>
+                                </div>
+                                <div class="notification-time">3 hours ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Analytics Tab - V1.3 -->
+
+        <!-- Analytics Tab (V1.3) -->
+        <!-- Content rendered by app.js analyticsInit() -->
+    <div id="analytics-tab" class="tab-content" style="display: none;">
+        <div class="analytics-container">
+            <!-- Analytics Header -->
+            <div class="analytics-header">
+                <h2>📊 Advanced Analytics & Reporting</h2>
+                <div class="analytics-timeframe">
+                    <button class="timeframe-btn active" onclick="setTimeframe('7d')">7 Days</button>
+                    <button class="timeframe-btn" onclick="setTimeframe('30d')">30 Days</button>
+                    <button class="timeframe-btn" onclick="setTimeframe('90d')">90 Days</button>
+                    <button class="export-btn" onclick="exportAnalyticsReport()">📥 Export Report</button>
+                </div>
+            </div>
+            
+            <!-- Key Metrics Grid -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">🎯</div>
+                    <div class="metric-content">
+                        <div class="metric-value" id="tasks-completed">47</div>
+                        <div class="metric-label">Tasks Completed</div>
+                        <div class="metric-change positive">+12% vs last period</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">⚡</div>
+                    <div class="metric-content">
+                        <div class="metric-value" id="avg-velocity">8.5</div>
+                        <div class="metric-label">Avg Velocity</div>
+                        <div class="metric-change positive">+5% vs last period</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">⏱️</div>
+                    <div class="metric-content">
+                        <div class="metric-value" id="hours-logged">156</div>
+                        <div class="metric-label">Hours Logged</div>
+                        <div class="metric-change positive">+8% vs last period</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">✅</div>
+                    <div class="metric-content">
+                        <div class="metric-value" id="completion-rate">94%</div>
+                        <div class="metric-label">Completion Rate</div>
+                        <div class="metric-change positive">+3% vs last period</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts Section -->
+            <div class="analytics-charts">
+                <!-- Velocity Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>📈 Team Velocity</h3>
+                        <div class="chart-legend">
+                            <span class="legend-item"><span class="legend-dot" style="background: var(--accent)"></span>Completed</span>
+                            <span class="legend-item"><span class="legend-dot" style="background: var(--warning)"></span>In Progress</span>
+                        </div>
+                    </div>
+                    <div class="chart-container" id="velocity-chart">
+                        <canvas id="velocityCanvas" width="500" height="200"></canvas>
+                    </div>
+                    <div class="chart-stats">
+                        <div class="chart-stat">
+                            <span class="stat-value">8.5</span>
+                            <span class="stat-label">Avg Tasks/Day</span>
+                        </div>
+                        <div class="chart-stat">
+                            <span class="stat-value">12</span>
+                            <span class="stat-label">Peak Day</span>
+                        </div>
+                        <div class="chart-stat">
+                            <span class="stat-value">5</span>
+                            <span class="stat-label">Lowest Day</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Workload Distribution -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>👥 Workload Distribution</h3>
+                    </div>
+                    <div class="workload-bars">
+                        <div class="workload-item">
+                            <div class="workload-info">
+                                <span class="workload-name">👑 Raz</span>
+                                <span class="workload-count">12 tasks</span>
+                            </div>
+                            <div class="workload-bar-container">
+                                <div class="workload-bar" style="width: 25%; background: linear-gradient(90deg, #f59e0b, #fbbf24)"></div>
+                            </div>
+                        </div>
+                        <div class="workload-item">
+                            <div class="workload-info">
+                                <span class="workload-name">🎨 Baro</span>
+                                <span class="workload-count">28 tasks</span>
+                            </div>
+                            <div class="workload-bar-container">
+                                <div class="workload-bar" style="width: 60%; background: linear-gradient(90deg, #8b5cf6, #a78bfa)"></div>
+                            </div>
+                        </div>
+                        <div class="workload-item">
+                            <div class="workload-info">
+                                <span class="workload-name">🔧 Noona</span>
+                                <span class="workload-count">47 tasks</span>
+                            </div>
+                            <div class="workload-bar-container">
+                                <div class="workload-bar" style="width: 95%; background: linear-gradient(90deg, #6366f1, #818cf8)"></div>
+                            </div>
+                        </div>
+                        <div class="workload-item">
+                            <div class="workload-info">
+                                <span class="workload-name">🔍 Bob</span>
+                                <span class="workload-count">8 tasks</span>
+                            </div>
+                            <div class="workload-bar-container">
+                                <div class="workload-bar" style="width: 15%; background: linear-gradient(90deg, #10b981, #34d399)"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project Progress Section -->
+            <div class="analytics-section">
+                <h3>🎯 Project Progress Analytics</h3>
+                <div class="project-analytics-grid">
+                    <div class="project-analytics-card">
+                        <div class="project-header">
+                            <span class="project-icon">🚀</span>
+                            <div class="project-info">
+                                <div class="project-name">Mission Control Dashboard</div>
+                                <div class="project-meta">V1.2 • 95% Complete</div>
+                            </div>
+                        </div>
+                        <div class="project-progress-bar">
+                            <div class="progress-fill" style="width: 95%; background: linear-gradient(90deg, #6366f1, #8b5cf6)"></div>
+                        </div>
+                        <div class="project-stats-row">
+                            <div class="project-stat">
+                                <span class="stat-number">47</span>
+                                <span class="stat-desc">Tasks Done</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="stat-number">3</span>
+                                <span class="stat-desc">In Progress</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="stat-number">5</span>
+                                <span class="stat-desc">Remaining</span>
+                            </div>
+                        </div>
+                        <div class="project-velocity">
+                            <span class="velocity-label">Velocity:</span>
+                            <span class="velocity-value">2.4 tasks/day</span>
+                            <span class="velocity-eta">ETA: 2 days</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-analytics-card">
+                        <div class="project-header">
+                            <span class="project-icon">📚</span>
+                            <div class="project-info">
+                                <div class="project-name">Amazon Short Stories</div>
+                                <div class="project-meta">V0.3 • 40% Complete</div>
+                            </div>
+                        </div>
+                        <div class="project-progress-bar">
+                            <div class="progress-fill" style="width: 40%; background: linear-gradient(90deg, #10b981, #34d399)"></div>
+                        </div>
+                        <div class="project-stats-row">
+                            <div class="project-stat">
+                                <span class="stat-number">8</span>
+                                <span class="stat-desc">Tasks Done</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="stat-number">5</span>
+                                <span class="stat-desc">In Progress</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="stat-number">12</span>
+                                <span class="stat-desc">Remaining</span>
+                            </div>
+                        </div>
+                        <div class="project-velocity">
+                            <span class="velocity-label">Velocity:</span>
+                            <span class="velocity-value">0.8 tasks/day</span>
+                            <span class="velocity-eta">ETA: 15 days</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Time Tracking Section -->
+            <div class="analytics-section">
+                <h3>⏱️ Time Tracking & Efficiency</h3>
+                <div class="time-tracking-grid">
+                    <div class="time-card">
+                        <div class="time-header">
+                            <h4>Daily Activity Heatmap</h4>
+                            <span class="time-total">156 hours total</span>
+                        </div>
+                        <div class="heatmap-container">
+                            <div class="heatmap-grid" id="activity-heatmap">
+                                <!-- Generated by JS -->
+                            </div>
+                            <div class="heatmap-legend">
+                                <span>Less</span>
+                                <div class="heatmap-scale">
+                                    <div class="scale-cell" style="background: var(--bg-hover)"></div>
+                                    <div class="scale-cell" style="background: rgba(99, 102, 241, 0.3)"></div>
+                                    <div class="scale-cell" style="background: rgba(99, 102, 241, 0.6)"></div>
+                                    <div class="scale-cell" style="background: rgba(99, 102, 241, 0.9)"></div>
+                                </div>
+                                <span>More</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-card">
+                        <div class="time-header">
+                            <h4>Time by Category</h4>
+                        </div>
+                        <div class="category-breakdown">
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-color" style="background: #6366f1"></span>
+                                    <span class="category-name">Development</span>
+                                </div>
+                                <div class="category-value">68 hrs (44%)</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-color" style="background: #8b5cf6"></span>
+                                    <span class="category-name">Design</span>
+                                </div>
+                                <div class="category-value">42 hrs (27%)</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-color" style="background: #10b981"></span>
+                                    <span class="category-name">Research</span>
+                                </div>
+                                <div class="category-value">28 hrs (18%)</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-color" style="background: #f59e0b"></span>
+                                    <span class="category-name">Planning</span>
+                                </div>
+                                <div class="category-value">18 hrs (11%)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Team Performance Section -->
+            <div class="analytics-section">
+                <h3>🏆 Team Performance Leaderboard</h3>
+                <div class="leaderboard-table">
+                    <div class="leaderboard-header">
+                        <span class="leaderboard-rank">#</span>
+                        <span class="leaderboard-member">Team Member</span>
+                        <span class="leaderboard-metric">Tasks</span>
+                        <span class="leaderboard-metric">Hours</span>
+                        <span class="leaderboard-metric">Efficiency</span>
+                        <span class="leaderboard-metric">Streak</span>
+                    </div>
+                    <div class="leaderboard-body">
+                        <div class="leaderboard-row top-performer">
+                            <span class="leaderboard-rank">🥇</span>
+                            <div class="leaderboard-member">
+                                <span class="member-avatar" style="background: linear-gradient(135deg, #6366f1, #8b5cf6)">🔧</span>
+                                <div class="member-info">
+                                    <span class="member-name">Noona</span>
+                                    <span class="member-role">Junior Engineer</span>
+                                </div>
+                            </div>
+                            <span class="leaderboard-metric">47</span>
+                            <span class="leaderboard-metric">78 hrs</span>
+                            <span class="leaderboard-metric">
+                                <span class="efficiency-badge high">98%</span>
+                            </span>
+                            <span class="leaderboard-metric">
+                                <span class="streak-badge">🔥 12 days</span>
+                            </span>
+                        </div>
+                        <div class="leaderboard-row">
+                            <span class="leaderboard-rank">🥈</span>
+                            <div class="leaderboard-member">
+                                <span class="member-avatar" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa)">🎨</span>
+                                <div class="member-info">
+                                    <span class="member-name">Baro</span>
+                                    <span class="member-role">Creative Director</span>
+                                </div>
+                            </div>
+                            <span class="leaderboard-metric">28</span>
+                            <span class="leaderboard-metric">52 hrs</span>
+                            <span class="leaderboard-metric">
+                                <span class="efficiency-badge high">95%</span>
+                            </span>
+                            <span class="leaderboard-metric">
+                                <span class="streak-badge">🔥 8 days</span>
+                            </span>
+                        </div>
+                        <div class="leaderboard-row">
+                            <span class="leaderboard-rank">🥉</span>
+                            <div class="leaderboard-member">
+                                <span class="member-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24)">👑</span>
+                                <div class="member-info">
+                                    <span class="member-name">Raz</span>
+                                    <span class="member-role">Project Lead</span>
+                                </div>
+                            </div>
+                            <span class="leaderboard-metric">12</span>
+                            <span class="leaderboard-metric">18 hrs</span>
+                            <span class="leaderboard-metric">
+                                <span class="efficiency-badge medium">88%</span>
+                            </span>
+                            <span class="leaderboard-metric">
+                                <span class="streak-badge">🔥 5 days</span>
+                            </span>
+                        </div>
+                        <div class="leaderboard-row">
+                            <span class="leaderboard-rank">4</span>
+                            <div class="leaderboard-member">
+                                <span class="member-avatar" style="background: linear-gradient(135deg, #10b981, #34d399)">🔍</span>
+                                <div class="member-info">
+                                    <span class="member-name">Bob</span>
+                                    <span class="member-role">Research Analyst</span>
+                                </div>
+                            </div>
+                            <span class="leaderboard-metric">8</span>
+                            <span class="leaderboard-metric">8 hrs</span>
+                            <span class="leaderboard-metric">
+                                <span class="efficiency-badge medium">85%</span>
+                            </span>
+                            <span class="leaderboard-metric">
+                                <span class="streak-badge">🔥 3 days</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Insights & Recommendations -->
+            <div class="analytics-section">
+                <h3>💡 AI-Powered Insights</h3>
+                <div class="insights-grid">
+                    <div class="insight-card positive">
+                        <div class="insight-icon">🚀</div>
+                        <div class="insight-content">
+                            <h4>Velocity Increasing</h4>
+                            <p>Team velocity has increased by 12% over the last 7 days. Noona's automation efforts are paying off!</p>
+                            <span class="insight-action">Keep momentum going</span>
+                        </div>
+                    </div>
+                    <div class="insight-card warning">
+                        <div class="insight-icon">⚠️</div>
+                        <div class="insight-content">
+                            <h4>Workload Imbalance</h4>
+                            <p>Noona is handling 47 tasks while Bob only has 8. Consider redistributing some research tasks.</p>
+                            <span class="insight-action">Review task allocation</span>
+                        </div>
+                    </div>
+                    <div class="insight-card positive">
+                        <div class="insight-icon">🎯</div>
+                        <div class="insight-content">
+                            <h4>Project On Track</h4>
+                            <p>Mission Control V1.3 is 95% complete and will finish 2 days ahead of schedule.</p>
+                            <span class="insight-action">Plan V1.4 features</span>
+                        </div>
+                    </div>
+                    <div class="insight-card info">
+                        <div class="insight-icon">💡</div>
+                        <div class="insight-content">
+                            <h4>Peak Productivity</h4>
+                            <p>Team is most productive between 2-6 PM. Schedule important meetings outside these hours.</p>
+                            <span class="insight-action">Optimize schedule</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
         <div id="office-tab" class="tab-content" style="display: none;">
             <div style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
