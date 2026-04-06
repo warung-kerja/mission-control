@@ -414,6 +414,94 @@ def get_file_content(agent_name, file_path):
             "file_path": file_path
         }), 500
 
+@app.route('/api/memories')
+def get_all_memories():
+    """Get memory files (MEMORY.md, SOUL.md, memory/ dir) for all agents"""
+    agents_dir = os.path.join(VAULT_PATH, "06_Agents")
+    MEMORY_FILENAMES = {'MEMORY.md', 'SOUL.md', 'IDENTITY.md', 'HEARTBEAT.md'}
+    PREVIEW_LENGTH = 300
+
+    if not os.path.exists(agents_dir):
+        return jsonify({"error": "Agents directory not found", "path": agents_dir}), 404
+
+    result = {}
+    total_files = 0
+    total_size = 0
+
+    try:
+        agents = sorted([
+            d for d in os.listdir(agents_dir)
+            if os.path.isdir(os.path.join(agents_dir, d))
+        ])
+
+        for agent in agents:
+            agent_path = os.path.join(agents_dir, agent)
+            agent_files = []
+
+            # Collect top-level memory files
+            for fname in MEMORY_FILENAMES:
+                fpath = os.path.join(agent_path, fname)
+                if os.path.isfile(fpath):
+                    try:
+                        stat = os.stat(fpath)
+                        with open(fpath, 'r', encoding='utf-8', errors='replace') as f:
+                            preview = f.read(PREVIEW_LENGTH)
+                        agent_files.append({
+                            "name": fname,
+                            "path": f"{agent}/{fname}",
+                            "type": "core",
+                            "size": stat.st_size,
+                            "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
+                            "preview": preview
+                        })
+                    except Exception:
+                        pass
+
+            # Collect files from memory/ subdirectory
+            memory_subdir = os.path.join(agent_path, "memory")
+            if os.path.isdir(memory_subdir):
+                try:
+                    for fname in sorted(os.listdir(memory_subdir)):
+                        fpath = os.path.join(memory_subdir, fname)
+                        if os.path.isfile(fpath) and fname.endswith('.md'):
+                            try:
+                                stat = os.stat(fpath)
+                                with open(fpath, 'r', encoding='utf-8', errors='replace') as f:
+                                    preview = f.read(PREVIEW_LENGTH)
+                                agent_files.append({
+                                    "name": fname,
+                                    "path": f"{agent}/memory/{fname}",
+                                    "type": "daily" if fname[:4].isdigit() else "general",
+                                    "size": stat.st_size,
+                                    "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
+                                    "preview": preview
+                                })
+                            except Exception:
+                                pass
+                except Exception:
+                    pass
+
+            if agent_files:
+                total_files += len(agent_files)
+                total_size += sum(f["size"] for f in agent_files)
+                result[agent] = {
+                    "files": agent_files,
+                    "file_count": len(agent_files),
+                    "total_size": sum(f["size"] for f in agent_files)
+                }
+
+        return jsonify({
+            "agents": result,
+            "agent_count": len(result),
+            "total_files": total_files,
+            "total_size": total_size,
+            "generated_at": datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == '__main__':
     print("=" * 50)
     print("🚀 Warung-Kerja Mission Control Data Bridge")
@@ -425,6 +513,7 @@ if __name__ == '__main__':
     print(f"👥 Workspace Endpoint: http://localhost:{PORT}/api/workspace")
     print(f"👤 Agent Workspace: http://localhost:{PORT}/api/workspace/<agent_name>")
     print(f"📄 File Content: http://localhost:{PORT}/api/file/<agent_name>/<file_path>")
+    print(f"🧠 Memories: http://localhost:{PORT}/api/memories")
     print("=" * 50)
     print("Press Ctrl+C to stop")
     print()

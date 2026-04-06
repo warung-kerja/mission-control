@@ -22,6 +22,7 @@
                 <button class="nav-tab" onclick="showTab('team', event)">👥 Team</button>
                 <button class="nav-tab" onclick="showTab('backlog', event)">📝 Backlog</button>
                 <button class="nav-tab" onclick="showTab('quickactions', event)">⚡ Quick Actions</button>
+                <button class="nav-tab" onclick="showTab('memories', event)">🧠 Memories</button>
                 <button class="nav-tab" onclick="showTab('office', event)">🏢 Office</button>
             </div>
             <div class="status-bar">
@@ -654,6 +655,51 @@
             </div>
         </div>
         
+        <div id="memories-tab" class="tab-content" style="display: none;">
+            <div style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+                <h2 style="text-align: center; margin-bottom: 0.5rem;">🧠 Agent Memories</h2>
+                <div style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9rem;">
+                    Browse MEMORY.md, SOUL.md, and daily logs for each agent
+                </div>
+
+                <!-- Stats bar -->
+                <div id="memories-stats-bar" style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; justify-content: center;">
+                    <div style="background: var(--card-bg); border-radius: 8px; padding: 0.75rem 1.25rem; border: 1px solid var(--border-color); text-align: center;">
+                        <div style="font-size: 1.4rem; font-weight: bold;" id="memories-total-agents">—</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">Agents</div>
+                    </div>
+                    <div style="background: var(--card-bg); border-radius: 8px; padding: 0.75rem 1.25rem; border: 1px solid var(--border-color); text-align: center;">
+                        <div style="font-size: 1.4rem; font-weight: bold;" id="memories-total-files">—</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">Memory Files</div>
+                    </div>
+                    <div style="background: var(--card-bg); border-radius: 8px; padding: 0.75rem 1.25rem; border: 1px solid var(--border-color); text-align: center;">
+                        <div style="font-size: 1.4rem; font-weight: bold;" id="memories-total-size">—</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">Total Size</div>
+                    </div>
+                    <div style="margin-left: auto; display: flex; align-items: center;">
+                        <button onclick="loadMemories()" style="padding: 0.6rem 1rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85rem;">🔄 Refresh</button>
+                    </div>
+                </div>
+
+                <!-- Search -->
+                <div style="position: relative; margin-bottom: 1.5rem;">
+                    <input type="text" id="memories-search" placeholder="Search across all memory files…"
+                           style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-color); font-size: 0.9rem;"
+                           oninput="filterMemories()">
+                    <span style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); opacity: 0.7;">🔍</span>
+                </div>
+
+                <!-- Agent cards grid -->
+                <div id="memories-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+                    <div style="text-align: center; padding: 3rem; color: var(--text-secondary); grid-column: 1 / -1;">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">🧠</div>
+                        <div>Loading agent memories…</div>
+                        <div style="font-size: 0.8rem; margin-top: 0.5rem;">Requires data-bridge.py running locally</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="office-tab" class="tab-content" style="display: none;">
             <div style="text
     </div>

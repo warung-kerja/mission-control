@@ -739,7 +739,8 @@ function clearWorkspaceFilters() {
 // Initialize workspace explorer when page loads
 document.addEventListener('DOMContentLoaded', () => {
     loadWorkspaceData();
-    loadTeamData(); // Load team data
+    loadTeamData();
+    loadMemories();
     
     // Add styles for workspace tabs
     const style = document.createElement('style');
@@ -1853,6 +1854,147 @@ Quick Actions dashboard provides one-click access to common team workflows.`;
 
 function openGitHub() {
     window.open('https://github.com/warung-kerja', '_blank');
+}
+
+// ============================================================
+// MEMORIES BROWSER (V0.9)
+// ============================================================
+
+let memoriesData = null;
+
+async function loadMemories() {
+    const grid = document.getElementById('memories-grid');
+    if (!grid) return;
+
+    try {
+        const response = await fetch('http://localhost:3001/api/memories');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        memoriesData = await response.json();
+        renderMemories(memoriesData);
+    } catch (err) {
+        grid.innerHTML = `
+            <div style="text-align: center; padding: 3rem; color: var(--text-secondary); grid-column: 1 / -1;">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">⚠️</div>
+                <div>Could not load memories</div>
+                <div style="font-size: 0.8rem; margin-top: 0.5rem;">Start data-bridge.py locally to enable this feature</div>
+                <div style="font-size: 0.75rem; margin-top: 0.5rem; opacity: 0.6;">${err.message}</div>
+            </div>`;
+    }
+}
+
+function renderMemories(data, searchTerm = '') {
+    const grid = document.getElementById('memories-grid');
+    if (!grid) return;
+
+    // Update stats
+    document.getElementById('memories-total-agents').textContent = data.agent_count || 0;
+    document.getElementById('memories-total-files').textContent = data.total_files || 0;
+    document.getElementById('memories-total-size').textContent = formatFileSize(data.total_size || 0);
+
+    const agents = data.agents || {};
+    const agentNames = Object.keys(agents);
+
+    if (agentNames.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:3rem; color:var(--text-secondary);">No memory files found.</div>`;
+        return;
+    }
+
+    const AGENT_ICONS = { Baro: '🎨', noona: '🔧', bob: '🔍', haji: '🎭', obey: '🤖', Soba: '📊', Lin: '📡', _Shared_Memory: '🧠' };
+    const TYPE_COLORS = { core: '#6366f1', daily: '#10b981', general: '#f59e0b' };
+
+    grid.innerHTML = agentNames.map(agent => {
+        const info = agents[agent];
+        const icon = AGENT_ICONS[agent] || '🤖';
+
+        let files = info.files || [];
+        if (searchTerm) {
+            const term = searchTerm.toLowerCase();
+            files = files.filter(f =>
+                f.name.toLowerCase().includes(term) ||
+                f.preview.toLowerCase().includes(term)
+            );
+        }
+        if (files.length === 0 && searchTerm) return '';
+
+        const fileItems = files.map(f => {
+            const color = TYPE_COLORS[f.type] || '#94a3b8';
+            const date = new Date(f.modified).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+            const previewSnippet = f.preview.slice(0, 120).replace(/\n/g, ' ').replace(/#+\s*/g, '').trim();
+            return `
+                <div onclick="openMemoryFile('${escapeHtml(agent)}', '${escapeHtml(f.path)}')"
+                     style="padding: 0.65rem 0.75rem; border-radius: 6px; cursor: pointer; border: 1px solid var(--border-color); background: rgba(0,0,0,0.15); transition: background 0.15s;"
+                     onmouseover="this.style.background='rgba(99,102,241,0.1)'" onmouseout="this.style.background='rgba(0,0,0,0.15)'">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem;">
+                        <span style="width: 8px; height: 8px; border-radius: 50%; background: ${color}; flex-shrink: 0;"></span>
+                        <span style="font-weight: 600; font-size: 0.85rem; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${f.name}</span>
+                        <span style="font-size: 0.7rem; color: var(--text-secondary); flex-shrink: 0;">${date}</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${previewSnippet || '—'}</div>
+                </div>`;
+        }).join('');
+
+        return `
+            <div style="background: var(--card-bg); border-radius: 12px; padding: 1.25rem; border: 1px solid var(--border-color);">
+                <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem;">
+                    <span style="font-size: 1.4rem;">${icon}</span>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 700; font-size: 1rem;">${agent}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">${files.length} file${files.length !== 1 ? 's' : ''} • ${formatFileSize(info.total_size)}</div>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    ${fileItems || '<div style="font-size:0.8rem;color:var(--text-secondary);text-align:center;padding:1rem;">No matches</div>'}
+                </div>
+            </div>`;
+    }).join('');
+
+    if (!grid.innerHTML.trim()) {
+        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--text-secondary);">No results for "${searchTerm}"</div>`;
+    }
+}
+
+function filterMemories() {
+    if (!memoriesData) return;
+    const term = document.getElementById('memories-search').value;
+    renderMemories(memoriesData, term);
+}
+
+async function openMemoryFile(agent, filePath) {
+    // Reuse the existing file preview modal
+    const modal = document.getElementById('file-preview-modal');
+    const title = document.getElementById('preview-title');
+    const content = document.getElementById('preview-content');
+    if (!modal) return;
+
+    title.textContent = filePath.split('/').pop();
+    content.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-secondary);">Loading…</div>';
+    modal.style.display = 'flex';
+
+    try {
+        const encodedPath = filePath.split('/').slice(1).join('/'); // strip agent prefix
+        const response = await fetch(`http://localhost:3001/api/file/${encodeURIComponent(agent)}/${encodedPath}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+
+        if (data.content) {
+            const highlighted = applySyntaxHighlighting(data.content, data.extension || '.md');
+            content.innerHTML = `
+                <div style="margin-bottom:1rem; display:flex; gap:1rem; flex-wrap:wrap; font-size:0.8rem; color:var(--text-secondary);">
+                    <span>📄 ${data.name}</span>
+                    <span>📦 ${formatFileSize(data.size)}</span>
+                    <span>🕐 ${new Date(data.modified).toLocaleString()}</span>
+                    <button onclick="copyFileContent(${JSON.stringify(data.content)})"
+                            style="margin-left:auto; padding:0.3rem 0.75rem; background:var(--accent-color); color:white; border:none; border-radius:4px; cursor:pointer; font-size:0.8rem;">
+                        Copy
+                    </button>
+                </div>
+                <pre style="white-space:pre-wrap; word-break:break-word; font-size:0.85rem; line-height:1.6; font-family: monospace;">${highlighted}</pre>`;
+        } else {
+            content.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-secondary);">Cannot preview this file type (${data.extension || 'unknown'})</div>`;
+        }
+    } catch (err) {
+        content.innerHTML = `<div style="text-align:center;padding:2rem;color:#ef4444;">Error loading file: ${err.message}</div>`;
+    }
 }
 
 function copyMessageTemplate(type) {
