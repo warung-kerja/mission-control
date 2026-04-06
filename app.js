@@ -775,6 +775,7 @@ async function loadTeamData() {
         teamData = await response.json();
         renderTeam();
         renderTeamStats();
+        renderOffice();
     } catch (error) {
         console.error('Failed to load team data:', error);
         // Show error message
@@ -1854,6 +1855,103 @@ Quick Actions dashboard provides one-click access to common team workflows.`;
 
 function openGitHub() {
     window.open('https://github.com/warung-kerja', '_blank');
+}
+
+// ============================================================
+// OFFICE VISUALIZATION (V1.0)
+// ============================================================
+
+function renderOffice() {
+    const container = document.getElementById('office-floors');
+    if (!container) return;
+
+    if (!teamData || !teamData.team) {
+        container.innerHTML = `
+            <div style="text-align:center;padding:3rem;color:var(--text-secondary);">
+                <div style="font-size:2rem;margin-bottom:1rem;">⚠️</div>
+                <div>Could not load team data</div>
+            </div>`;
+        return;
+    }
+
+    const STATUS_DOT = { online: 'dot-online', away: 'dot-away', idle: 'dot-idle', offline: 'dot-offline' };
+    const STATUS_LABEL = { online: 'Online', away: 'Away', idle: 'Idle', offline: 'Offline' };
+
+    function timeAgo(iso) {
+        if (!iso) return 'Unknown';
+        const diff = Math.floor((Date.now() - new Date(iso)) / 1000);
+        if (diff < 60) return 'Just now';
+        if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+        if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+        return `${Math.floor(diff/86400)}d ago`;
+    }
+
+    function deskHTML(member) {
+        const dotClass = STATUS_DOT[member.status] || 'dot-idle';
+        const statusLabel = STATUS_LABEL[member.status] || member.status;
+        const skills = (member.skills || []).slice(0, 3);
+        const color = member.color || '#6366f1';
+
+        return `
+            <div class="office-desk" style="border-color: ${color}40; color: ${color};">
+                <div class="office-desk-avatar">${member.roleIcon || '🤖'}</div>
+                <div class="office-desk-header">
+                    <div class="office-desk-name" style="color: var(--text-color);">${member.name}</div>
+                </div>
+                <div class="office-desk-role">${member.role}</div>
+                <div class="office-status-badge">
+                    <span class="dot ${dotClass}"></span>
+                    <span style="color:var(--text-color);">${statusLabel}</span>
+                    <span style="color:var(--text-secondary); margin-left:0.25rem;">· ${timeAgo(member.lastActive)}</span>
+                </div>
+                <div class="office-activity">${member.activity || 'No current activity'}</div>
+                ${skills.length ? `
+                <div class="office-skills">
+                    ${skills.map(s => `<span class="office-skill-tag">${s}</span>`).join('')}
+                </div>` : ''}
+                <div class="office-actions">
+                    <button class="office-action-btn" onclick="showTab('team', event)">👥 Team</button>
+                    <button class="office-action-btn" onclick="showTab('memories', event)">🧠 Memories</button>
+                </div>
+            </div>`;
+    }
+
+    // Group by hierarchy level
+    const floors = {};
+    const FLOOR_LABELS = { 0: '🏛️ Executive Floor', 1: '🎨 Creative Floor', 2: '🔧 Engineering Floor' };
+
+    teamData.team.forEach(member => {
+        const lvl = member.level ?? 2;
+        if (!floors[lvl]) floors[lvl] = [];
+        floors[lvl].push(member);
+
+        // Sub-agents go on the same floor as their parent, +0.5 visual indent
+        (member.subAgents || []).forEach(sub => {
+            const subLvl = lvl + 1;
+            if (!floors[subLvl]) floors[subLvl] = [];
+            floors[subLvl].push(sub);
+        });
+    });
+
+    const sortedLevels = Object.keys(floors).sort((a, b) => a - b);
+
+    const html = sortedLevels.map(lvl => {
+        const label = FLOOR_LABELS[lvl] || `Floor ${parseInt(lvl) + 1}`;
+        const desks = floors[lvl].map(deskHTML).join('');
+        return `
+            <div class="office-floor">
+                <div class="office-floor-label">${label}</div>
+                <div class="office-desks">${desks}</div>
+            </div>`;
+    }).join('');
+
+    container.innerHTML = html;
+
+    const updated = teamData.lastUpdated
+        ? `Team data last updated: ${new Date(teamData.lastUpdated).toLocaleString()}`
+        : '';
+    const el = document.getElementById('office-last-updated');
+    if (el) el.textContent = updated;
 }
 
 // ============================================================
