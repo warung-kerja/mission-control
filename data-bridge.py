@@ -295,6 +295,125 @@ def list_workspaces():
             "path": agents_dir
         }), 500
 
+@app.route('/api/file/<agent_name>/<path:file_path>')
+def get_file_content(agent_name, file_path):
+    """Get content of a specific file from an agent's workspace"""
+    agent_workspace = os.path.join(VAULT_PATH, "06_Agents", agent_name)
+    
+    if not os.path.exists(agent_workspace):
+        return jsonify({
+            "error": f"Workspace not found for agent: {agent_name}",
+            "path": agent_workspace
+        }), 404
+    
+    # Construct full file path
+    full_file_path = os.path.join(agent_workspace, file_path)
+    
+    # Security check: ensure the file is within the agent workspace
+    try:
+        full_file_path = os.path.normpath(full_file_path)
+        if not full_file_path.startswith(os.path.normpath(agent_workspace)):
+            return jsonify({
+                "error": "Access denied: file path outside agent workspace",
+                "agent": agent_name,
+                "requested_path": file_path
+            }), 403
+    except Exception as e:
+        return jsonify({
+            "error": f"Path validation error: {str(e)}",
+            "agent": agent_name,
+            "requested_path": file_path
+        }), 400
+    
+    if not os.path.exists(full_file_path):
+        return jsonify({
+            "error": f"File not found: {file_path}",
+            "agent": agent_name,
+            "full_path": full_file_path
+        }), 404
+    
+    if not os.path.isfile(full_file_path):
+        return jsonify({
+            "error": f"Path is not a file: {file_path}",
+            "agent": agent_name,
+            "full_path": full_file_path
+        }), 400
+    
+    try:
+        # Get file info
+        stat = os.stat(full_file_path)
+        _, ext = os.path.splitext(full_file_path)
+        ext = ext.lower()
+        
+        # Determine file type
+        if ext in ['.md', '.txt', '.json', '.py', '.js', '.html', '.css', '.sh', '.yaml', '.yml', '.xml']:
+            file_type = "text"
+        elif ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.bmp', '.webp']:
+            file_type = "image"
+        else:
+            file_type = "other"
+        
+        # Read file content based on type
+        if file_type == "text":
+            # Read text files
+            with open(full_file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            return jsonify({
+                "agent": agent_name,
+                "file_path": file_path,
+                "name": os.path.basename(full_file_path),
+                "type": file_type,
+                "size": stat.st_size,
+                "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
+                "extension": ext if ext else "none",
+                "content": content,
+                "mime_type": "text/plain"
+            })
+        elif file_type == "image":
+            # For images, we could return base64 encoded content
+            # But for now, just return file info
+            return jsonify({
+                "agent": agent_name,
+                "file_path": file_path,
+                "name": os.path.basename(full_file_path),
+                "type": file_type,
+                "size": stat.st_size,
+                "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
+                "extension": ext if ext else "none",
+                "content": None,
+                "mime_type": f"image/{ext[1:]}" if ext else "image/*",
+                "note": "Image content not served via API for security. Use direct file URL."
+            })
+        else:
+            # For other file types, just return metadata
+            return jsonify({
+                "agent": agent_name,
+                "file_path": file_path,
+                "name": os.path.basename(full_file_path),
+                "type": file_type,
+                "size": stat.st_size,
+                "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
+                "extension": ext if ext else "none",
+                "content": None,
+                "mime_type": "application/octet-stream",
+                "note": "Binary file content not served via API."
+            })
+        
+    except UnicodeDecodeError:
+        return jsonify({
+            "error": "File is not UTF-8 encoded text",
+            "agent": agent_name,
+            "file_path": file_path,
+            "type": "binary"
+        }), 400
+    except Exception as e:
+        return jsonify({
+            "error": str(e),
+            "agent": agent_name,
+            "file_path": file_path
+        }), 500
+
 if __name__ == '__main__':
     print("=" * 50)
     print("🚀 Warung-Kerja Mission Control Data Bridge")
@@ -305,6 +424,7 @@ if __name__ == '__main__':
     print(f"📅 Calendar Endpoint: http://localhost:{PORT}/api/calendar")
     print(f"👥 Workspace Endpoint: http://localhost:{PORT}/api/workspace")
     print(f"👤 Agent Workspace: http://localhost:{PORT}/api/workspace/<agent_name>")
+    print(f"📄 File Content: http://localhost:{PORT}/api/file/<agent_name>/<file_path>")
     print("=" * 50)
     print("Press Ctrl+C to stop")
     print()
