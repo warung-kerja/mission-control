@@ -16,7 +16,8 @@
                 </div>
             </div>
             <div class="nav-tabs">
-                <button class="nav-tab active" onclick="showTab('tasks', event)">📋 Tasks</button>
+                <button class="nav-tab active" onclick="showTab('overview', event)">🏠 Overview</button>
+                <button class="nav-tab" onclick="showTab('tasks', event)">📋 Tasks</button>
                 <button class="nav-tab" onclick="showTab('calendar', event)">📅 Calendar</button>
                 <button class="nav-tab" onclick="showTab('projects', event)">🎯 Projects</button>
                 <button class="nav-tab" onclick="showTab('team', event)">👥 Team</button>
@@ -31,7 +32,99 @@
             </div>
         </header>
         
-        <div id="tasks-tab" class="tab-content">
+        <div id="overview-tab" class="tab-content">
+            <div style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+
+                <!-- Greeting + date -->
+                <div style="margin-bottom: 2rem;">
+                    <h2 id="overview-greeting" style="margin: 0 0 0.25rem; font-size: 1.6rem;">Good morning 👋</h2>
+                    <div id="overview-date" style="color: var(--text-secondary); font-size: 0.9rem;"></div>
+                </div>
+
+                <!-- Hero stats -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem;" id="overview-hero-stats">
+                    <div class="stat-card" style="cursor:pointer;" onclick="showTab('team',event)">
+                        <div class="stat-value" id="ov-online-count">—</div>
+                        <div class="stat-label">Team Online</div>
+                    </div>
+                    <div class="stat-card" style="cursor:pointer;" onclick="showTab('projects',event)">
+                        <div class="stat-value" id="ov-active-projects">—</div>
+                        <div class="stat-label">Active Projects</div>
+                    </div>
+                    <div class="stat-card" style="cursor:pointer;" onclick="showTab('backlog',event)">
+                        <div class="stat-value" id="ov-backlog-tasks">—</div>
+                        <div class="stat-label">Open Tasks</div>
+                    </div>
+                    <div class="stat-card" style="cursor:pointer;" onclick="showTab('calendar',event)">
+                        <div class="stat-value" id="ov-upcoming-events">—</div>
+                        <div class="stat-label">Events This Week</div>
+                    </div>
+                    <div class="stat-card" style="cursor:pointer;" onclick="showTab('memories',event)">
+                        <div class="stat-value" id="ov-memory-files">—</div>
+                        <div class="stat-label">Memory Files</div>
+                    </div>
+                </div>
+
+                <!-- Two-column: projects + team -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+
+                    <!-- Active projects -->
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                            <h3 style="margin:0; font-size:0.95rem;">🎯 Active Projects</h3>
+                            <button onclick="showTab('projects',event)" style="font-size:0.75rem; background:none; border:none; color:var(--accent-color); cursor:pointer;">View all →</button>
+                        </div>
+                        <div id="ov-projects-list">
+                            <div style="color:var(--text-secondary);font-size:0.85rem;">Loading…</div>
+                        </div>
+                    </div>
+
+                    <!-- Team presence -->
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                            <h3 style="margin:0; font-size:0.95rem;">👥 Team Now</h3>
+                            <button onclick="showTab('office',event)" style="font-size:0.75rem; background:none; border:none; color:var(--accent-color); cursor:pointer;">View office →</button>
+                        </div>
+                        <div id="ov-team-list">
+                            <div style="color:var(--text-secondary);font-size:0.85rem;">Loading…</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two-column: upcoming events + quick nav -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+
+                    <!-- Upcoming calendar events -->
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                            <h3 style="margin:0; font-size:0.95rem;">📅 Upcoming</h3>
+                            <button onclick="showTab('calendar',event)" style="font-size:0.75rem; background:none; border:none; color:var(--accent-color); cursor:pointer;">Full calendar →</button>
+                        </div>
+                        <div id="ov-events-list">
+                            <div style="color:var(--text-secondary);font-size:0.85rem;">Loading…</div>
+                        </div>
+                    </div>
+
+                    <!-- Quick navigation -->
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                        <h3 style="margin:0 0 1rem; font-size:0.95rem;">⚡ Quick Jump</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;">
+                            <button onclick="showTab('tasks',event)" style="padding:0.75rem; background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:8px; color:var(--text-color); cursor:pointer; font-size:0.85rem; transition:background 0.15s;" onmouseover="this.style.background='rgba(99,102,241,0.15)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'">📋 Tasks</button>
+                            <button onclick="showTab('calendar',event)" style="padding:0.75rem; background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:8px; color:var(--text-color); cursor:pointer; font-size:0.85rem; transition:background 0.15s;" onmouseover="this.style.background='rgba(99,102,241,0.15)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'">📅 Calendar</button>
+                            <button onclick="showTab('projects',event)" style="padding:0.75rem; background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:8px; color:var(--text-color); cursor:pointer; font-size:0.85rem; transition:background 0.15s;" onmouseover="this.style.background='rgba(99,102,241,0.15)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'">🎯 Projects</button>
+                            <button onclick="showTab('team',event)" style="padding:0.75rem; background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:8px; color:var(--text-color); cursor:pointer; font-size:0.85rem; transition:background 0.15s;" onmouseover="this.style.background='rgba(99,102,241,0.15)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'">👥 Team</button>
+                            <button onclick="showTab('memories',event)" style="padding:0.75rem; background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:8px; color:var(--text-color); cursor:pointer; font-size:0.85rem; transition:background 0.15s;" onmouseover="this.style.background='rgba(99,102,241,0.15)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'">🧠 Memories</button>
+                            <button onclick="showTab('office',event)" style="padding:0.75rem; background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:8px; color:var(--text-color); cursor:pointer; font-size:0.85rem; transition:background 0.15s;" onmouseover="this.style.background='rgba(99,102,241,0.15)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'">🏢 Office</button>
+                            <button onclick="showTab('backlog',event)" style="padding:0.75rem; background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:8px; color:var(--text-color); cursor:pointer; font-size:0.85rem; transition:background 0.15s;" onmouseover="this.style.background='rgba(99,102,241,0.15)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'">📝 Backlog</button>
+                            <button onclick="showTab('quickactions',event)" style="padding:0.75rem; background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:8px; color:var(--text-color); cursor:pointer; font-size:0.85rem; transition:background 0.15s;" onmouseover="this.style.background='rgba(99,102,241,0.15)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'">⚡ Actions</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="tasks-tab" class="tab-content" style="display:none;">
             <div class="taskboard">
                 <div class="activity-feed">
                     <h3>📡 Live Activity</h3>

@@ -139,16 +139,10 @@ async function fetchCalendarEvents() {
         const data = await response.json();
         calendarEvents = data.events || [];
         renderCalendar();
+        renderOverview();
     } catch (error) {
         console.error('Error fetching calendar events:', error);
-        // Fallback to mock data if static file is unavailable
-        calendarEvents = [
-            { id: "1", title: "Weekly Review", date: "2026-03-20", type: "meeting", source: "manual", color: "#10b981" },
-            { id: "2", title: "Mission Control V0.6 Launch", date: "2026-03-22", type: "milestone", source: "manual", color: "#8b5cf6" },
-            { id: "3", title: "Figma Template Review", date: "2026-03-19", type: "task", source: "manual", color: "#f59e0b" },
-            { id: "4", title: "[CRON] Heartbeat", date: "2026-03-20", type: "cron", source: "openclaw", color: "#8b5cf6" },
-            { id: "5", title: "Team Sync", date: "2026-03-21", type: "meeting", source: "manual", color: "#10b981" },
-        ];
+        calendarEvents = [];
         renderCalendar();
     }
 }
@@ -297,49 +291,30 @@ let allProjects = [];
 let projectsCurrentFilter = 'all';
 
 async function loadProjects() {
+    // Try live API first, fall back to static projects.json
+    let data = null;
     try {
         const response = await fetch('http://localhost:3001/api/projects');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        if (response.ok) data = await response.json();
+    } catch (_) {}
+
+    if (!data) {
+        try {
+            const response = await fetch('projects.json');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const json = await response.json();
+            // projects.json wraps array in { projects: [...] }
+            data = json.projects || json;
+        } catch (error) {
+            console.error('Failed to load projects:', error);
+            data = [];
         }
-        allProjects = await response.json();
-        renderProjects();
-        updateStats();
-    } catch (error) {
-        console.error('Failed to load projects:', error);
-        // Fallback to mock data if API fails
-        allProjects = [
-            {
-                id: 'mission-control',
-                name: 'Mission Control',
-                status: 'active',
-                progress: 60,
-                description: 'Web dashboard for team coordination and project tracking',
-                created: '2026-03-15',
-                updated: '2026-03-19'
-            },
-            {
-                id: 'sample-project-1',
-                name: 'Sample Project 1',
-                status: 'planning',
-                progress: 10,
-                description: 'Example project in planning phase',
-                created: '2026-03-18',
-                updated: '2026-03-18'
-            },
-            {
-                id: 'sample-project-2',
-                name: 'Sample Project 2',
-                status: 'completed',
-                progress: 100,
-                description: 'Example completed project',
-                created: '2026-02-01',
-                updated: '2026-03-10'
-            }
-        ];
-        renderProjects();
-        updateStats();
     }
+
+    allProjects = Array.isArray(data) ? data : [];
+    renderProjects();
+    updateStats();
+    renderOverview();
 }
 
 function renderProjects() {
@@ -738,9 +713,11 @@ function clearWorkspaceFilters() {
 
 // Initialize workspace explorer when page loads
 document.addEventListener('DOMContentLoaded', () => {
+    renderOverview();
     loadWorkspaceData();
     loadTeamData();
     loadMemories();
+    loadProjects();
     
     // Add styles for workspace tabs
     const style = document.createElement('style');
@@ -776,6 +753,7 @@ async function loadTeamData() {
         renderTeam();
         renderTeamStats();
         renderOffice();
+        renderOverview();
     } catch (error) {
         console.error('Failed to load team data:', error);
         // Show error message
@@ -1267,6 +1245,7 @@ function updateBacklogStats() {
     const totalTasks = (backlogData.match(/- \[[ xX]\]/g) || []).length;
     const doneTasks = (backlogData.match(/- \[[xX]\]/g) || []).length;
     const todoTasks = totalTasks - doneTasks;
+    _ovBacklogStats(totalTasks, todoTasks);
     
     // Count priority tasks
     const priorityTasks = (backlogData.match(/High Priority|Medium Priority|Low Priority/g) || []).length;
@@ -1858,6 +1837,145 @@ function openGitHub() {
 }
 
 // ============================================================
+// OVERVIEW TAB (Home screen)
+// ============================================================
+
+function renderOverview() {
+    // Greeting + date
+    const now = new Date();
+    const hour = now.getHours();
+    const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    const greetEl = document.getElementById('overview-greeting');
+    if (greetEl) greetEl.textContent = `${greeting} 👋`;
+
+    const dateEl = document.getElementById('overview-date');
+    if (dateEl) dateEl.textContent = now.toLocaleDateString('en-AU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    // Hero stats
+    _ovTeamStats();
+    _ovProjectStats();
+    _ovCalendarStats();
+    _ovMemoryStats();
+
+    // Panels
+    _ovProjectsList();
+    _ovTeamList();
+    _ovEventsList();
+}
+
+function _ovTeamStats() {
+    if (!teamData) return;
+    const all = teamData.team || [];
+    const online = all.filter(m => m.status === 'online').length;
+    const el = document.getElementById('ov-online-count');
+    if (el) el.textContent = `${online}/${all.length}`;
+}
+
+function _ovProjectStats() {
+    const el = document.getElementById('ov-active-projects');
+    if (!el) return;
+    if (!allProjects.length) { el.textContent = '—'; return; }
+    const active = allProjects.filter(p => p.status === 'active').length;
+    el.textContent = active;
+}
+
+function _ovCalendarStats() {
+    const el = document.getElementById('ov-upcoming-events');
+    if (!el) return;
+    if (!calendarEvents.length) { el.textContent = '—'; return; }
+    const today = new Date();
+    const weekOut = new Date(today); weekOut.setDate(today.getDate() + 7);
+    const todayStr = today.toISOString().split('T')[0];
+    const weekStr = weekOut.toISOString().split('T')[0];
+    const count = calendarEvents.filter(e => e.date >= todayStr && e.date <= weekStr).length;
+    el.textContent = count;
+}
+
+function _ovMemoryStats() {
+    const el = document.getElementById('ov-memory-files');
+    if (!el) return;
+    if (memoriesData) {
+        el.textContent = memoriesData.total_files || '—';
+    }
+}
+
+function _ovBacklogStats(total, open) {
+    const el = document.getElementById('ov-backlog-tasks');
+    if (el) el.textContent = open !== undefined ? open : (total || '—');
+}
+
+function _ovProjectsList() {
+    const el = document.getElementById('ov-projects-list');
+    if (!el) return;
+    if (!allProjects.length) {
+        el.innerHTML = '<div style="color:var(--text-secondary);font-size:0.85rem;">No projects loaded</div>';
+        return;
+    }
+    const active = allProjects.filter(p => p.status === 'active').slice(0, 4);
+    el.innerHTML = active.map(p => `
+        <div style="margin-bottom: 0.85rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+                <span style="font-size:0.85rem; font-weight:600;">${p.icon || '📁'} ${p.name}</span>
+                <span style="font-size:0.75rem; color:var(--text-secondary);">${p.progress || 0}%</span>
+            </div>
+            <div style="height:5px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;">
+                <div style="height:100%; width:${p.progress || 0}%; background:${p.color || '#6366f1'}; border-radius:3px; transition:width 0.4s;"></div>
+            </div>
+        </div>`).join('');
+}
+
+function _ovTeamList() {
+    const el = document.getElementById('ov-team-list');
+    if (!el) return;
+    if (!teamData) {
+        el.innerHTML = '<div style="color:var(--text-secondary);font-size:0.85rem;">Loading…</div>';
+        return;
+    }
+    const STATUS_COLOR = { online: '#10b981', away: '#f59e0b', idle: '#94a3b8', offline: '#ef4444' };
+    const members = teamData.team || [];
+    el.innerHTML = members.map(m => `
+        <div style="display:flex; align-items:center; gap:0.75rem; padding:0.5rem 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+            <span style="font-size:1.3rem; flex-shrink:0;">${m.roleIcon || '🤖'}</span>
+            <div style="flex:1; min-width:0;">
+                <div style="font-size:0.85rem; font-weight:600;">${m.name}</div>
+                <div style="font-size:0.75rem; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${m.activity || m.role}</div>
+            </div>
+            <span style="width:8px; height:8px; border-radius:50%; background:${STATUS_COLOR[m.status] || '#94a3b8'}; flex-shrink:0;"></span>
+        </div>`).join('');
+}
+
+function _ovEventsList() {
+    const el = document.getElementById('ov-events-list');
+    if (!el) return;
+    if (!calendarEvents.length) {
+        el.innerHTML = '<div style="color:var(--text-secondary);font-size:0.85rem;">No calendar data</div>';
+        return;
+    }
+    const todayStr = new Date().toISOString().split('T')[0];
+    const upcoming = calendarEvents
+        .filter(e => e.date >= todayStr)
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .slice(0, 5);
+
+    if (!upcoming.length) {
+        el.innerHTML = '<div style="color:var(--text-secondary);font-size:0.85rem;">No upcoming events</div>';
+        return;
+    }
+    el.innerHTML = upcoming.map(e => {
+        const d = new Date(e.date + 'T00:00:00');
+        const label = d.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+        return `
+            <div style="display:flex; align-items:center; gap:0.75rem; padding:0.45rem 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                <span style="width:8px; height:8px; border-radius:50%; background:${e.color || '#6366f1'}; flex-shrink:0;"></span>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-size:0.83rem; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${e.title}</div>
+                </div>
+                <span style="font-size:0.72rem; color:var(--text-secondary); flex-shrink:0;">${label}</span>
+            </div>`;
+    }).join('');
+}
+
+// ============================================================
 // OFFICE VISUALIZATION (V1.0)
 // ============================================================
 
@@ -1988,6 +2106,7 @@ function renderMemories(data, searchTerm = '') {
     document.getElementById('memories-total-agents').textContent = data.agent_count || 0;
     document.getElementById('memories-total-files').textContent = data.total_files || 0;
     document.getElementById('memories-total-size').textContent = formatFileSize(data.total_size || 0);
+    _ovMemoryStats();
 
     const agents = data.agents || {};
     const agentNames = Object.keys(agents);
