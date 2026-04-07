@@ -654,6 +654,160 @@ def get_heartbeat():
         return jsonify({"error": str(e)}), 500
 
 
+@app.route('/api/activity-feed')
+def get_activity_feed():
+    """
+    Aggregate workCompleted items from all agent heartbeat-state.json files
+    into a unified reverse-chronological activity stream.
+    """
+    agents_dir = os.path.join(VAULT_PATH, "06_Agents")
+    if not os.path.exists(agents_dir):
+        return jsonify({"error": "Agents directory not found"}), 404
+
+    events = []
+
+    try:
+        for agent_name in sorted(os.listdir(agents_dir)):
+            agent_path = os.path.join(agents_dir, agent_name)
+            if not os.path.isdir(agent_path):
+                continue
+
+            # Find heartbeat-state.json (root or memory/)
+            candidates = [
+                os.path.join(agent_path, "heartbeat-state.json"),
+                os.path.join(agent_path, "memory", "heartbeat-state.json"),
+            ]
+            state_path = next((p for p in candidates if os.path.isfile(p)), None)
+            if not state_path:
+                continue
+
+            try:
+                with open(state_path, 'r', encoding='utf-8', errors='replace') as f:
+                    data = json.load(f)
+            except Exception:
+                continue
+
+            # --- Baro-style: activeProjects[].lastAction ---
+            if "activeProjects" in data and "lastCycle" in data:
+                for proj in data.get("activeProjects", []):
+                    action = proj.get("lastAction", "")
+                    if action:
+                        events.append({
+                            "agent": agent_name,
+                            "project": proj.get("name", ""),
+                            "action": action,
+                            "timestamp": data.get("lastCycle"),
+                            "type": "completed",
+                        })
+                summary = data.get("cycleSummary", "")
+                if summary:
+                    events.append({
+                        "agent": agent_name,
+                        "project": data.get("currentFocus", ""),
+                        "action": summary,
+                        "timestamp": data.get("lastCycle"),
+                        "type": "summary",
+                    })
+
+            # --- Noona-style: workCycleHistory[].workCompleted[] ---
+            for cycle in data.get("workCycleHistory", []):
+                ts = cycle.get("endTime") or cycle.get("startTime")
+                project = cycle.get("project", "")
+                phase = cycle.get("phase", "")
+                for item in cycle.get("workCompleted", []):
+                    events.append({
+                        "agent": agent_name,
+                        "project": project,
+                        "phase": phase,
+                        "action": item,
+                        "timestamp": ts,
+                        "type": "completed",
+                    })
+                notes = cycle.get("notes", "")
+                if notes:
+                    events.append({
+                        "agent": agent_name,
+                        "project": project,
+                        "phase": phase,
+                        "action": notes,
+                        "timestamp": ts,
+                        "type": "note",
+                    })
+
+        # Sort newest first, cap at 50
+        def _sort_key(e):
+            ts = e.get("timestamp") or ""
+            return ts
+
+        events.sort(key=_sort_key, reverse=True)
+        events = events[:50]
+
+        return jsonify({
+            "events": events,
+            "total": len(events),
+            "generated_at": datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/project-status')
+def get_project_status():
+    """
+    Aggregate projectStatus blocks from all heartbeat-state.json files
+    so the dashboard can show real progress figures.
+    """
+    agents_dir = os.path.join(VAULT_PATH, "06_Agents")
+    if not os.path.exists(agents_dir):
+        return jsonify({"error": "Agents directory not found"}), 404
+
+    projects = {}
+
+    try:
+        for agent_name in sorted(os.listdir(agents_dir)):
+            agent_path = os.path.join(agents_dir, agent_name)
+            if not os.path.isdir(agent_path):
+                continue
+            candidates = [
+                os.path.join(agent_path, "heartbeat-state.json"),
+                os.path.join(agent_path, "memory", "heartbeat-state.json"),
+            ]
+            state_path = next((p for p in candidates if os.path.isfile(p)), None)
+            if not state_path:
+                continue
+            try:
+                with open(state_path, 'r', encoding='utf-8', errors='replace') as f:
+                    data = json.load(f)
+            except Exception:
+                continue
+
+            for proj_name, info in data.get("projectStatus", {}).items():
+                if proj_name not in projects or (
+                    info.get("lastUpdated", "") > projects[proj_name].get("lastUpdated", "")
+                ):
+                    projects[proj_name] = {
+                        "name": proj_name,
+                        "agent": agent_name,
+                        "status": info.get("status", "unknown"),
+                        "currentVersion": info.get("currentVersion", ""),
+                        "phase": info.get("phase", ""),
+                        "progress": info.get("progress", ""),
+                        "nextMilestone": info.get("nextMilestone", ""),
+                        "lastUpdated": info.get("lastUpdated", ""),
+                        "notes": info.get("notes", ""),
+                    }
+
+        return jsonify({
+            "projects": list(projects.values()),
+            "total": len(projects),
+            "generated_at": datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == '__main__':
     print("=" * 50)
     print("Warung-Kerja Mission Control Data Bridge")

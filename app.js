@@ -347,7 +347,9 @@ function renderProjects() {
                 </span>
             </div>
             <p class="project-description">${project.description || 'No description available'}</p>
-            
+            ${project.currentPhase ? `<div style="font-size:0.75rem;color:var(--accent-color);margin-bottom:0.5rem;padding:0.25rem 0.5rem;background:rgba(99,102,241,0.1);border-radius:4px;">⚡ ${project.currentPhase}</div>` : ''}
+            ${project.liveNotes ? `<div style="font-size:0.72rem;color:var(--text-secondary);margin-bottom:0.5rem;font-style:italic;">📝 ${project.liveNotes.substring(0,100)}${project.liveNotes.length>100?'…':''}</div>` : ''}
+
             <div class="project-progress">
                 <div class="progress-label">
                     <span>Progress</span>
@@ -878,6 +880,105 @@ function _agentEmoji(name) {
     return map[name] || map[name.charAt(0).toUpperCase() + name.slice(1)] || '🤖';
 }
 
+// ====================
+// ACTIVITY FEED MODULE
+// ====================
+let activityFeedData = null;
+
+async function loadActivityFeed() {
+    try {
+        const res = await fetch('http://localhost:3001/api/activity-feed');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        activityFeedData = await res.json();
+        renderActivityFeed();
+    } catch (_) {
+        // Local only — graceful degradation
+        const el = document.getElementById('ov-activity-feed');
+        if (el && !activityFeedData) {
+            el.innerHTML = `<div style="text-align:center;padding:1.5rem;color:var(--text-secondary);font-size:0.82rem;">
+                Start data-bridge.py locally to see live agent activity
+            </div>`;
+        }
+        const meta = document.getElementById('activity-feed-meta');
+        if (meta && !activityFeedData) meta.textContent = 'local server only';
+    }
+}
+
+function _activityAgentColor(agent) {
+    const map = { Baro: '#f093fb', baro: '#f093fb', noona: '#6ee7b7', Noona: '#6ee7b7', Raz: '#fbbf24', raz: '#fbbf24' };
+    return map[agent] || '#818cf8';
+}
+
+function renderActivityFeed(limit = 10) {
+    const container = document.getElementById('ov-activity-feed');
+    const meta = document.getElementById('activity-feed-meta');
+    if (!container || !activityFeedData) return;
+
+    const events = activityFeedData.events || [];
+    if (!events.length) {
+        container.innerHTML = `<div style="text-align:center;padding:1.5rem;color:var(--text-secondary);font-size:0.82rem;">No activity yet</div>`;
+        return;
+    }
+
+    if (meta) meta.textContent = `${activityFeedData.total} events · updated just now`;
+
+    container.innerHTML = events.slice(0, limit).map(e => {
+        const color = _activityAgentColor(e.agent);
+        const proj  = e.project ? `<span style="color:var(--text-secondary);font-size:0.7rem;"> · ${e.project}</span>` : '';
+        const time  = e.timestamp ? _hbTimeAgo(e.timestamp) : '';
+        const icon  = e.type === 'note' ? '📝' : e.type === 'summary' ? '📋' : '✅';
+        const action = (e.action || '').length > 120 ? e.action.substring(0, 120) + '…' : e.action;
+        return `
+        <div style="display:flex;gap:0.75rem;padding:0.65rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+            <div style="width:3px;border-radius:2px;background:${color};flex-shrink:0;min-height:100%;"></div>
+            <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.2rem;">
+                    <span style="font-size:0.75rem;font-weight:600;color:${color};">${e.agent}</span>
+                    ${proj}
+                    <span style="margin-left:auto;font-size:0.68rem;color:var(--text-secondary);white-space:nowrap;">${time}</span>
+                </div>
+                <div style="font-size:0.78rem;color:var(--text-color);line-height:1.4;">${icon} ${action}</div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ====================
+// PROJECT STATUS SYNC
+// ====================
+let liveProjectStatus = null;
+
+async function loadLiveProjectStatus() {
+    try {
+        const res = await fetch('http://localhost:3001/api/project-status');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        liveProjectStatus = await res.json();
+        _syncProjectProgress();
+    } catch (_) { /* local only */ }
+}
+
+function _syncProjectProgress() {
+    if (!liveProjectStatus || !liveProjectStatus.projects) return;
+    liveProjectStatus.projects.forEach(lp => {
+        // Match by name (case-insensitive, normalise dashes/spaces)
+        const normLive = lp.name.toLowerCase().replace(/[-_\s]/g, '');
+        allProjects.forEach(proj => {
+            const normProj = (proj.name || '').toLowerCase().replace(/[-_\s]/g, '');
+            if (normProj.includes(normLive) || normLive.includes(normProj)) {
+                if (lp.progress) {
+                    // Strip % and parse
+                    const pct = parseInt(lp.progress);
+                    if (!isNaN(pct)) proj.progress = pct;
+                }
+                if (lp.phase) proj.currentPhase = lp.phase;
+                if (lp.notes) proj.liveNotes = lp.notes;
+            }
+        });
+    });
+    renderProjects();
+    renderOverview();
+}
+
 // Initialize workspace explorer when page loads
 document.addEventListener('DOMContentLoaded', () => {
     renderOverview();
@@ -897,6 +998,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Heartbeat — separate faster loop (30s), local only
     loadHeartbeat();
     setInterval(loadHeartbeat, HEARTBEAT_INTERVAL_MS);
+
+    // Activity feed + project status sync — local only, refresh every 60s
+    loadActivityFeed();
+    loadLiveProjectStatus();
+    setInterval(() => { loadActivityFeed(); loadLiveProjectStatus(); }, 60000);
 
     // Add styles for workspace tabs
     const style = document.createElement('style');
