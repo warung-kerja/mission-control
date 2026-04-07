@@ -19,6 +19,9 @@ function showTab(tabName, event) {
             }
         });
     }
+
+    // Clear notification dot when tab is visited
+    _clearTabNotif(tabName);
 }
 
 // Drag and drop
@@ -863,6 +866,9 @@ function renderHeartbeat() {
         }
     });
 
+    // --- Render Up Next panel ---
+    renderUpNext();
+
     // --- Update Office tab desk activity bubbles ---
     Object.entries(agents).forEach(([name, a]) => {
         const bubble = document.querySelector(`[data-office-bubble="${name}"]`);
@@ -921,6 +927,7 @@ function renderActivityFeed(limit = 10) {
     }
 
     if (meta) meta.textContent = `${activityFeedData.total} events · updated just now`;
+    _checkNotifications();
 
     container.innerHTML = events.slice(0, limit).map(e => {
         const color = _activityAgentColor(e.agent);
@@ -942,6 +949,78 @@ function renderActivityFeed(limit = 10) {
         </div>`;
     }).join('');
 }
+
+function renderUpNext() {
+    const container = document.getElementById('ov-up-next');
+    if (!container || !heartbeatData || !heartbeatData.agents) return;
+
+    const agents = heartbeatData.agents;
+    const items = [];
+
+    Object.entries(agents).forEach(([name, a]) => {
+        const color = _activityAgentColor(name);
+        const steps = a.nextSteps || [];
+        const notes = a.cycleSummary || '';
+
+        // Detect blocker keywords in notes
+        const blockerKeywords = ['blocked', 'blocker', 'waiting', 'depends on', 'cannot', 'need', 'requires'];
+        const isBlocker = blockerKeywords.some(kw => notes.toLowerCase().includes(kw));
+
+        steps.slice(0, 2).forEach(step => {
+            items.push({ name, color, step, notes: isBlocker ? notes : '', isBlocker });
+        });
+
+        // If no nextSteps but has nextAction from activeProjects
+        if (!steps.length && a.nextAction) {
+            items.push({ name, color, step: a.nextAction, notes: isBlocker ? notes : '', isBlocker });
+        }
+    });
+
+    if (!items.length) {
+        container.innerHTML = `<div style="text-align:center;padding:1.5rem;color:var(--text-secondary);font-size:0.82rem;">No upcoming steps found</div>`;
+        return;
+    }
+
+    container.innerHTML = items.map(({ name, color, step, notes, isBlocker }) => `
+        <div class="up-next-item">
+            <span class="up-next-agent-pill" style="background:${color}22;color:${color};">${name}</span>
+            <div style="flex:1;min-width:0;">
+                <div style="font-size:0.78rem;color:var(--text-color);line-height:1.4;">${step.substring(0, 110)}${step.length > 110 ? '…' : ''}</div>
+                ${isBlocker && notes ? `<div class="up-next-blocker">⚠️ ${notes.substring(0, 100)}${notes.length > 100 ? '…' : ''}</div>` : ''}
+            </div>
+        </div>`).join('');
+}
+
+// ====================
+// NOTIFICATION DOTS
+// ====================
+let _lastSeenActivityCount = 0;
+const _tabNotifMap = {
+    // tabName → selector for the nav button
+};
+
+function _setTabNotif(tabName, show) {
+    const btn = document.querySelector(`.nav-tab[onclick*="${tabName}"]`);
+    if (!btn) return;
+    if (show) btn.classList.add('has-notif');
+    else btn.classList.remove('has-notif');
+}
+
+function _clearTabNotif(tabName) {
+    _setTabNotif(tabName, false);
+    if (tabName === 'overview') _lastSeenActivityCount = activityFeedData?.total || 0;
+}
+
+function _checkNotifications() {
+    // Activity feed has new events since last overview visit
+    const currentCount = activityFeedData?.total || 0;
+    if (currentCount > _lastSeenActivityCount && _lastSeenActivityCount > 0) {
+        _setTabNotif('overview', true);
+    }
+}
+
+// Patch showTab to clear notif on visit
+const _origShowTab = typeof showTab === 'function' ? showTab : null;
 
 // ====================
 // PROJECT STATUS SYNC

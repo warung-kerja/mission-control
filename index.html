@@ -16,17 +16,17 @@
                 </div>
             </div>
             <div class="nav-tabs">
-                <button class="nav-tab active" onclick="showTab('overview', event)">🏠 Overview</button>
-                <button class="nav-tab" onclick="showTab('tasks', event)">📋 Tasks</button>
-                <button class="nav-tab" onclick="showTab('calendar', event)">📅 Calendar</button>
-                <button class="nav-tab" onclick="showTab('projects', event)">🎯 Projects</button>
-                <button class="nav-tab" onclick="showTab('team', event)">👥 Team</button>
-                <button class="nav-tab" onclick="showTab('backlog', event)">📝 Backlog</button>
-                <button class="nav-tab" onclick="showTab('quickactions', event)">⚡ Quick Actions</button>
-                <button class="nav-tab" onclick="showTab('memories', event)">🧠 Memories</button>
-                <button class="nav-tab" onclick="showTab('office', event)">🏢 Office</button>
-                <button class="nav-tab" onclick="showTab('collaboration', event)">💬 Collab</button>
-                <button class="nav-tab" onclick="showTab('analytics', event)">📊 Analytics</button>
+                <button class="nav-tab active" onclick="showTab('overview', event)">🏠 Overview<span class="notif-dot"></span></button>
+                <button class="nav-tab" onclick="showTab('tasks', event)">📋 Tasks<span class="notif-dot"></span></button>
+                <button class="nav-tab" onclick="showTab('calendar', event)">📅 Calendar<span class="notif-dot"></span></button>
+                <button class="nav-tab" onclick="showTab('projects', event)">🎯 Projects<span class="notif-dot"></span></button>
+                <button class="nav-tab" onclick="showTab('team', event)">👥 Team<span class="notif-dot"></span></button>
+                <button class="nav-tab" onclick="showTab('backlog', event)">📝 Backlog<span class="notif-dot"></span></button>
+                <button class="nav-tab" onclick="showTab('quickactions', event)">⚡ Quick Actions<span class="notif-dot"></span></button>
+                <button class="nav-tab" onclick="showTab('memories', event)">🧠 Memories<span class="notif-dot"></span></button>
+                <button class="nav-tab" onclick="showTab('office', event)">🏢 Office<span class="notif-dot"></span></button>
+                <button class="nav-tab" onclick="showTab('collaboration', event)">💬 Collab<span class="notif-dot"></span></button>
+                <button class="nav-tab" onclick="showTab('analytics', event)">📊 Analytics<span class="notif-dot"></span></button>
             </div>
             <div class="status-bar">
                 <div class="status-dot"></div>
@@ -134,17 +134,34 @@
                     </div>
                 </div>
 
-                <!-- Live Activity Feed -->
-                <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color); margin-top: 1.5rem;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-                        <h3 style="margin:0; font-size:0.95rem;">📡 Agent Activity Feed</h3>
-                        <span style="font-size:0.72rem; color:var(--text-secondary);" id="activity-feed-meta">Loading…</span>
+                <!-- Up Next + Activity Feed row -->
+                <div style="display:grid; grid-template-columns: 1fr 1.6fr; gap:1.5rem; margin-top:1.5rem;">
+
+                    <!-- Up Next panel -->
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                            <h3 style="margin:0; font-size:0.95rem;">🔜 Up Next</h3>
+                            <span style="font-size:0.72rem; color:var(--text-secondary);">from heartbeat</span>
+                        </div>
+                        <div id="ov-up-next">
+                            <div class="skeleton-card"><div class="skeleton-line title"></div><div class="skeleton-line long"></div></div>
+                            <div class="skeleton-card"><div class="skeleton-line title"></div><div class="skeleton-line medium"></div></div>
+                        </div>
                     </div>
-                    <div id="ov-activity-feed">
-                        <div class="skeleton-card"><div class="skeleton-line title"></div><div class="skeleton-line long"></div></div>
-                        <div class="skeleton-card"><div class="skeleton-line title"></div><div class="skeleton-line medium"></div></div>
-                        <div class="skeleton-card"><div class="skeleton-line title"></div><div class="skeleton-line long"></div></div>
+
+                    <!-- Live Activity Feed -->
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                            <h3 style="margin:0; font-size:0.95rem;">📡 Agent Activity Feed</h3>
+                            <span style="font-size:0.72rem; color:var(--text-secondary);" id="activity-feed-meta">Loading…</span>
+                        </div>
+                        <div id="ov-activity-feed">
+                            <div class="skeleton-card"><div class="skeleton-line title"></div><div class="skeleton-line long"></div></div>
+                            <div class="skeleton-card"><div class="skeleton-line title"></div><div class="skeleton-line medium"></div></div>
+                            <div class="skeleton-card"><div class="skeleton-line title"></div><div class="skeleton-line long"></div></div>
+                        </div>
                     </div>
+
                 </div>
 
             </div>
