@@ -415,17 +415,13 @@ function setupProjectFilters() {
 
 // Initialize projects when page loads
 document.addEventListener('DOMContentLoaded', () => {
-    loadProjects();
     setupProjectFilters();
-    
-    // Also load projects when projects tab is clicked
+
+    // Refresh projects data when switching to projects tab
     document.querySelectorAll('.nav-tab').forEach(tab => {
         tab.addEventListener('click', function() {
             if (this.getAttribute('onclick') && this.getAttribute('onclick').includes('projects')) {
-                // Refresh projects data when switching to projects tab
-                setTimeout(() => {
-                    loadProjects();
-                }, 100);
+                setTimeout(() => { loadProjects(); }, 100);
             }
         });
     });
@@ -711,14 +707,93 @@ function clearWorkspaceFilters() {
     }
 }
 
+// ====================
+// AUTO-REFRESH MODULE
+// ====================
+const REFRESH_INTERVAL_MS = 60000; // 60 seconds
+let _lastRefreshTime = null;
+let _refreshTimer = null;
+let _refreshing = false;
+
+function _setRefreshPill(state) {
+    const pill  = document.getElementById('refresh-pill');
+    const dot   = document.getElementById('refresh-dot');
+    const label = document.getElementById('refresh-label');
+    if (!pill) return;
+
+    if (state === 'loading') {
+        pill.classList.add('refreshing');
+        if (dot) dot.className = 'refresh-dot';
+        if (label) label.textContent = 'Refreshing…';
+    } else if (state === 'done') {
+        pill.classList.remove('refreshing');
+        _lastRefreshTime = Date.now();
+        _updateRefreshLabel();
+    } else if (state === 'stale') {
+        if (dot) dot.className = 'refresh-dot stale';
+    }
+}
+
+function _updateRefreshLabel() {
+    const label = document.getElementById('refresh-label');
+    if (!label || !_lastRefreshTime) return;
+    const sec = Math.round((Date.now() - _lastRefreshTime) / 1000);
+    if (sec < 10)        label.textContent = 'Just now';
+    else if (sec < 60)   label.textContent = `${sec}s ago`;
+    else if (sec < 3600) label.textContent = `${Math.floor(sec / 60)}m ago`;
+    else                 label.textContent = `${Math.floor(sec / 3600)}h ago`;
+
+    const dot = document.getElementById('refresh-dot');
+    if (dot) dot.className = sec > 90 ? 'refresh-dot stale' : 'refresh-dot';
+}
+
+async function _doRefresh() {
+    if (_refreshing) return;
+    _refreshing = true;
+    _setRefreshPill('loading');
+    try {
+        await Promise.allSettled([
+            loadTeamData(),
+            fetchCalendarEvents(),
+            loadProjects(),
+            loadMemories()
+        ]);
+    } finally {
+        _refreshing = false;
+        _setRefreshPill('done');
+    }
+}
+
+function manualRefresh() {
+    _doRefresh();
+    // Reset the timer so next auto-refresh is 60s from now
+    if (_refreshTimer) clearInterval(_refreshTimer);
+    _refreshTimer = setInterval(_doRefresh, REFRESH_INTERVAL_MS);
+}
+
+function _startAutoRefresh() {
+    // Update the "X ago" label every 15s without full data reload
+    setInterval(_updateRefreshLabel, 15000);
+    // First auto-refresh after initial load completes
+    _refreshTimer = setInterval(_doRefresh, REFRESH_INTERVAL_MS);
+}
+
 // Initialize workspace explorer when page loads
 document.addEventListener('DOMContentLoaded', () => {
     renderOverview();
     loadWorkspaceData();
-    loadTeamData();
-    loadMemories();
-    loadProjects();
-    
+
+    // Kick off initial data load, then mark refresh pill as "done" and start auto-refresh loop
+    Promise.allSettled([
+        loadTeamData(),
+        loadMemories(),
+        loadProjects(),
+        fetchCalendarEvents()
+    ]).then(() => {
+        _setRefreshPill('done');
+        _startAutoRefresh();
+    });
+
     // Add styles for workspace tabs
     const style = document.createElement('style');
     style.textContent = `
