@@ -2791,3 +2791,85 @@ header {
     font-weight: 500;
     letter-spacing: 0.03em;
 }
+
+
+/* ═══════════════════════════════════════════════════════
+   DAILY BRIEFING PANEL
+   ═══════════════════════════════════════════════════════ */
+
+.briefing-agent-block {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.briefing-agent-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.briefing-agent-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.briefing-agent-date {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+}
+
+.briefing-fresh {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.briefing-stale {
+    color: var(--warning);
+    font-weight: 600;
+}
+
+.briefing-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.briefing-entry {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    font-size: 0.8rem;
+    line-height: 1.45;
+}
+
+.briefing-time {
+    flex-shrink: 0;
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding-top: 0.1rem;
+    min-width: 4rem;
+}
+
+.briefing-text {
+    color: var(--text-secondary);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.briefing-entry-empty,
+.briefing-empty {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}

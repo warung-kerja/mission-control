@@ -819,6 +819,96 @@ def get_project_status():
         return jsonify({"error": str(e)}), 500
 
 
+@app.route('/api/briefing')
+def get_briefing():
+    """
+    Daily briefing for each agent: finds the most recent YYYY-MM-DD.md in
+    their memory/ directory and returns the parsed bullet points.
+    Endpoint returns data for all agents plus a shared context block.
+    """
+    agents_dir = os.path.join(VAULT_PATH, "06_Agents")
+    if not os.path.exists(agents_dir):
+        return jsonify({"error": "Agents directory not found"}), 404
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    briefing = {
+        "date": today,
+        "generated_at": datetime.now().isoformat(),
+        "agents": {}
+    }
+
+    # Core agents we care about
+    agent_names = ["Baro", "noona"]
+    for agent_name in agent_names:
+        agent_mem = os.path.join(agents_dir, agent_name, "memory")
+        if not os.path.isdir(agent_mem):
+            continue
+
+        # Find most recent YYYY-MM-DD.md (exact date pattern only, no suffix)
+        date_files = []
+        for fname in os.listdir(agent_mem):
+            if fname.endswith(".md") and len(fname) == 13:  # "2026-04-07.md"
+                try:
+                    datetime.strptime(fname[:10], "%Y-%m-%d")
+                    date_files.append(fname)
+                except ValueError:
+                    pass
+        if not date_files:
+            continue
+
+        date_files.sort(reverse=True)
+        latest_file = date_files[0]
+        latest_date = latest_file[:10]
+        file_path = os.path.join(agent_mem, latest_file)
+
+        try:
+            with open(file_path, 'r', encoding='utf-8', errors='replace') as f:
+                raw = f.read()
+        except Exception:
+            continue
+
+        # Parse bullets — lines starting with "- "
+        bullets = []
+        for line in raw.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("- "):
+                entry = stripped[2:].strip()
+                if entry:
+                    bullets.append(entry)
+
+        # Split off timestamp if present (e.g. "10:04 PM — Mission Control: …")
+        parsed = []
+        for b in bullets:
+            time_str = None
+            text = b
+            # Match "HH:MM AM/PM — " or "HH:MM — "
+            import re as _re
+            m = _re.match(r'^(\d{1,2}:\d{2}(?:\s*[AP]M)?)\s*[—\-]+\s*', b, _re.IGNORECASE)
+            if m:
+                time_str = m.group(1).strip()
+                text = b[m.end():].strip()
+            parsed.append({"time": time_str, "text": text})
+
+        # Days since last entry
+        try:
+            entry_date = datetime.strptime(latest_date, "%Y-%m-%d")
+            today_dt = datetime.strptime(today, "%Y-%m-%d")
+            days_ago = (today_dt - entry_date).days
+        except Exception:
+            days_ago = None
+
+        briefing["agents"][agent_name] = {
+            "date": latest_date,
+            "days_ago": days_ago,
+            "file": latest_file,
+            "entry_count": len(parsed),
+            "entries": parsed,
+            "raw_preview": raw[:500] if raw else "",
+        }
+
+    return jsonify(briefing)
+
+
 @app.route('/api/tasks/create', methods=['POST'])
 def create_task():
     """

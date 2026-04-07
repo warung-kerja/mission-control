@@ -1172,6 +1172,81 @@ function _syncProjectProgress() {
     renderOverview();
 }
 
+// ═══════════════════════════════════════════════════════
+// DAILY BRIEFING MODULE
+// ═══════════════════════════════════════════════════════
+
+let briefingData = null;
+
+async function loadBriefing() {
+    try {
+        const resp = await fetch('http://localhost:3001/api/briefing', {
+            signal: AbortSignal.timeout(5000),
+        });
+        if (!resp.ok) return;
+        briefingData = await resp.json();
+        renderBriefing();
+    } catch (_) {
+        // Data bridge offline (GitHub Pages) — hide briefing or show placeholder
+        const panel = document.getElementById('briefing-panel');
+        if (panel) panel.style.display = 'none';
+    }
+}
+
+function renderBriefing() {
+    const panel = document.getElementById('briefing-panel');
+    if (!panel || !briefingData) return;
+
+    const agents = briefingData.agents || {};
+    const agentKeys = Object.keys(agents);
+
+    if (agentKeys.length === 0) {
+        panel.innerHTML = `<div class="briefing-empty">No memory entries found for today.</div>`;
+        return;
+    }
+
+    const agentEmojis = { baro: '🎨', noona: '⚡', raz: '👑' };
+    const agentColors = { baro: '#f093fb', noona: '#6ee7b7', raz: '#fbbf24' };
+
+    let html = '';
+    for (const [name, data] of Object.entries(agents)) {
+        const lname = name.toLowerCase();
+        const emoji = agentEmojis[lname] || '🤖';
+        const color = agentColors[lname] || '#94a3b8';
+        const daysAgo = data.days_ago;
+        const staleness = daysAgo === 0
+            ? `<span class="briefing-fresh">today</span>`
+            : daysAgo === 1
+                ? `<span class="briefing-stale">yesterday</span>`
+                : `<span class="briefing-stale">${daysAgo}d ago</span>`;
+
+        // Show last 5 entries, most recent first
+        const entries = (data.entries || []).slice().reverse().slice(0, 5);
+
+        html += `
+        <div class="briefing-agent-block">
+            <div class="briefing-agent-header">
+                <span class="briefing-agent-name" style="color:${color}">${emoji} ${name}</span>
+                <span class="briefing-agent-date">${data.date} · ${staleness} · ${data.entry_count} entries</span>
+            </div>
+            <div class="briefing-entries">
+                ${entries.length === 0
+                    ? `<div class="briefing-entry-empty">No entries found.</div>`
+                    : entries.map(e => `
+                        <div class="briefing-entry">
+                            ${e.time ? `<span class="briefing-time">${e.time}</span>` : ''}
+                            <span class="briefing-text">${_escHtml(e.text)}</span>
+                        </div>`).join('')}
+            </div>
+        </div>`;
+    }
+
+    panel.style.display = 'grid';
+    panel.style.gridTemplateColumns = '1fr 1fr';
+    panel.style.gap = '1rem';
+    panel.innerHTML = html;
+}
+
 // Initialize workspace explorer when page loads
 document.addEventListener('DOMContentLoaded', () => {
     renderOverview();
@@ -1199,6 +1274,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Live tasks from bridge (populates kanban if static cards are absent)
     loadLiveTasks();
+
+    // Daily briefing — local only
+    loadBriefing();
 
     // Keyboard shortcut: Escape closes task modal
     document.addEventListener('keydown', function(e) {
