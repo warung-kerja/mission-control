@@ -780,6 +780,104 @@ function _startAutoRefresh() {
     _refreshTimer = setInterval(_doRefresh, REFRESH_INTERVAL_MS);
 }
 
+// ====================
+// HEARTBEAT MODULE
+// ====================
+let heartbeatData = null;
+const HEARTBEAT_INTERVAL_MS = 30000; // 30s — faster than general refresh
+
+async function loadHeartbeat() {
+    try {
+        const res = await fetch('http://localhost:3001/api/heartbeat');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        heartbeatData = await res.json();
+        renderHeartbeat();
+    } catch (_) {
+        // Graceful degradation — heartbeat only works locally
+    }
+}
+
+function _hbStatusDot(status) {
+    const map = { online: '#22c55e', away: '#f59e0b', idle: '#f59e0b', offline: '#6b7280' };
+    const color = map[status] || map.offline;
+    const pulse = status === 'online' ? 'animation:pulse 2s infinite;' : '';
+    return `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color};${pulse}flex-shrink:0;"></span>`;
+}
+
+function _hbTimeAgo(isoStr) {
+    if (!isoStr) return 'unknown';
+    try {
+        const diff = (Date.now() - new Date(isoStr).getTime()) / 1000;
+        if (diff < 60)   return 'just now';
+        if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+        if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+        return `${Math.floor(diff/86400)}d ago`;
+    } catch(_) { return ''; }
+}
+
+function renderHeartbeat() {
+    if (!heartbeatData || !heartbeatData.agents) return;
+    const agents = heartbeatData.agents;
+
+    // --- Update Overview "Team Now" panel ---
+    const teamList = document.getElementById('ov-team-list');
+    if (teamList) {
+        const agentNames = Object.keys(agents);
+        if (agentNames.length) {
+            teamList.innerHTML = agentNames.map(name => {
+                const a = agents[name];
+                const focus = a.currentFocus || 'Idle';
+                const task  = a.currentTask  || a.cycleSummary || '';
+                const since = _hbTimeAgo(a.lastSeen);
+                return `
+                <div style="display:flex;gap:0.75rem;align-items:flex-start;padding:0.75rem;background:rgba(0,0,0,0.2);border-radius:8px;margin-bottom:0.5rem;">
+                    <div style="font-size:1.5rem;flex-shrink:0;">${_agentEmoji(name)}</div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="display:flex;align-items:center;gap:0.4rem;font-weight:600;font-size:0.9rem;">
+                            ${_hbStatusDot(a.status)} ${name}
+                            <span style="font-size:0.7rem;color:var(--text-secondary);font-weight:400;margin-left:auto;">${since}</span>
+                        </div>
+                        <div style="font-size:0.78rem;color:var(--accent-color);margin-top:0.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                            🎯 ${focus}
+                        </div>
+                        ${task ? `<div style="font-size:0.72rem;color:var(--text-secondary);margin-top:0.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${task.substring(0,80)}</div>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+    }
+
+    // --- Update Team tab member cards with live "currently working on" ---
+    Object.entries(agents).forEach(([name, a]) => {
+        // Find activity element in team card by data attribute
+        const el = document.querySelector(`[data-agent-activity="${name}"]`);
+        if (el && a.currentTask) {
+            el.textContent = a.currentTask.substring(0, 100);
+        }
+        // Update status dot in team card
+        const dotEl = document.querySelector(`[data-agent-status="${name}"]`);
+        if (dotEl) {
+            dotEl.style.background = a.status === 'online' ? '#10b981' : a.status === 'away' ? '#f59e0b' : '#6b7280';
+        }
+    });
+
+    // --- Update Office tab desk activity bubbles ---
+    Object.entries(agents).forEach(([name, a]) => {
+        const bubble = document.querySelector(`[data-office-bubble="${name}"]`);
+        if (bubble && a.currentTask) {
+            bubble.textContent = a.currentTask.substring(0, 60) + (a.currentTask.length > 60 ? '…' : '');
+        }
+    });
+
+    // --- Add live indicator to ov-online-count ---
+    _ovTeamStats();
+}
+
+function _agentEmoji(name) {
+    const map = { Baro: '🎨', noona: '⚡', Raz: '👑', raz: '👑' };
+    return map[name] || map[name.charAt(0).toUpperCase() + name.slice(1)] || '🤖';
+}
+
 // Initialize workspace explorer when page loads
 document.addEventListener('DOMContentLoaded', () => {
     renderOverview();
@@ -795,6 +893,10 @@ document.addEventListener('DOMContentLoaded', () => {
         _setRefreshPill('done');
         _startAutoRefresh();
     });
+
+    // Heartbeat — separate faster loop (30s), local only
+    loadHeartbeat();
+    setInterval(loadHeartbeat, HEARTBEAT_INTERVAL_MS);
 
     // Add styles for workspace tabs
     const style = document.createElement('style');
@@ -901,7 +1003,7 @@ function renderTeam() {
         html += `
             <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, ${member.color} 0%, ${member.color}99 100%); border-radius: 12px; width: 100%; max-width: 450px; color: white; position: relative; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-left: ${levelPadding}px;">
                 <div style="position: absolute; top: 1rem; right: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                    <div style="width: 10px; height: 10px; background: ${statusColor}; border-radius: 50%;"></div>
+                    <div data-agent-status="${member.name}" style="width: 10px; height: 10px; background: ${statusColor}; border-radius: 50%;"></div>
                     <span style="font-size: 0.7rem; opacity: 0.9; text-transform: capitalize;">${statusText}</span>
                 </div>
                 
@@ -931,12 +1033,10 @@ function renderTeam() {
                     "${member.mission}"
                 </div>
                 
-                ${member.activity ? `
                 <div style="margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.9; display: flex; align-items: center; justify-content: center; gap: 0.3rem;">
                     <span>📝</span>
-                    <span>${member.activity}</span>
+                    <span data-agent-activity="${member.name}">${member.activity || 'Standby'}</span>
                 </div>
-                ` : ''}
                 
                 ${member.skills && member.skills.length > 0 ? `
                 <div style="margin-top: 0.5rem; font-size: 0.7rem; opacity: 0.8;">

@@ -15,7 +15,11 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # Configuration
-VAULT_PATH = "/mnt/d/Warung Kerja 1.0"
+import sys as _sys
+VAULT_PATH = (
+    "/mnt/d/Warung Kerja 1.0" if _sys.platform != "win32"
+    else "D:/Warung Kerja 1.0"
+)
 PORT = 3001
 
 @app.route('/api/health')
@@ -496,6 +500,154 @@ def get_all_memories():
             "total_files": total_files,
             "total_size": total_size,
             "generated_at": datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/heartbeat')
+def get_heartbeat():
+    """Read heartbeat-state.json for each agent and return normalised live status."""
+    agents_dir = os.path.join(VAULT_PATH, "06_Agents")
+    now = datetime.now()
+
+    if not os.path.exists(agents_dir):
+        return jsonify({"error": "Agents directory not found"}), 404
+
+    def _parse_iso(ts):
+        if not ts:
+            return None
+        try:
+            # Strip timezone offset for naive comparison
+            ts_clean = ts.replace('Z', '+00:00')
+            from datetime import timezone
+            dt = datetime.fromisoformat(ts_clean)
+            # Convert to naive UTC for age calculation
+            if dt.tzinfo is not None:
+                dt = dt.replace(tzinfo=None)
+            return dt
+        except Exception:
+            return None
+
+    def _age_status(last_seen_dt):
+        if not last_seen_dt:
+            return "offline"
+        hours = (now - last_seen_dt).total_seconds() / 3600
+        if hours < 24:
+            return "online"
+        elif hours < 72:
+            return "away"
+        return "offline"
+
+    def _load_heartbeat_file(agent_path):
+        """Find and parse heartbeat-state.json — checks root then memory/ subdir."""
+        candidates = [
+            os.path.join(agent_path, "heartbeat-state.json"),
+            os.path.join(agent_path, "memory", "heartbeat-state.json"),
+        ]
+        best = None
+        best_mtime = -1
+        for path in candidates:
+            if os.path.isfile(path):
+                mtime = os.path.getmtime(path)
+                if mtime > best_mtime:
+                    best_mtime = mtime
+                    best = path
+        if not best:
+            return None
+        try:
+            with open(best, 'r', encoding='utf-8', errors='replace') as f:
+                return json.load(f)
+        except Exception:
+            return None
+
+    def _normalise(agent_name, data):
+        """Turn either heartbeat schema into a common shape."""
+        if not data:
+            return None
+
+        # --- Baro-style schema ---
+        if "lastCycle" in data and "activeProjects" in data:
+            projects = data.get("activeProjects", [])
+            top = projects[0] if projects else {}
+            last_seen_dt = _parse_iso(data.get("lastCycle"))
+            return {
+                "name": agent_name,
+                "currentFocus": data.get("currentFocus", ""),
+                "currentTask": top.get("status", ""),
+                "lastAction": top.get("lastAction", ""),
+                "nextAction": top.get("nextAction", ""),
+                "cycleSummary": data.get("cycleSummary", ""),
+                "activeProjects": projects,
+                "lastSeen": data.get("lastCycle"),
+                "status": _age_status(last_seen_dt),
+                "schema": "baro",
+            }
+
+        # --- Noona-style schema (lastWorkCycle + workCycleHistory) ---
+        if "lastWorkCycle" in data:
+            cycle = data.get("lastWorkCycle", {})
+            last_seen_dt = _parse_iso(cycle.get("endTime") or cycle.get("startTime"))
+            completed = cycle.get("workCompleted", [])
+            next_steps = cycle.get("nextSteps", [])
+            proj_status = data.get("projectStatus", {})
+            active_projects = [
+                {
+                    "name": k,
+                    "status": v.get("currentVersion", ""),
+                    "lastAction": v.get("phase", ""),
+                    "nextAction": v.get("nextMilestone", ""),
+                }
+                for k, v in proj_status.items()
+                if v.get("status") == "active"
+            ]
+            return {
+                "name": agent_name,
+                "currentFocus": data.get("currentFocus", cycle.get("project", "")),
+                "currentTask": cycle.get("phase", ""),
+                "lastAction": completed[0] if completed else "",
+                "nextAction": next_steps[0] if next_steps else "",
+                "cycleSummary": cycle.get("notes", ""),
+                "activeProjects": active_projects,
+                "workCompleted": completed,
+                "nextSteps": next_steps,
+                "lastSeen": cycle.get("endTime") or cycle.get("startTime"),
+                "status": _age_status(last_seen_dt),
+                "schema": "noona",
+            }
+
+        # Unknown schema — return minimal
+        return {
+            "name": agent_name,
+            "currentFocus": data.get("currentFocus", ""),
+            "currentTask": "",
+            "lastAction": "",
+            "nextAction": "",
+            "cycleSummary": "",
+            "activeProjects": [],
+            "lastSeen": None,
+            "status": "offline",
+            "schema": "unknown",
+        }
+
+    agents_data = {}
+    try:
+        for entry in sorted(os.listdir(agents_dir)):
+            agent_path = os.path.join(agents_dir, entry)
+            if not os.path.isdir(agent_path):
+                continue
+            raw = _load_heartbeat_file(agent_path)
+            if raw is None:
+                continue
+            normalised = _normalise(entry, raw)
+            if normalised:
+                agents_data[entry] = normalised
+
+        return jsonify({
+            "agents": agents_data,
+            "agent_count": len(agents_data),
+            "generated_at": now.isoformat()
         })
 
     except Exception as e:
