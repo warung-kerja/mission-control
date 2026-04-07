@@ -909,6 +909,90 @@ def get_briefing():
     return jsonify(briefing)
 
 
+@app.route('/api/messages/<agent_name>', methods=['GET'])
+def get_messages(agent_name):
+    """Return message history from Raz to the given agent."""
+    agents_dir = os.path.join(VAULT_PATH, "06_Agents")
+    # Resolve case-insensitive agent name
+    agent_dir = None
+    if os.path.isdir(agents_dir):
+        for d in os.listdir(agents_dir):
+            if d.lower() == agent_name.lower():
+                agent_dir = os.path.join(agents_dir, d)
+                break
+    if not agent_dir:
+        return jsonify({"messages": [], "agent": agent_name})
+
+    inbox_file = os.path.join(agent_dir, "inbox", "messages.json")
+    if not os.path.exists(inbox_file):
+        return jsonify({"messages": [], "agent": agent_name})
+
+    try:
+        with open(inbox_file, 'r', encoding='utf-8', errors='replace') as f:
+            messages = json.load(f)
+        if not isinstance(messages, list):
+            messages = []
+        return jsonify({"messages": messages, "agent": agent_name, "total": len(messages)})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/messages/send', methods=['POST'])
+def send_message():
+    """
+    Write a message from Raz into an agent's inbox/messages.json.
+    Also writes to a team-wide messages.json when agent == 'Team'.
+    """
+    try:
+        data = request.get_json(force=True, silent=True) or {}
+        text = (data.get('text') or '').strip()
+        to_agent = (data.get('to') or '').strip()
+        if not text or not to_agent:
+            return jsonify({"error": "text and to are required"}), 400
+
+        msg = {
+            "id": f"msg_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')[:22]}",
+            "from": "Raz",
+            "to": to_agent,
+            "text": text,
+            "timestamp": datetime.now().isoformat(),
+            "read": False,
+        }
+
+        agents_dir = os.path.join(VAULT_PATH, "06_Agents")
+        saved_to = []
+
+        if to_agent.lower() == 'team':
+            # Broadcast — write to every agent inbox + shared
+            shared_file = os.path.join(VAULT_PATH, "06_Agents", "_Shared_Memory", "team-messages.json")
+            os.makedirs(os.path.dirname(shared_file), exist_ok=True)
+            _append_to_json_list(shared_file, msg)
+            saved_to.append("_Shared_Memory/team-messages.json")
+        else:
+            # Single agent
+            if os.path.isdir(agents_dir):
+                for d in os.listdir(agents_dir):
+                    if d.lower() == to_agent.lower():
+                        inbox_dir = os.path.join(agents_dir, d, "inbox")
+                        os.makedirs(inbox_dir, exist_ok=True)
+                        inbox_file = os.path.join(inbox_dir, "messages.json")
+                        _append_to_json_list(inbox_file, msg)
+                        saved_to.append(f"{d}/inbox/messages.json")
+                        break
+
+        if not saved_to:
+            # Agent dir not found — still save to a fallback central file
+            fallback = os.path.join(VAULT_PATH, "00_Sync_Hub", "messages-from-raz.json")
+            os.makedirs(os.path.dirname(fallback), exist_ok=True)
+            _append_to_json_list(fallback, msg)
+            saved_to.append("00_Sync_Hub/messages-from-raz.json")
+
+        return jsonify({"success": True, "message": msg, "saved_to": saved_to})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route('/api/tasks/create', methods=['POST'])
 def create_task():
     """

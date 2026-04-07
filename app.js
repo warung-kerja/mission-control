@@ -2891,8 +2891,11 @@ function selectAgentChat(agentName) {
     document.getElementById('chat-avatar').textContent = agent.avatar;
     document.getElementById('chat-avatar').style.background = agent.color;
     
-    // Load chat history
+    // Render in-memory history (static/session messages)
     renderChatMessages(agentName);
+
+    // Then overlay persisted vault messages from bridge
+    loadChatHistory(agentName);
 }
 
 // Render chat messages
@@ -2953,51 +2956,108 @@ function handleChatKeypress(event) {
     }
 }
 
-// Send message
-function sendMessage() {
+// Send message — persists to agent inbox via data bridge
+async function sendMessage() {
     const input = document.getElementById('chat-input');
     const text = input.value.trim();
-    
     if (!text) return;
-    
+
+    const timeStr = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     const message = {
-        sender: 'Noona',
+        sender: 'Raz',
         text: text,
-        time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+        time: timeStr,
+        own: true,
     };
-    
-    // Add to history
-    if (!chatHistory[currentChatAgent]) {
-        chatHistory[currentChatAgent] = [];
-    }
+
+    if (!chatHistory[currentChatAgent]) chatHistory[currentChatAgent] = [];
     chatHistory[currentChatAgent].push(message);
-    
-    // Clear input
+
     input.value = '';
-    
-    // Render message
+
     const container = document.getElementById('chat-messages');
-    
-    // Remove empty state if present
     if (container.querySelector('.chat-message') === null && container.children.length <= 1) {
         container.innerHTML = '<div class="chat-date-divider"><span>Today</span></div>';
     }
-    
     appendMessageToContainer(container, message);
     container.scrollTop = container.scrollHeight;
-    
-    // Simulate typing indicator and response
-    if (currentChatAgent !== 'Team') {
-        showTypingIndicator();
-        
-        setTimeout(() => {
-            hideTypingIndicator();
-            simulateResponse();
-        }, 2000 + Math.random() * 2000);
+
+    // Persist to vault via bridge (fire-and-forget, show indicator)
+    _showChatSaveIndicator('saving');
+    try {
+        const resp = await fetch('http://localhost:3001/api/messages/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text, to: currentChatAgent }),
+            signal: AbortSignal.timeout(5000),
+        });
+        if (resp.ok) {
+            _showChatSaveIndicator('saved');
+        } else {
+            _showChatSaveIndicator('local');
+        }
+    } catch (_) {
+        _showChatSaveIndicator('local');
     }
-    
-    // Add to activity feed
+
     addActivity(`Message sent to ${currentChatAgent}`);
+    _setTabNotif('overview', true);
+}
+
+function _showChatSaveIndicator(state) {
+    let el = document.getElementById('chat-save-indicator');
+    if (!el) return;
+    if (state === 'saving') {
+        el.textContent = '↑ saving…';
+        el.style.color = 'var(--text-secondary)';
+    } else if (state === 'saved') {
+        el.textContent = '✓ saved to vault';
+        el.style.color = 'var(--success)';
+        setTimeout(() => { el.textContent = ''; }, 3000);
+    } else {
+        el.textContent = '· local only';
+        el.style.color = 'var(--warning)';
+        setTimeout(() => { el.textContent = ''; }, 4000);
+    }
+}
+
+// Load persisted message history for an agent from bridge
+async function loadChatHistory(agentName) {
+    try {
+        const resp = await fetch(`http://localhost:3001/api/messages/${agentName}`, {
+            signal: AbortSignal.timeout(4000),
+        });
+        if (!resp.ok) return;
+        const data = await resp.json();
+        const msgs = data.messages || [];
+        if (msgs.length === 0) return;
+
+        const container = document.getElementById('chat-messages');
+        if (!container) return;
+
+        // Only inject if we don't already have real messages showing
+        const existingReal = container.querySelectorAll('.chat-message.own');
+        if (existingReal.length > 0) return;
+
+        // Prepend a divider and the persisted messages
+        const divider = document.createElement('div');
+        divider.className = 'chat-date-divider';
+        divider.innerHTML = '<span>From vault</span>';
+        container.insertBefore(divider, container.firstChild);
+
+        msgs.slice(-20).forEach(m => {
+            const display = {
+                sender: m.from || 'Raz',
+                text: m.text,
+                time: m.timestamp ? new Date(m.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '',
+                own: true,
+            };
+            const tempDiv = document.createElement('div');
+            appendMessageToContainer(tempDiv, display);
+            container.insertBefore(tempDiv.firstChild, divider.nextSibling);
+        });
+        container.scrollTop = container.scrollHeight;
+    } catch (_) {}
 }
 
 // Show typing indicator
@@ -3038,18 +3098,30 @@ function simulateResponse() {
     }
 }
 
-// Delegate task
+// Delegate task — opens the real Task Dispatch modal pre-filled with current agent
 function delegateTask() {
-    showDelegateTaskModal();
+    // Pre-select the current chat agent in the task modal
+    addTask('todo');
+    // After modal opens, set assignee to match current chat agent
+    setTimeout(() => {
+        const sel = document.getElementById('task-assignee');
+        if (sel && currentChatAgent && currentChatAgent !== 'Team') {
+            // Find matching option (case-insensitive)
+            for (const opt of sel.options) {
+                if (opt.value.toLowerCase() === currentChatAgent.toLowerCase()) {
+                    sel.value = opt.value;
+                    break;
+                }
+            }
+        }
+    }, 50);
 }
 
-// Show delegate task modal
+// Legacy stub (kept for any old references)
 function showDelegateTaskModal() {
-    const taskTitle = prompt('Task title:');
+    delegateTask();
+    const taskTitle = null; // no-op
     if (!taskTitle) return;
-    
-    const assignee = prompt('Assign to (Baro/Noona/Raz):', currentChatAgent);
-    if (!assignee) return;
     
     // Add to delegated tasks
     const container = document.getElementById('delegated-tasks-list');

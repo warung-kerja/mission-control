@@ -975,8 +975,11 @@
                     </div>
                     
                     <div class="chat-input-area">
-                        <input type="text" class="chat-input" id="chat-input" placeholder="Type a message..." onkeypress="handleChatKeypress(event)">
-                        <button class="chat-send-btn" onclick="sendMessage()">Send</button>
+                        <input type="text" class="chat-input" id="chat-input" placeholder="Type a message to the agent…" onkeypress="handleChatKeypress(event)">
+                        <button class="chat-send-btn" onclick="sendMessage()">Send ⚡</button>
+                    </div>
+                    <div style="text-align:right; padding: 0.2rem 1rem 0.4rem; font-size:0.72rem; min-height:1.2em;">
+                        <span id="chat-save-indicator"></span>
                     </div>
                 </div>
                 
