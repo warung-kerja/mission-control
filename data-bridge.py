@@ -4,7 +4,7 @@ Warung-Kerja Mission Control Data Bridge
 Reads from Obsidian vault and serves data via local API
 """
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
 import json
@@ -52,7 +52,18 @@ def get_tasks():
                     "source": filename
                 })
     
-    # Add some default tasks if vault is empty
+    # Also load tasks created via dashboard (tasks-from-raz.json)
+    raz_tasks_file = os.path.join(VAULT_PATH, "00_Sync_Hub", "tasks-from-raz.json")
+    if os.path.exists(raz_tasks_file):
+        try:
+            with open(raz_tasks_file, 'r', encoding='utf-8') as f:
+                raz_tasks = json.load(f)
+                if isinstance(raz_tasks, list):
+                    tasks.extend(raz_tasks)
+        except Exception:
+            pass
+
+    # Add some default tasks if vault is completely empty
     if not tasks:
         tasks = [
             {"id": "1", "title": "Build Calendar module", "status": "backlog", "assignee": "Baro", "priority": "medium"},
@@ -60,7 +71,7 @@ def get_tasks():
             {"id": "3", "title": "Build Data Bridge", "status": "done", "assignee": "Baro", "priority": "high"},
             {"id": "4", "title": "Mission Control V0.5", "status": "done", "assignee": "Baro", "priority": "high"},
         ]
-    
+
     return jsonify(tasks)
 
 @app.route('/api/projects')
@@ -808,18 +819,83 @@ def get_project_status():
         return jsonify({"error": str(e)}), 500
 
 
+@app.route('/api/tasks/create', methods=['POST'])
+def create_task():
+    """
+    Create a new task dispatched by Raz from the dashboard.
+    Saves to {VAULT_PATH}/00_Sync_Hub/tasks-from-raz.json and optionally
+    to the assigned agent's inbox directory.
+    """
+    try:
+        data = request.get_json(force=True, silent=True) or {}
+        title = (data.get('title') or '').strip()
+        if not title:
+            return jsonify({"error": "title is required"}), 400
+
+        task_id = f"raz_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')[:22]}"
+        task = {
+            "id": task_id,
+            "title": title,
+            "description": (data.get('description') or '').strip(),
+            "assignee": data.get('assignee') or 'Baro',
+            "priority": data.get('priority') or 'medium',
+            "project": (data.get('project') or '').strip(),
+            "status": data.get('status') or 'todo',
+            "notes": (data.get('notes') or '').strip(),
+            "createdBy": "Raz",
+            "createdAt": datetime.now().isoformat(),
+        }
+
+        # ── 1. Write to central sync hub ──
+        sync_hub = os.path.join(VAULT_PATH, "00_Sync_Hub")
+        os.makedirs(sync_hub, exist_ok=True)
+        central_file = os.path.join(sync_hub, "tasks-from-raz.json")
+        _append_to_json_list(central_file, task)
+
+        # ── 2. Mirror to agent inbox so agents can pick it up ──
+        assignee = task['assignee']
+        agent_dir = os.path.join(VAULT_PATH, "06_Agents", assignee)
+        if os.path.isdir(agent_dir):
+            inbox_dir = os.path.join(agent_dir, "inbox")
+            os.makedirs(inbox_dir, exist_ok=True)
+            inbox_file = os.path.join(inbox_dir, "tasks-from-raz.json")
+            _append_to_json_list(inbox_file, task)
+
+        return jsonify({"success": True, "task": task})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+def _append_to_json_list(file_path, item):
+    """Load a JSON list file, append item, and write back."""
+    existing = []
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                existing = json.load(f)
+            if not isinstance(existing, list):
+                existing = []
+        except Exception:
+            existing = []
+    existing.append(item)
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(existing, f, indent=2, ensure_ascii=False)
+
+
 if __name__ == '__main__':
     print("=" * 50)
     print("Warung-Kerja Mission Control Data Bridge")
     print("=" * 50)
     print(f"Vault Path: {VAULT_PATH}")
     print(f"API URL: http://localhost:{PORT}")
-    print(f"Tasks Endpoint: http://localhost:{PORT}/api/tasks")
-    print(f"Calendar Endpoint: http://localhost:{PORT}/api/calendar")
-    print(f"Workspace Endpoint: http://localhost:{PORT}/api/workspace")
-    print(f"Agent Workspace: http://localhost:{PORT}/api/workspace/<agent_name>")
-    print(f"File Content: http://localhost:{PORT}/api/file/<agent_name>/<file_path>")
-    print(f"Memories: http://localhost:{PORT}/api/memories")
+    print(f"Tasks (GET):   http://localhost:{PORT}/api/tasks")
+    print(f"Tasks (POST):  http://localhost:{PORT}/api/tasks/create")
+    print(f"Calendar:      http://localhost:{PORT}/api/calendar")
+    print(f"Workspace:     http://localhost:{PORT}/api/workspace")
+    print(f"Heartbeat:     http://localhost:{PORT}/api/heartbeat")
+    print(f"Activity Feed: http://localhost:{PORT}/api/activity-feed")
+    print(f"Project Status:{PORT}/api/project-status")
     print("=" * 50)
     print("Press Ctrl+C to stop")
     print()

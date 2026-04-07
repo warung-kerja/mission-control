@@ -81,40 +81,154 @@ function addActivity(message) {
     activityList.insertBefore(newActivity, activityList.firstChild);
 }
 
+// ═══════════════════════════════════════════════════════
+// WRITE PATH — Task Dispatch Modal
+// ═══════════════════════════════════════════════════════
+
+let _taskModalDefaultColumn = 'todo';
+
 function addTask(column) {
-    const title = prompt('Task title:');
-    if (title) {
-        const columnEl = document.querySelector(`[data-status="${column}"] .tasks-container`);
-        const newTask = document.createElement('div');
-        newTask.className = 'task-card';
-        newTask.draggable = true;
-        newTask.innerHTML = `
-            <div class="task-title">${title}</div>
-            <div class="task-meta">
-                <div class="task-assignee">
-                    <div class="assignee-avatar">R</div>
-                    <span>Raz</span>
-                </div>
-                <span class="task-priority priority-medium">Medium</span>
+    _taskModalDefaultColumn = column || 'todo';
+    const modal = document.getElementById('task-modal-backdrop');
+    if (!modal) return;
+    // Reset form
+    document.getElementById('task-title').value = '';
+    document.getElementById('task-notes').value = '';
+    document.getElementById('task-project').value = '';
+    document.getElementById('task-assignee').value = 'Baro';
+    document.getElementById('task-priority').value = 'medium';
+    document.getElementById('task-status').value = column || 'todo';
+    // Reset button state
+    const btn = document.getElementById('task-submit-btn');
+    btn.textContent = 'Dispatch Task ⚡';
+    btn.disabled = false;
+    // Show
+    modal.style.display = 'flex';
+    setTimeout(() => document.getElementById('task-title').focus(), 80);
+}
+
+function closeTaskModal(e) {
+    // If called from backdrop click, only close if clicking the backdrop itself
+    if (e && e.target && e.target.id !== 'task-modal-backdrop') return;
+    document.getElementById('task-modal-backdrop').style.display = 'none';
+}
+
+function _escHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+function _addTaskCardToKanban(task) {
+    const status = task.status === 'in_progress' ? 'inprogress' : (task.status || 'backlog');
+    const columnEl = document.querySelector(`[data-status="${status}"] .tasks-container`);
+    if (!columnEl) return;
+    const initials = (task.assignee || 'R')[0].toUpperCase();
+    const prio = task.priority || 'medium';
+    const prioLabel = prio.charAt(0).toUpperCase() + prio.slice(1);
+    const card = document.createElement('div');
+    card.className = 'task-card';
+    card.draggable = true;
+    card.dataset.taskId = task.id || '';
+    card.innerHTML = `
+        <div class="task-title">${_escHtml(task.title)}</div>
+        ${task.notes ? `<div class="task-desc">${_escHtml(task.notes)}</div>` : ''}
+        <div class="task-meta">
+            <div class="task-assignee">
+                <div class="assignee-avatar">${initials}</div>
+                <span>${_escHtml(task.assignee || 'Raz')}</span>
             </div>
-        `;
-        
-        newTask.addEventListener('dragstart', function(e) {
-            draggedElement = this;
-            this.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-        });
-        
-        newTask.addEventListener('dragend', function() {
-            this.classList.remove('dragging');
-            draggedElement = null;
-            updateCounts();
-        });
-        
-        columnEl.appendChild(newTask);
+            <span class="task-priority priority-${prio}">${prioLabel}</span>
+        </div>
+        ${task.project ? `<div class="task-project-tag">${_escHtml(task.project)}</div>` : ''}
+    `;
+    card.addEventListener('dragstart', function(ev) {
+        draggedElement = this;
+        this.classList.add('dragging');
+        ev.dataTransfer.effectAllowed = 'move';
+    });
+    card.addEventListener('dragend', function() {
+        this.classList.remove('dragging');
+        draggedElement = null;
         updateCounts();
-        addActivity(`New task created: ${title}`);
+    });
+    columnEl.appendChild(card);
+}
+
+async function submitNewTask(e) {
+    e.preventDefault();
+    const btn = document.getElementById('task-submit-btn');
+    const title = document.getElementById('task-title').value.trim();
+    if (!title) return;
+
+    const task = {
+        title,
+        assignee:    document.getElementById('task-assignee').value,
+        priority:    document.getElementById('task-priority').value,
+        project:     document.getElementById('task-project').value.trim(),
+        status:      document.getElementById('task-status').value,
+        notes:       document.getElementById('task-notes').value.trim(),
+        createdBy:   'Raz',
+        createdAt:   new Date().toISOString(),
+    };
+
+    btn.textContent = 'Dispatching…';
+    btn.disabled = true;
+
+    // Try to persist via data bridge
+    let savedRemotely = false;
+    try {
+        const resp = await fetch('http://localhost:3001/api/tasks/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(task),
+            signal: AbortSignal.timeout(5000),
+        });
+        if (resp.ok) {
+            const result = await resp.json();
+            if (result.task?.id) task.id = result.task.id;
+            savedRemotely = true;
+        }
+    } catch (_) {}
+
+    if (!task.id) task.id = `local_${Date.now()}`;
+
+    // Render the card immediately — no waiting
+    _addTaskCardToKanban(task);
+    updateCounts();
+    addActivity(`Task dispatched: "${title}" → ${task.assignee}`);
+
+    // Close modal
+    document.getElementById('task-modal-backdrop').style.display = 'none';
+    btn.textContent = 'Dispatch Task ⚡';
+    btn.disabled = false;
+
+    if (savedRemotely) {
+        console.log(`[Tasks] "${title}" saved to vault → ${task.assignee} inbox`);
+    } else {
+        console.warn(`[Tasks] "${title}" added locally (data bridge offline — task will not persist)`);
     }
+}
+
+// Load live tasks from bridge and populate kanban
+async function loadLiveTasks() {
+    try {
+        const resp = await fetch('http://localhost:3001/api/tasks', {
+            signal: AbortSignal.timeout(5000),
+        });
+        if (!resp.ok) return;
+        const tasks = await resp.json();
+        if (!Array.isArray(tasks) || tasks.length === 0) return;
+
+        // Only populate if kanban looks empty (avoid doubling on re-load)
+        const existingCards = document.querySelectorAll('.kanban-column .task-card');
+        if (existingCards.length > 0) return; // already has static cards
+
+        tasks.forEach(t => _addTaskCardToKanban(t));
+        updateCounts();
+    } catch (_) {}
 }
 
 // Auto-refresh activity feed
@@ -1082,6 +1196,19 @@ document.addEventListener('DOMContentLoaded', () => {
     loadActivityFeed();
     loadLiveProjectStatus();
     setInterval(() => { loadActivityFeed(); loadLiveProjectStatus(); }, 60000);
+
+    // Live tasks from bridge (populates kanban if static cards are absent)
+    loadLiveTasks();
+
+    // Keyboard shortcut: Escape closes task modal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('task-modal-backdrop');
+            if (modal && modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            }
+        }
+    });
 
     // Add styles for workspace tabs
     const style = document.createElement('style');
