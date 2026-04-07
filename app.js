@@ -516,6 +516,8 @@ function showWorkspace(agentName) {
     
     const workspace = workspaceData.workspaces[agentName];
     if (!workspace) {
+        document.getElementById('workspace-content').innerHTML = `
+            <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
                 <div style="font-size: 2rem; margin-bottom: 1rem;">❌</div>
                 <div>Workspace not found: ${agentName}</div>
             </div>
@@ -2850,3 +2852,4 @@ document.addEventListener('DOMContentLoaded', function() {
         
         observer.observe(analyticsTab, { attributes: true, attributeFilter: ['style'] });
     }
+});
