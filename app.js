@@ -3376,10 +3376,10 @@ function exportAnalyticsReport() {
             completionRate: document.getElementById('completion-rate').textContent
         },
         teamPerformance: [
-            { name: 'Noona', tasks: 47, hours: 78, efficiency: '98%' },
-            { name: 'Baro', tasks: 28, hours: 52, efficiency: '95%' },
-            { name: 'Raz', tasks: 12, hours: 18, efficiency: '88%' },
-            { name: 'Bob', tasks: 8, hours: 8, efficiency: '85%' }
+            { name: 'Noona', tasks: 16, hours: 31, efficiency: '97%' },
+            { name: 'Baro', tasks: 18, hours: 29, efficiency: '95%' },
+            { name: 'Raz', tasks: 9, hours: 12, efficiency: '90%' },
+            { name: 'Jen', tasks: 5, hours: 9, efficiency: '86%' }
         ]
     };
     
